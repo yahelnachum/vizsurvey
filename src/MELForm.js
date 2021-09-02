@@ -10,7 +10,6 @@ class MELForm extends Component {
   render() {
     return (
       <div>
-        <h1>$5 now or $10 two weeks from now?</h1>
         <Formik
           initialValues={{
             picked: "",
@@ -25,11 +24,16 @@ class MELForm extends Component {
               <div id="my-radio-group">Picked</div>
               <div role="group" aria-labelledby="my-radio-group">
                 <label>
-                  <Field type="radio" name="picked" value="early" />
+                  <Field type="radio" name="picked" value="$5 now" />
                   $5 now
                 </label>
+                &nbsp;
                 <label>
-                  <Field type="radio" name="picked" value="later" />
+                  <Field
+                    type="radio"
+                    name="picked"
+                    value="$10 two weeks from now"
+                  />
                   $10 two weeks from now
                 </label>
                 <div>Picked: {values.picked}</div>
