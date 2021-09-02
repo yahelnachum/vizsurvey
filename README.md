@@ -68,3 +68,22 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+### links I found useful while developing
+Articles of interest regarding review of web charting and graphing libraries.
+https://cube.dev/blog/dataviz-ecosystem-2021/
+
+This blog posts shows how to create a react app and ad D3.js to it.
+https://blog.logrocket.com/using-d3-js-v6-with-react/
+
+This post shows how to setup eslint and prettier
+https://medium.com/how-to-react/config-eslint-and-prettier-in-visual-studio-code-for-react-js-development-97bb2236b31a
+
+
+### Notes on React
+React Hooks - provides an easy way of handling the component behavior and share the component logic
+Redux - is a library for managing the global application state.
+* single source of truth where data is stored in object tree store
+* state is read only and can only change data in store by emitting actions
+* changes are made with pure functions - To update store a reducer is written as a pure function.
+Redux should be used in applications that have several features. With these features sharing chunks of the same information.
