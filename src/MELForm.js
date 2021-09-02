@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Formik, Form, Field } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Button } from "react-bootstrap";
 
 class MELForm extends Component {
@@ -10,36 +10,47 @@ class MELForm extends Component {
   render() {
     return (
       <div>
+        <h1>Any place in your app!</h1>
         <Formik
-          initialValues={{
-            picked: "",
+          initialValues={{ choice: "" }}
+          validate={(values) => {
+            let errors = {};
+            if (!values.choice) {
+              errors.choice = "Please choose a selection to continue.";
+            }
+
+            return errors;
           }}
-          onSubmit={async (values) => {
-            await new Promise((r) => setTimeout(r, 500));
-            alert(JSON.stringify(values, null, 2));
+          onSubmit={(values, { setSubmitting }) => {
+            setTimeout(() => {
+              alert(JSON.stringify(values, null, 2));
+              setSubmitting(false);
+            }, 400);
           }}
         >
-          {({ values }) => (
+          {({ isSubmitting }) => (
             <Form>
-              <div id="my-radio-group">Picked</div>
               <div role="group" aria-labelledby="my-radio-group">
                 <label>
-                  <Field type="radio" name="picked" value="$5 now" />
+                  <Field type="radio" name="choice" value="$5 now" />
                   $5 now
                 </label>
                 &nbsp;
                 <label>
                   <Field
                     type="radio"
-                    name="picked"
+                    name="choice"
                     value="$10 two weeks from now"
                   />
                   $10 two weeks from now
                 </label>
-                <div>Picked: {values.picked}</div>
+                <span style={{ color: "red", fontWeight: "bold" }}>
+                  <ErrorMessage name="choice" component="div" />
+                </span>
               </div>
-
-              <Button type="submit">Submit</Button>
+              <Button type="submit" disabled={isSubmitting}>
+                Submit
+              </Button>
             </Form>
           )}
         </Formik>
