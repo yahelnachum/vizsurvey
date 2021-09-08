@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import BarChart from "./BarChart";
-import MELForm from "./MELForm";
+import "./App.css";
+import BarChart from "./components/BarChart";
+import MELForm from "./components/MELForm";
 
 const data = [
   { year: 1980, efficiency: 24.3, sales: 5 },
@@ -15,12 +16,12 @@ const data = [
 class App extends Component {
   render() {
     return (
-      <div>
-        <header className="App-header">
-          <h1>$5 now or $10 two weeks from now?</h1>
-          <BarChart data={data} />
+      <div className="App-container">
+        <header>Survey Question 1</header>
+        <div className="question">
           <MELForm />
-        </header>
+          <BarChart data={data} />
+        </div>
       </div>
     );
   }

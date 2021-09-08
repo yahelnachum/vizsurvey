@@ -2,6 +2,7 @@
   "name": "vizsurvey",
   "version": "0.1.0",
   "private": true,
+  "main": "index.js",
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
@@ -48,6 +49,9 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.25.1",
     "flow-bin": "^0.158.0",
-    "prettier": "^2.3.2"
+    "prettier": "^2.3.2",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^4.8.0",
+    "webpack-dev-server": "^3.11.1"
   }
 }
