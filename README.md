@@ -83,6 +83,9 @@ https://medium.com/how-to-react/config-eslint-and-prettier-in-visual-studio-code
 This post shows how to incorporate a D3 visualization as a react component
 https://www.pluralsight.com/guides/using-d3.js-inside-a-react-app
 
+Flexbox post
+https://css-tricks.com/snippets/css/a-guide-to-flexbox/
+
 ### Notes on React
 
 React Hooks - provides an easy way of handling the component behavior and share the component logic
