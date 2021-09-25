@@ -5,6 +5,13 @@ import { Button } from "react-bootstrap";
 class MELForm extends Component {
   constructor(props) {
     super(props);
+
+    const { question } = props;
+    this.state = {
+      questionText: question.questionText,
+      optionSooner: question.optionSooner,
+      optionLater: question.optionLater,
+    };
   }
 
   render() {
@@ -31,17 +38,21 @@ class MELForm extends Component {
             <Form>
               <div role="group" aria-labelledby="my-radio-group">
                 <label>
-                  <Field type="radio" name="choice" value="$5 now" />
-                  $5 now
+                  <Field
+                    type="radio"
+                    name="choice"
+                    value="{this.state.optionSooner}"
+                  />
+                  {this.state.optionSooner}
                 </label>
                 &nbsp;
                 <label>
                   <Field
                     type="radio"
                     name="choice"
-                    value="$10 two weeks from now"
+                    value="{this.state.optionLater}"
                   />
-                  $10 two weeks from now
+                  {this.state.questionText}
                 </label>
                 <span style={{ color: "red", fontWeight: "bold" }}>
                   <ErrorMessage name="choice" component="div" />
