@@ -2,7 +2,26 @@ import { useD3 } from "../hooks/useD3";
 import React from "react";
 import * as d3 from "d3";
 
-function BarChart({ data }) {
+function BarChart(props) {
+  const { question } = props;
+  const array = Array(question.laterTime - question.soonerTime + 1)
+    .fill()
+    .map((_, idx) => question.soonerTime + idx);
+
+  const data = array.map((d) => {
+    if (d == question.soonerTime) {
+      return { time: question.soonerTime, amount: question.soonerAmount };
+    } else if (d == question.laterTime) {
+      return { time: question.laterTime, amount: question.laterAmount };
+    } else {
+      return { time: d, amount: 0 };
+    }
+  });
+
+  // const data = [
+  //   { time: question.soonerTime, amount: question.soonerAmount },
+  //   { time: question.laterAmount, amount: question.laterAmount },
+  // ];
   const ref = useD3(
     (svg) => {
       const height = 500;
@@ -11,13 +30,13 @@ function BarChart({ data }) {
 
       const x = d3
         .scaleBand()
-        .domain(data.map((d) => d.year))
+        .domain(data.map((d) => d.time))
         .rangeRound([margin.left, width - margin.right])
         .padding(0.1);
 
       const y1 = d3
         .scaleLinear()
-        .domain([0, d3.max(data, (d) => d.sales)])
+        .domain([0, d3.max(data, (d) => d.amount)])
         .rangeRound([height - margin.bottom, margin.top]);
 
       const xAxis = (g) =>
@@ -58,10 +77,10 @@ function BarChart({ data }) {
         .data(data)
         .join("rect")
         .attr("class", "bar")
-        .attr("x", (d) => x(d.year))
+        .attr("x", (d) => x(d.time))
         .attr("width", x.bandwidth())
-        .attr("y", (d) => y1(d.sales))
-        .attr("height", (d) => y1(0) - y1(d.sales));
+        .attr("y", (d) => y1(d.amount))
+        .attr("height", (d) => y1(0) - y1(d.amount));
     },
     [data.length]
   );

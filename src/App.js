@@ -1,30 +1,56 @@
 import React, { Component } from "react";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { Nav, Navbar } from "react-bootstrap";
 import "./App.css";
-import BarChart from "./components/BarChart";
-import MELForm from "./components/MELForm";
-
-const data = [
-  { year: 1980, efficiency: 24.3, sales: 5 },
-  { year: 1985, efficiency: 27.6, sales: 0 },
-  { year: 1990, efficiency: 28, sales: 0 },
-  { year: 1991, efficiency: 28.4, sales: 0 },
-  { year: 1992, efficiency: 27.9, sales: 0 },
-  { year: 1993, efficiency: 28.4, sales: 0 },
-  { year: 1994, efficiency: 28.3, sales: 10 },
-];
+import Survey from "./components/Survey";
+import Instructions from "./components/Instructions";
 
 class App extends Component {
   render() {
     return (
-      <div className="App-container">
-        <header>Survey Question 1</header>
-        <div className="question">
-          <MELForm />
-          <BarChart data={data} />
-        </div>
+      <div>
+        <Header />
       </div>
     );
   }
 }
 
 export default App;
+
+class Header extends Component {
+  render() {
+    return (
+      <BrowserRouter>
+        <div>
+          <Navbar bg="dark" variant="dark" expand="lg">
+            <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="mr-auto">
+                <Nav.Link href="/">Instructions</Nav.Link>
+                <Nav.Link href="/survey">Survey</Nav.Link>
+              </Nav>
+            </Navbar.Collapse>
+          </Navbar>
+          <Switch>
+            <Route exact path="/" component={Instructions} />
+            <Route exact path="/survey" component={Survey} />
+            <Route exact path="/*" component={NotFound} />
+          </Switch>
+        </div>
+      </BrowserRouter>
+    );
+  }
+}
+
+class Home extends Component {
+  render() {
+    return <div>Home</div>;
+  }
+}
+
+class NotFound extends Component {
+  render() {
+    return <div>The page you are looking for can't be found.</div>;
+  }
+}

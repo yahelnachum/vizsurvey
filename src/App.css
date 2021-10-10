@@ -13,32 +13,6 @@
   }
 }
 
-header {
-  background-color: #282c34;
-  color: white;
-  text-align: center;
-  font-size: 1.5em;
-}
-
-.App-container {
-  background-color: #282c34;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.question {
-  background-color: #e9204b;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
 .App-link {
   color: #61dafb;
 }
@@ -50,4 +24,7 @@ header {
   to {
     transform: rotate(360deg);
   }
+}
+
+.navbar {
 }
