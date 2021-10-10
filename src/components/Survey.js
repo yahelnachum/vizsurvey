@@ -61,12 +61,18 @@ class Survey extends Component {
 
   render() {
     return (
-      <Container>
-        <Row>{this.question.questionText}</Row>
+      <Container fluid="md">
         <Row>
           <Col>
-            Please choose one option below:
-            <MELForm question={this.question} />
+            <Container>
+              <Row>
+                <h3>{this.question.questionText}</h3>
+              </Row>
+              <Row>&nbsp;</Row>
+              <Row>
+                <MELForm question={this.question} />
+              </Row>
+            </Container>
           </Col>
           <Col>
             <BarChart question={this.question} />
