@@ -1,3 +1,11 @@
+# What is VizSurvey
+
+I created VisSurvey out of a need to have a tool with survey questions with an accompanying visualization that could be data driven for my masters thesis reasearch.  I had originally investigated using survey monkey and other tools; however, they lack the ability to embed visualizations or could't find any with a REST API that would allow me to make the visualizations driven off the survey questions, so I wrote VizHub.
+
+The application is written in react using redux and axios.  It fetches the survey question data in csv format from gist and will write back the survey questions to gist as well, so hosting question data and answers can be done for free.  The application retrieves the survey questionaire data, and renders the questions in a click through format making the data avialable to the react component that wraps the D3 visualization.
+
+I hope you find it useful.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
