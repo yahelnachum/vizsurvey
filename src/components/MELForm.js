@@ -27,14 +27,13 @@ export function MELForm() {
   }
 
   function question1stPartText() {
-    return `$${question.first_amount} ${todayText(question.first_time)}`;
+    return `$${question.amount_earlier} ${todayText(question.time_earlier)}`;
   }
 
   function question2ndPartText() {
-    return `$${question.second_amount} in ${question.second_time} weeks`;
+    return `$${question.amount_later} in ${question.time_later} weeks`;
   }
 
-  console.log("question=" + question);
   return (
     <Formik
       initialValues={{ choice: question.choice }}
@@ -47,7 +46,6 @@ export function MELForm() {
       }}
       onSubmit={(values, { setSubmitting }) => {
         setTimeout(() => {
-          alert(JSON.stringify(values, null, 2));
           dispatch(answer(values.choice));
           setSubmitting(false);
         }, 400);
@@ -56,16 +54,16 @@ export function MELForm() {
       {({ isSubmitting }) => (
         <Form>
           <div role="group" aria-labelledby="my-radio-group">
+            <p>{questionText()}</p>
             <label>
               <Field type="radio" name="choice" value="{Answer.Earlier}" />
-              {question1stPartText()}
+              &nbsp;{question1stPartText()}
             </label>
             &nbsp;
             <label>
               <Field type="radio" name="choice" value="{Answer.Later}" />
-              {question2ndPartText()}
+              &nbsp;{question2ndPartText()}
             </label>
-            {questionText()}
             <span style={{ color: "red", fontWeight: "bold" }}>
               <ErrorMessage name="choice" component="div" />
             </span>

@@ -7,12 +7,12 @@ export const Answer = {
   Later: "Later",
 };
 
-// export const Status = {
-//   Unitialized: "Unitialized",
-//   Fetching: "Fetching",
-//   Fetched: "Fetched",
-//   Error: "Error",
-// };
+export const Status = {
+  Unitialized: "Unitialized",
+  Fetching: "Fetching",
+  Fetched: "Fetched",
+  Error: "Error",
+};
 
 // Define the initial state of the store for this slicer.
 const initialState = {
@@ -52,42 +52,36 @@ export const questionSlice = createSlice({
       // doesn't actually mutate the state because it uses the Immer library,
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
-      console.log(JSON.stringify(action.payload));
-      state.questions.nextQuestion +=
-        state.questions.nextQuestion < state.questions.questions.length - 1
-          ? 1
-          : 0;
+      state.questions[state.currentQuestion].choice = action.payload;
+      state.currentQuestion +=
+        state.currentQuestion < state.questions.length - 1 ? 1 : 0;
     },
     nextQuestion(state, action) {
-      state.questions.nextQuestion +=
-        state.questions.nextQuestion < state.questions.questions.length - 1
-          ? 1
-          : 0;
+      state.questions.currentQuestion +=
+        state.currentQuestion < state.questions.length - 1 ? 1 : 0;
     },
     previousQuestion(state, action) {
-      state.questions.nextQuestion -= state.questions.nextQuestion > 0 ? 1 : 0;
+      state.currentQuestion -= state.currentQuestion > 0 ? 1 : 0;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchQuestions.pending, (state, action) => {
-        if (state.status === "Unitialized") {
-          //state.status = Status.Fetching;
-          state.status = "Fetching";
+        if (state.status === Status.Unitialized) {
+          state.status = Status.Fetching;
+          //state.status = "Fetching";
         }
       })
       .addCase(fetchQuestions.fulfilled, (state, action) => {
-        console.log("action.payload=" + JSON.stringify(action.payload));
         state.questions = action.payload;
-        console.log(JSON.stringify(state.questions));
         state.currentQuestion = 0;
-        //state.status = Status.Fetched;
-        state.status = "Fetched";
+        state.status = Status.Fetched;
+        //state.status = "Fetched";
       })
       .addCase(fetchQuestions.rejected, (state, action) => {
         if (state.status === "pending") {
-          //state.status = Status.Error;
-          state.status = "Error";
+          state.status = Status.Error;
+          //state.status = "Error";
           state.error = action.error;
         }
       });
