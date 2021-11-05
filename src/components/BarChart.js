@@ -1,44 +1,40 @@
-import { useD3 } from "../hooks/useD3";
 import React from "react";
+
+import { useSelector, useDispatch } from "react-redux";
+import { selectCurrentQuestion } from "../features/questionSlice";
+
+import { useD3 } from "../hooks/useD3";
 import * as d3 from "d3";
 
-function BarChart(props) {
-  const { question } = props;
-  const array = Array(question.laterTime - question.soonerTime + 1)
+function BarChart() {
+  const dispatch = useDispatch();
+  const question = useSelector(selectCurrentQuestion);
+  const array = Array(question.time_later - question.time_earlier + 1)
     .fill()
-    .map((_, idx) => question.soonerTime + idx);
-
+    .map((_, idx) => question.time_earlier + idx);
   const data = array.map((d) => {
-    if (d == question.soonerTime) {
-      return { time: question.soonerTime, amount: question.soonerAmount };
-    } else if (d == question.laterTime) {
-      return { time: question.laterTime, amount: question.laterAmount };
+    if (d == question.time_earlier) {
+      return { time: question.time_earlier, amount: question.amount_earlier };
+    } else if (d == question.time_later) {
+      return { time: question.time_later, amount: question.amount_later };
     } else {
       return { time: d, amount: 0 };
     }
   });
-
-  // const data = [
-  //   { time: question.soonerTime, amount: question.soonerAmount },
-  //   { time: question.laterAmount, amount: question.laterAmount },
-  // ];
   const ref = useD3(
     (svg) => {
       const height = 500;
       const width = 500;
       const margin = { top: 20, right: 30, bottom: 30, left: 40 };
-
       const x = d3
         .scaleBand()
         .domain(data.map((d) => d.time))
         .rangeRound([margin.left, width - margin.right])
         .padding(0.1);
-
       const y1 = d3
         .scaleLinear()
         .domain([0, d3.max(data, (d) => d.amount)])
         .rangeRound([height - margin.bottom, margin.top]);
-
       const xAxis = (g) =>
         g.attr("transform", `translate(0,${height - margin.bottom})`).call(
           d3
@@ -50,7 +46,6 @@ function BarChart(props) {
             )
             .tickSizeOuter(0)
         );
-
       const y1Axis = (g) =>
         g
           .attr("transform", `translate(${margin.left},0)`)
@@ -66,10 +61,8 @@ function BarChart(props) {
               .attr("text-anchor", "start")
               .text(data.y1)
           );
-
       svg.select(".x-axis").call(xAxis);
       svg.select(".y-axis").call(y1Axis);
-
       svg
         .select(".plot-area")
         .attr("fill", "steelblue")
@@ -84,7 +77,6 @@ function BarChart(props) {
     },
     [data.length]
   );
-
   return (
     <svg
       ref={ref}

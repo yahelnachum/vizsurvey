@@ -1,11 +1,14 @@
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
 import { Nav, Navbar } from "react-bootstrap";
 
 import "./App.css";
 import Survey from "./components/Survey";
 import Instructions from "./components/Instructions";
 
-import { useFetchQuestionsQuery } from "./features/questionsApiSlice";
+import { useSelector, useDispatch } from "react-redux";
+
+import { fetchQuestions, fetchStatus } from "./features/questionSlice";
 
 //import useFetch from "./hooks/useFetch";
 
@@ -52,12 +55,18 @@ import { useFetchQuestionsQuery } from "./features/questionsApiSlice";
 // export default connectedComponent;
 
 const App = () => {
-  const { data = [], isFetching } = useFetchQuestionsQuery();
+  const dispatch = useDispatch();
+  const status = useSelector(fetchStatus);
+
+  useEffect(() => {
+    if (status === "Unitialized") {
+      dispatch(fetchQuestions());
+    }
+  }, [status, dispatch]);
 
   return (
     <div>
       <Header />
-      <p>fetched {data.length} questions.</p>
     </div>
   );
 };
@@ -69,12 +78,27 @@ const Header = () => {
     <BrowserRouter>
       <div>
         <Navbar bg="dark" variant="dark" expand="lg">
-          <Navbar.Brand href="/">Viz Survey</Navbar.Brand>
+          <Navbar.Brand as={Link} to="/">
+            Viz Survey
+          </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
-              <Nav.Link href="/instructions">Instructions</Nav.Link>
-              <Nav.Link href="/survey">Survey</Nav.Link>
+              <Nav.Item href="/">
+                <Nav.Link as={Link} to="/">
+                  Home
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item href="/instructions">
+                <Nav.Link as={Link} to="/instructions">
+                  Instructions
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item href="/survey">
+                <Nav.Link as={Link} to="/survey">
+                  Survey
+                </Nav.Link>
+              </Nav.Item>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
