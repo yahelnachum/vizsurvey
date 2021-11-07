@@ -54,12 +54,13 @@ export function MELForm() {
       {({ isSubmitting }) => (
         <Form>
           <div role="group" aria-labelledby="my-radio-group">
-            <p>{questionText()}</p>
+            <h3>{questionText()}</h3>
+            <br></br>
             <label>
               <Field type="radio" name="choice" value="{Answer.Earlier}" />
               &nbsp;{question1stPartText()}
             </label>
-            &nbsp;
+            <br></br>
             <label>
               <Field type="radio" name="choice" value="{Answer.Later}" />
               &nbsp;{question2ndPartText()}

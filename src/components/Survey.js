@@ -1,36 +1,22 @@
-import React, { useEffect } from "react";
 import { Col, Container, Row, Media } from "react-bootstrap";
 import MELForm from "./MELForm";
 import BarChart from "./BarChart";
 
-import { useSelector, useDispatch } from "react-redux";
-import {
-  fetchQuestions,
-  selectCurrentQuestion,
-  questionsFetchStatus,
-} from "../features/questionSlice";
-
 export function Survey() {
-  const dispatch = useDispatch();
-  const currentQuestion = useSelector(selectCurrentQuestion);
-
   return (
     <Container fluid="md">
       <Row>
-        <Col>
-          <Container>
-            <Row>
-              <h3>Question</h3>
-            </Row>
-            <Row>&nbsp;</Row>
-            <Row>
-              <MELForm />
-            </Row>
-          </Container>
-        </Col>
-        <Col>
-          <BarChart />
-        </Col>
+        <MELForm />
+      </Row>
+      <Row>
+        <BarChart
+          width="600"
+          height="600"
+          top_margin="20"
+          right_margin="0"
+          bottom_margin="0"
+          left_margin="0"
+        />
       </Row>
     </Container>
   );
