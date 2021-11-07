@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { csv } from "d3";
+import { csv, max } from "d3";
 
 export const Answer = {
   Unitialized: "Unitialized",
@@ -87,6 +87,16 @@ export const questionSlice = createSlice({
       });
   },
 });
+
+export const selectMaxTime = (state) => {
+  return max(state.questions.questions, (d) => d.time_later);
+};
+
+export const selectMaxAmount = (state) => {
+  return max(state.questions.questions, (d) =>
+    d.amount_earlier > d.amount_later ? d.amount_earlier : d.amount_greater
+  );
+};
 
 export const selectAllQuestions = (state) => {
   return state.questions.questions;

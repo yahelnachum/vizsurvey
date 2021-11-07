@@ -53,7 +53,11 @@ export function MELForm() {
     >
       {({ isSubmitting }) => (
         <Form>
-          <div role="group" aria-labelledby="my-radio-group">
+          <div
+            role="group"
+            aria-labelledby="my-radio-group"
+            className="radio-choice-label"
+          >
             <h3>{questionText()}</h3>
             <br></br>
             <label>

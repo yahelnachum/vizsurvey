@@ -13,9 +13,9 @@ export function Survey() {
           width="600"
           height="600"
           top_margin="20"
-          right_margin="0"
-          bottom_margin="0"
-          left_margin="0"
+          right_margin="30"
+          bottom_margin="30"
+          left_margin="80"
         />
       </Row>
     </Container>
