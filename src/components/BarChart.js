@@ -16,6 +16,7 @@ import {
   scaleBand,
   max,
   ticks,
+  range,
   extent,
 } from "d3";
 
@@ -26,7 +27,6 @@ function BarChart(props) {
   const maxAmount = useSelector(selectMaxAmount);
 
   const height = props.height;
-  console.log("height=" + height);
   const width = props.width;
   const margin = {
     top: props.top_margin,
@@ -40,7 +40,6 @@ function BarChart(props) {
     marginLeft: margin.left + "px",
     marginRight: margin.right + "px",
   };
-  console.log(style);
 
   const domain = Array.from(Array(maxTime + 1).keys());
 
@@ -59,42 +58,35 @@ function BarChart(props) {
       ref={useD3(
         (svg) => {
           const x = scaleBand()
-            .domain(data.map((d) => d.time))
+            .domain(domain)
             .rangeRound([margin.left, width - margin.right])
             .padding(0.1);
 
+          const rangeValues = [0, max(data, (d) => d.amount)];
+
           const y = scaleLinear()
-            .domain([0, max(data, (d) => d.amount)])
+            .domain(rangeValues)
             .rangeRound([height - margin.bottom, margin.top]);
 
           svg
             .select(".x-axis")
             .attr("transform", `translate(0,${height - margin.bottom})`)
-            .call(
-              axisBottom(x)
-                .tickValues(
-                  ticks(...extent(x.domain()), width / 40).filter(
-                    (v) => x(v) !== undefined
-                  )
-                )
-                .tickSizeOuter(0)
-            );
+            .call(axisBottom(x).tickValues(domain).tickSizeOuter(0));
+
+          const yTickValues = range(
+            rangeValues[0],
+            rangeValues[1],
+            rangeValues[1] / 5
+          );
 
           svg
             .select(".y-axis")
             .attr("transform", `translate(${margin.left},0)`)
             .style("color", "steelblue")
-            .call(axisLeft(y).ticks(5, "$,.2f"))
+            .call(
+              axisLeft(y).tickValues(yTickValues).tickFormat(d3.format("$,.2f"))
+            )
             .call((g) => g.select(".domain").remove());
-          // .call((g) =>
-          //   g
-          //     .append("text")
-          //     .attr("x", -margin.left)
-          //     .attr("y", 10)
-          //     .attr("fill", "currentColor")
-          //     .attr("text-anchor", "start")
-          //     .text(data.y1)
-          // );
 
           svg
             .select(".plot-area")
