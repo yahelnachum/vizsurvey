@@ -66,8 +66,9 @@ const Home = () => {
         only. ***
       </p>
       Some open questions about how to design the visualization are captured
-      below. I didn't want to loose track of them, so I put them on this page.
-      For information on how the app is designed and works, see{" "}
+      below. I didn't want to loose track of them, so I put them on this page. I
+      also have a list of tasks to still do. For information on how the app is
+      designed and works, see{" "}
       <a
         href="
         https://github.com/pcordone/vizsurvey"
@@ -102,6 +103,17 @@ const Home = () => {
           set is not a divided by 5 to a normal looking v alue. Not sure if that
           is a good decision. Again, this would be easy to paramaterize through
           the input data.
+        </li>
+        <li>I need to get the vertical line to draw for the y axis.</li>
+        <li>
+          I need to get the survey results to save on either gist or a google
+          sheets document may be better since I can't append to a gist file
+          through the API. I may create a new gist file for each survey results.
+        </li>
+        <li>
+          I need to pass the qustion set (question configuration) through the
+          URL and use it to load the correct set of questions. Then I can change
+          the URL link that I embed into the mechanical turk experiment run.
         </li>
       </ol>
     </div>
