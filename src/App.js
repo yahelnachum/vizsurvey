@@ -111,10 +111,13 @@ const Home = () => {
           through the API. I may create a new gist file for each survey results.
         </li>
         <li>
-          I need to pass the qustion set (question configuration) through the
+          I need to pass the question set (question configuration) through the
           URL and use it to load the correct set of questions. Then I can change
           the URL link that I embed into the mechanical turk experiment run.
         </li>
+        Fix code so that it works in firefox. Test it on other browsers (Edge,
+        Safari) and make sure it works for those.
+        <li></li>
       </ol>
     </div>
   );
