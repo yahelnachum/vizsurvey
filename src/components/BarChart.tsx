@@ -1,6 +1,7 @@
 import React from "react";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useAppDispatch, useAppSelector} from "./../hooks/hooks";
+
 import {
   selectCurrentQuestion,
   selectMaxAmount,
@@ -11,11 +12,11 @@ import { useD3 } from "../hooks/useD3";
 import * as d3 from "d3";
 import { axisBottom, axisLeft, scaleLinear, scaleBand, max, range } from "d3";
 
-function BarChart(props) {
-  const dispatch = useDispatch();
-  const question = useSelector(selectCurrentQuestion);
-  const maxTime = useSelector(selectMaxTime);
-  const maxAmount = useSelector(selectMaxAmount);
+function BarChart(props: { height: any; width: any; top_margin: any; right_margin: any; bottom_margin: any; left_margin: any; }) {
+  const dispatch = useAppDispatch();
+  const question = useAppSelector(selectCurrentQuestion);
+  const maxTime = useAppSelector(selectMaxTime);
+  const maxAmount = useAppSelector(selectMaxAmount);
 
   const height = props.height;
   const width = props.width;
@@ -47,7 +48,7 @@ function BarChart(props) {
   return (
     <svg
       ref={useD3(
-        (svg) => {
+        (svg: { select: (arg0: string) => { (): any; new(): any; attr: { (arg0: string, arg1: string): { (): any; new(): any; call: { (arg0: d3.Axis<string> & string[]): void; new(): any; }; style: { (arg0: string, arg1: string): { (): any; new(): any; call: { (arg0: d3.Axis<d3.NumberValue>): { (): any; new(): any; call: { (arg0: (g: any) => any): void; new(): any; }; }; new(): any; }; }; new(): any; }; attr: { (arg0: string, arg1: string): { (): any; new(): any; selectAll: { (arg0: string): { (): any; new(): any; data: { (arg0: { time: number; amount: any; }[]): { (): any; new(): any; join: { (arg0: string): { (): any; new(): any; attr: { (arg0: string, arg1: string): { (): any; new(): any; attr: { (arg0: string, arg1: (d: any) => number | undefined): { (): any; new(): any; attr: { (arg0: string, arg1: number): { (): any; new(): any; attr: { (arg0: string, arg1: (d: any) => number): { (): any; new(): any; attr: { (arg0: string, arg1: (d: any) => number): void; new(): any; }; }; new(): any; }; }; new(): any; }; }; new(): any; }; }; new(): any; }; }; new(): any; }; }; new(): any; }; }; new(): any; }; }; new(): any; }; }; new(): any; }; }; }) => {
           const x = scaleBand()
             .domain(domain)
             .rangeRound([margin.left, width - margin.right])

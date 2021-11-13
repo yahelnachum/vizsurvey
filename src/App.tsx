@@ -38,7 +38,7 @@ const Header = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
-              <Nav.Item ref="/survey">
+              <Nav.Item href="/survey">
                 <Nav.Link as={Link} to="/survey">
                   Survey
                 </Nav.Link>
