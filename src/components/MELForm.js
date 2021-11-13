@@ -2,16 +2,22 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectCurrentQuestion,
+  isLastQuestion,
+  selectAllQuestions,
   Answer,
   answer,
+  writeAnswers,
 } from "../features/questionSlice";
 //import { Col, Container, Row, Media } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Button } from "react-bootstrap";
+import { objectsToCsv } from "../util/objectsToCSV";
 
 export function MELForm() {
   const dispatch = useDispatch();
   const question = useSelector(selectCurrentQuestion);
+  const lastQuestion = useSelector(isLastQuestion);
+  const allQuestions = useSelector(selectAllQuestions);
 
   // Absolute money value, delay framing (e.g., $5 today vs. $5 plus an additional $5 in 4 weeks)
   // Relative money value, delay framing (e.g., $5 today vs. $5 plus an additional 100% in 4 weeks)
@@ -47,6 +53,10 @@ export function MELForm() {
       onSubmit={(values, { setSubmitting }) => {
         setTimeout(() => {
           dispatch(answer(values.choice));
+          if (lastQuestion) {
+            const csv = objectsToCsv(allQuestions);
+            dispatch(writeAnswers(csv));
+          }
           setSubmitting(false);
         }, 400);
       }}

@@ -1,5 +1,11 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { csv, max } from "d3";
+import { Octokit, App } from "octokit";
+
+const gistToken = "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";
+const gistQuestionId = "f8095509f669e2a3ac98bbfa586d16d9";
+const gistAnswerId = "d2d5617ce3c6b4436ec781854ba10341";
+const gistQuestionURL = `https://gist.githubusercontent.com/pcordone/${gistQuestionId}/raw/`;
 
 export const Answer = {
   Unitialized: "Unitialized",
@@ -25,9 +31,7 @@ const initialState = {
 export const fetchQuestions = createAsyncThunk(
   "survey/getQuestions",
   async () => {
-    const response = await csv(
-      "https://gist.githubusercontent.com/pcordone/f8095509f669e2a3ac98bbfa586d16d9/raw/"
-    );
+    const response = await csv(gistQuestionURL);
     response.forEach((e) => {
       e.question_set = +e.question_set;
       e.position = +e.position;
@@ -36,9 +40,26 @@ export const fetchQuestions = createAsyncThunk(
       e.amount_later = +e.amount_later;
       e.time_later = +e.time_later;
       e.choice = Answer.Unitialized;
-      return response;
+      //return response;
     });
     return response;
+  }
+);
+
+export const writeAnswers = createAsyncThunk(
+  "survey/writeAnswers",
+  async (answersCSV) => {
+    // TODO commit the results to gist
+    const octokit = new Octokit({
+      userAgent: "thesis_answers/v1.0",
+      auth: gistToken,
+    });
+    const url = `PATCH /gists/${gistAnswerId}`;
+    const response = await octokit.request(url, {
+      gist_id: gistAnswerId,
+      description: "description",
+      files: { "answers-subject-x.csv": { content: answersCSV } },
+    });
   }
 );
 
@@ -104,6 +125,13 @@ export const selectAllQuestions = (state) => {
 
 export const selectCurrentQuestion = (state) => {
   return state.questions.questions[state.questions.currentQuestion];
+};
+
+export const isLastQuestion = (state) => {
+  const result =
+    state.questions.currentQuestion === state.questions.questions.length - 1;
+  console.log(result);
+  return result;
 };
 
 export const fetchStatus = (state) => {

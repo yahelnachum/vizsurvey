@@ -90,6 +90,9 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 
 ### links I found useful while developing
 
+Gives examples of using octokit for gist
+https://www.liquidweb.com/kb/little-known-ways-to-utilize-github-gists/
+
 Articles of interest regarding review of web charting and graphing libraries.
 https://cube.dev/blog/dataviz-ecosystem-2021/
 
@@ -104,6 +107,10 @@ https://www.pluralsight.com/guides/using-d3.js-inside-a-react-app
 
 Flexbox post
 https://css-tricks.com/snippets/css/a-guide-to-flexbox/
+
+### Code I am crediting
+
+object2Csv - https://gist.github.com/select/0e2aa49b98ea81db7c615e6560497c41
 
 ### Notes on React
 
