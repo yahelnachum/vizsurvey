@@ -1,25 +1,42 @@
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { csv, max } from "d3";
+import { createSlice, createAsyncThunk, PayloadAction, SerializedError } from "@reduxjs/toolkit";
+import { csv, DSVRowString, max } from "d3";
 
-export const Answer = {
-  Unitialized: "Unitialized",
-  Earlier: "Earlier",
-  Later: "Later",
+export enum Answer {
+  Unitialized,
+  Earlier,
+  Later,
 };
 
-export const Status = {
-  Unitialized: "Unitialized",
-  Fetching: "Fetching",
-  Fetched: "Fetched",
-  Error: "Error",
+export enum Status  {
+  Unitialized,
+  Fetching,
+  Fetched,
+  Error,
 };
+
+type Question = {
+  question_set: number,
+  position: number,
+  amount_earlier: number,
+  time_earlier: number,
+  amount_later: number,
+  time_later: number,
+  choice: Answer
+}
+
+interface QuestionState {
+  questions: Array<Question>,
+  currentQuestion: number,
+  status: Status,
+  error?: SerializedError,
+}
 
 // Define the initial state of the store for this slicer.
-const initialState = {
+const initialState: QuestionState = {
   questions: [],
   currentQuestion: 0,
-  status: "Unitialized",
-  error: null,
+  status:Status.Unitialized,
+  error: undefined,
 };
 
 export const fetchQuestions = createAsyncThunk(
@@ -29,12 +46,19 @@ export const fetchQuestions = createAsyncThunk(
       "https://gist.githubusercontent.com/pcordone/f8095509f669e2a3ac98bbfa586d16d9/raw/"
     );
     response.forEach((e) => {
-      e.question_set = +e.question_set;
-      e.position = +e.position;
-      e.amount_earlier = +e.amount_earlier;
-      e.time_earlier = +e.time_earlier;
-      e.amount_later = +e.amount_later;
-      e.time_later = +e.time_later;
+      // @ts-ignore 
+      e.question_set = +e.question_set!;
+      // @ts-ignore 
+      e.position = +e.position!;
+      // @ts-ignore 
+      e.amount_earlier = +e.amount_earlier!;
+      // @ts-ignore 
+      e.time_earlier = +e.time_earlier!;
+      // @ts-ignore 
+      e.amount_later = +e.amount_later!;
+      // @ts-ignore 
+      e.time_later = +e.time_later!;
+      // @ts-ignore 
       e.choice = Answer.Unitialized;
       return response;
     });
@@ -57,7 +81,7 @@ export const questionSlice = createSlice({
         state.currentQuestion < state.questions.length - 1 ? 1 : 0;
     },
     nextQuestion(state, action) {
-      state.questions.currentQuestion +=
+      state.currentQuestion +=
         state.currentQuestion < state.questions.length - 1 ? 1 : 0;
     },
     previousQuestion(state, action) {
@@ -69,19 +93,16 @@ export const questionSlice = createSlice({
       .addCase(fetchQuestions.pending, (state, action) => {
         if (state.status === Status.Unitialized) {
           state.status = Status.Fetching;
-          //state.status = "Fetching";
         }
       })
       .addCase(fetchQuestions.fulfilled, (state, action) => {
         state.questions = action.payload;
         state.currentQuestion = 0;
         state.status = Status.Fetched;
-        //state.status = "Fetched";
       })
       .addCase(fetchQuestions.rejected, (state, action) => {
-        if (state.status === "pending") {
+        if (state.status === Status.Unitialized) {
           state.status = Status.Error;
-          //state.status = "Error";
           state.error = action.error;
         }
       });

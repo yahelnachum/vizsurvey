@@ -6,3 +6,6 @@ export const store = configureStore({
     questions: questionReducer,
   },
 });
+
+export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof store.getState>;

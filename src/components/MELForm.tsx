@@ -19,7 +19,7 @@ export function MELForm() {
   // Relative money value, speedup framing (e.g., $10 in 4 weeks vs. $10 minus 50% today)
   // Absolute money value, speedup framing (e.g., $10 in 4 weeks vs. $10 minus $5 today)
 
-  const todayText = (sooner_time) =>
+  const todayText = (sooner_time: number) =>
     sooner_time === 0 ? "today" : `in ${sooner_time} weeks`;
 
   function questionText() {
@@ -38,7 +38,7 @@ export function MELForm() {
     <Formik
       initialValues={{ choice: question.choice }}
       validate={(values) => {
-        let errors = {};
+        let errors = {choice: ""};
         if (!values.choice || values.choice === Answer.Unitialized) {
           errors.choice = "Please choose a selection to continue.";
         }

@@ -9,16 +9,7 @@ import {
 
 import { useD3 } from "../hooks/useD3";
 import * as d3 from "d3";
-import {
-  axisBottom,
-  axisLeft,
-  scaleLinear,
-  scaleBand,
-  max,
-  ticks,
-  range,
-  extent,
-} from "d3";
+import { axisBottom, axisLeft, scaleLinear, scaleBand, max, range } from "d3";
 
 function BarChart(props) {
   const dispatch = useDispatch();

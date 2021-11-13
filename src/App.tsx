@@ -5,16 +5,15 @@ import { Nav, Navbar } from "react-bootstrap";
 import "./App.css";
 import Survey from "./components/Survey";
 
-import { useSelector, useDispatch } from "react-redux";
-
-import { fetchQuestions, fetchStatus } from "./features/questionSlice";
+import { useAppDispatch, useAppSelector} from "./hooks/hooks";
+import { fetchQuestions, fetchStatus, Status } from "./features/questionSlice";
 
 const App = () => {
-  const dispatch = useDispatch();
-  const status = useSelector(fetchStatus);
+  const dispatch = useAppDispatch();
+  const status = useAppSelector(fetchStatus);
 
   useEffect(() => {
-    if (status === "Unitialized") {
+    if (status === Status.Unitialized) {
       dispatch(fetchQuestions());
     }
   }, [status, dispatch]);
@@ -39,7 +38,7 @@ const Header = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
-              <Nav.Item href="/survey">
+              <Nav.Item ref="/survey">
                 <Nav.Link as={Link} to="/survey">
                   Survey
                 </Nav.Link>
