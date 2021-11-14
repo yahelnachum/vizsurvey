@@ -52,7 +52,7 @@ export const fetchQuestions = createAsyncThunk(
 
 export const writeAnswers = createAsyncThunk(
   "survey/writeAnswers",
-  async (answersCSV) => {
+  async (answersCSV, participantId) => {
     // TODO commit the results to gist
     const octokit = new Octokit({
       userAgent: "thesis_answers/v1.0",
@@ -62,10 +62,10 @@ export const writeAnswers = createAsyncThunk(
     const now = DateTime.now().toFormat("yyyy-MM-dd-H-mm-ss-SSS-ZZZZ");
     const files = {};
     answersCSV = `${answersCSV}`;
-    files[`answers-subject-x-${now}.csv`] = {
+    files[`answers-subject-${participantId}-${now}.csv`] = {
       content: answersCSV,
     };
-    const description = `Answer results for subject x at ${now}`;
+    const description = `Answer results for participant ${participantId} at ${now}`;
     const payloadObj = {
       gist_id: gistAnswerId,
       description: description,
@@ -118,19 +118,16 @@ export const questionSlice = createSlice({
       .addCase(fetchQuestions.pending, (state, action) => {
         if (state.status === Status.Unitialized) {
           state.status = Status.Fetching;
-          //state.status = "Fetching";
         }
       })
       .addCase(fetchQuestions.fulfilled, (state, action) => {
         state.questions = action.payload;
         state.currentQuestion = 0;
         state.status = Status.Fetched;
-        //state.status = "Fetched";
       })
       .addCase(fetchQuestions.rejected, (state, action) => {
         if (state.status === "pending") {
           state.status = Status.Error;
-          //state.status = "Error";
           state.error = action.error;
         }
       });
@@ -153,6 +150,10 @@ export const selectAllQuestions = (state) => {
 
 export const selectCurrentQuestion = (state) => {
   return state.questions.questions[state.questions.currentQuestion];
+};
+
+export const selectParticipantId = (state) => {
+  return state.participantId;
 };
 
 export const isLastQuestion = (state) => {

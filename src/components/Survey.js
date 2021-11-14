@@ -3,8 +3,6 @@ import MELForm from "./MELForm";
 import BarChart from "./BarChart";
 
 export function Survey() {
-  //  const { questionSetId } = useParams();
-
   return (
     <Container fluid="md">
       <Row>

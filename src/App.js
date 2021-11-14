@@ -1,29 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
+import ReactLoading from "react-loading";
 
 import { Nav, Navbar } from "react-bootstrap";
 
 import "./App.css";
+
 import Survey from "./components/Survey";
 
 import { useSelector, useDispatch } from "react-redux";
 
-import { fetchQuestions, fetchStatus } from "./features/questionSlice";
+import { fetchQuestions, fetchStatus, Status } from "./features/questionSlice";
 
 import { QueryParam } from "./components/QueryParam";
 
 const App = () => {
   const dispatch = useDispatch();
-  const status = useSelector(fetchStatus);
+  const loadingStatus = useSelector(fetchStatus);
 
   useEffect(() => {
-    if (status === "Unitialized") {
+    if (loadingStatus === "Unitialized") {
       dispatch(fetchQuestions());
     }
-  }, [status, dispatch]);
+  }, [loadingStatus, dispatch]);
 
   return (
     <div>
+      {loadingStatus === Status.Fetching && (
+        <ReactLoading type="spinningBubbles" color="#444" />
+      )}
       <Header />
     </div>
   );
