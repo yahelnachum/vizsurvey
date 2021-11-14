@@ -1,7 +1,6 @@
 import { Col, Container, Row, Media } from "react-bootstrap";
 import MELForm from "./MELForm";
 import BarChart from "./BarChart";
-//import { useParams } from "react-router-dom";
 
 export function Survey() {
   //  const { questionSetId } = useParams();

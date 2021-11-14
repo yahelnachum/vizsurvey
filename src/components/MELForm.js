@@ -11,7 +11,7 @@ import {
 //import { Col, Container, Row, Media } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Button } from "react-bootstrap";
-import { objectsToCsv } from "../util/objectsToCSV";
+import { csvFormat } from "d3";
 
 export function MELForm() {
   const dispatch = useDispatch();
@@ -54,7 +54,7 @@ export function MELForm() {
         setTimeout(() => {
           dispatch(answer(values.choice));
           if (lastQuestion) {
-            const csv = objectsToCsv(allQuestions);
+            const csv = csvFormat(allQuestions);
             dispatch(writeAnswers(csv));
           }
           setSubmitting(false);
@@ -71,12 +71,12 @@ export function MELForm() {
             <h3>{questionText()}</h3>
             <br></br>
             <label>
-              <Field type="radio" name="choice" value="{Answer.Earlier}" />
+              <Field type="radio" name="choice" value={Answer.Earlier} />
               &nbsp;{question1stPartText()}
             </label>
             <br></br>
             <label>
-              <Field type="radio" name="choice" value="{Answer.Later}" />
+              <Field type="radio" name="choice" value={Answer.Later} />
               &nbsp;{question2ndPartText()}
             </label>
             <span style={{ color: "red", fontWeight: "bold" }}>

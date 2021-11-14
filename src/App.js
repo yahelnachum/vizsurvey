@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
+
 import { Nav, Navbar } from "react-bootstrap";
 
 import "./App.css";
@@ -8,6 +9,8 @@ import Survey from "./components/Survey";
 import { useSelector, useDispatch } from "react-redux";
 
 import { fetchQuestions, fetchStatus } from "./features/questionSlice";
+
+import { QueryParam } from "./components/QueryParam";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -31,6 +34,7 @@ export default App;
 const Header = () => {
   return (
     <BrowserRouter>
+      <QueryParam />
       <div>
         <Navbar bg="dark" variant="dark" expand="lg">
           <Navbar.Brand as={Link} to="/">
