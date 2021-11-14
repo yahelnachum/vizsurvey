@@ -1,14 +1,34 @@
-import { useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { setParticipant } from "../features/questionSlice";
+import {
+  fetchQuestions,
+  fetchStatus,
+  Status,
+  setParticipant,
+} from "../features/questionSlice";
+import ReactLoading from "react-loading";
 
 export function QueryParam() {
+  const dispatch = useDispatch();
+  const loadingStatus = useSelector(fetchStatus);
   const search = useLocation().search;
   const participantId = new URLSearchParams(search).get("participant");
-  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (loadingStatus === "Unitialized") {
+      dispatch(fetchQuestions());
+    }
+  }, [loadingStatus, dispatch]);
 
   dispatch(setParticipant(participantId));
-  return null;
+  return (
+    <div>
+      {loadingStatus === Status.Fetching && (
+        <ReactLoading type="spinningBubbles" color="#444" />
+      )}
+    </div>
+  );
 }
 
 export default QueryParam;

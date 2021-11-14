@@ -2,7 +2,6 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectCurrentQuestion,
-  selectParticipantId,
   isLastQuestion,
   selectAllQuestions,
   Answer,
@@ -19,7 +18,6 @@ export function MELForm() {
   const question = useSelector(selectCurrentQuestion);
   const lastQuestion = useSelector(isLastQuestion);
   const allQuestions = useSelector(selectAllQuestions);
-  const participantId = useSelector(selectParticipantId);
 
   // Absolute money value, delay framing (e.g., $5 today vs. $5 plus an additional $5 in 4 weeks)
   // Relative money value, delay framing (e.g., $5 today vs. $5 plus an additional 100% in 4 weeks)
@@ -57,7 +55,7 @@ export function MELForm() {
           dispatch(answer(values.choice));
           if (lastQuestion) {
             const csv = csvFormat(allQuestions);
-            dispatch(writeAnswers(csv, participantId));
+            dispatch(writeAnswers(csv));
           }
           setSubmitting(false);
         }, 400);

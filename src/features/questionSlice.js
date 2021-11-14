@@ -1,12 +1,14 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { csv, max } from "d3";
-import { Octokit, App } from "octokit";
+import { Octokit } from "octokit";
 import { DateTime } from "luxon";
 
-const gistToken = "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";
-const gistQuestionId = "f8095509f669e2a3ac98bbfa586d16d9";
-const gistAnswerId = "d2d5617ce3c6b4436ec781854ba10341";
-const gistQuestionURL = `https://gist.githubusercontent.com/pcordone/${gistQuestionId}/raw/`;
+// eslint-disable-next-line no-undef
+const gistToken = process.env.REACT_APP_AUTH_TOKEN;
+// eslint-disable-next-line no-undef
+const gistAnswerId = process.env.REACT_APP_GIST_ANSWER_ID;
+// eslint-disable-next-line no-undef
+const gistQuestionURL = process.env.REACT_APP_GIST_QUESTION_URL;
 
 export const Answer = {
   Unitialized: "Unitialized",
@@ -52,8 +54,8 @@ export const fetchQuestions = createAsyncThunk(
 
 export const writeAnswers = createAsyncThunk(
   "survey/writeAnswers",
-  async (answersCSV, participantId) => {
-    // TODO commit the results to gist
+  async (answersCSV, { getState }) => {
+    const state = getState();
     const octokit = new Octokit({
       userAgent: "thesis_answers/v1.0",
       auth: gistToken,
@@ -62,23 +64,24 @@ export const writeAnswers = createAsyncThunk(
     const now = DateTime.now().toFormat("yyyy-MM-dd-H-mm-ss-SSS-ZZZZ");
     const files = {};
     answersCSV = `${answersCSV}`;
-    files[`answers-subject-${participantId}-${now}.csv`] = {
+    files[`answers-subject-${state.questions.participantId}-${now}.csv`] = {
       content: answersCSV,
     };
-    const description = `Answer results for participant ${participantId} at ${now}`;
+    const description = `Answer results for participant ${state.questions.participantId} at ${now}`;
     const payloadObj = {
       gist_id: gistAnswerId,
       description: description,
       files: files,
     };
+    console.log(payloadObj);
     const response = await octokit.request(url, payloadObj);
-
     // const response = await octokit.request(url, {
     //   gist_id: gistAnswerId,
     //   description: "Answers for subject y.",
     //   files: { "answers-subject-z.csv": { content: answersCSV } },
     // });
     const status = response.status;
+    console.log("status=" + "'" + status + "'");
   }
 );
 
@@ -159,7 +162,6 @@ export const selectParticipantId = (state) => {
 export const isLastQuestion = (state) => {
   const result =
     state.questions.currentQuestion === state.questions.questions.length - 1;
-  console.log(result);
   return result;
 };
 
