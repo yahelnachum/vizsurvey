@@ -12,7 +12,7 @@ import {
   Status,
 } from "../features/questionSlice";
 //import { Col, Container, Row, Media } from "react-bootstrap";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useFormikContext, Formik, Form, Field, ErrorMessage } from "formik";
 import { Button } from "react-bootstrap";
 import { csvFormat } from "d3";
 
@@ -46,7 +46,7 @@ export function MELForm() {
 
   const result = (
     <Formik
-      initialValues={{ choice: question.choice }}
+      initialValues={{ choice: Answer.Unitialized }}
       validate={(values) => {
         let errors = {};
         if (!values.choice || values.choice === Answer.Unitialized) {
@@ -54,7 +54,7 @@ export function MELForm() {
         }
         return errors;
       }}
-      onSubmit={(values, { setSubmitting }) => {
+      onSubmit={(values, { setSubmitting, resetForm }) => {
         setTimeout(() => {
           dispatch(answer(values.choice));
           if (lastQuestion) {
@@ -62,6 +62,8 @@ export function MELForm() {
             dispatch(writeAnswers(csv));
           }
           setSubmitting(false);
+          //setFieldValue("choice", "");
+          resetForm();
         }, 400);
       }}
     >
