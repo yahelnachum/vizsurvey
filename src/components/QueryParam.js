@@ -6,6 +6,7 @@ import {
   fetchStatus,
   Status,
   setParticipant,
+  setQuestionSet,
 } from "../features/questionSlice";
 import ReactLoading from "react-loading";
 
@@ -13,15 +14,18 @@ export function QueryParam() {
   const dispatch = useDispatch();
   const loadingStatus = useSelector(fetchStatus);
   const search = useLocation().search;
-  const participantId = new URLSearchParams(search).get("participant");
+  const participantId = new URLSearchParams(search).get("participantId");
+  const questionSetId = new URLSearchParams(search).get("questionSetId");
+
+  dispatch(setParticipant(participantId));
+  dispatch(setQuestionSet(questionSetId));
 
   useEffect(() => {
-    if (loadingStatus === "Unitialized") {
-      dispatch(fetchQuestions());
+    if (loadingStatus === Status.Unitialized) {
+      dispatch(fetchQuestions(questionSetId));
     }
   }, [loadingStatus, dispatch]);
 
-  dispatch(setParticipant(participantId));
   return (
     <div>
       {loadingStatus === Status.Fetching && (

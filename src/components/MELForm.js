@@ -1,12 +1,15 @@
 import React from "react";
+import { Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectCurrentQuestion,
   isLastQuestion,
   selectAllQuestions,
+  fetchStatus,
   Answer,
   answer,
   writeAnswers,
+  Status,
 } from "../features/questionSlice";
 //import { Col, Container, Row, Media } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -18,6 +21,7 @@ export function MELForm() {
   const question = useSelector(selectCurrentQuestion);
   const lastQuestion = useSelector(isLastQuestion);
   const allQuestions = useSelector(selectAllQuestions);
+  const status = useSelector(fetchStatus);
 
   // Absolute money value, delay framing (e.g., $5 today vs. $5 plus an additional $5 in 4 weeks)
   // Relative money value, delay framing (e.g., $5 today vs. $5 plus an additional 100% in 4 weeks)
@@ -40,7 +44,7 @@ export function MELForm() {
     return `$${question.amount_later} in ${question.time_later} weeks`;
   }
 
-  return (
+  const result = (
     <Formik
       initialValues={{ choice: question.choice }}
       validate={(values) => {
@@ -90,6 +94,12 @@ export function MELForm() {
       )}
     </Formik>
   );
+
+  if (status === Status.Complete) {
+    return <Redirect to="/thankyou" />;
+  } else {
+    return result;
+  }
 }
 
 export default MELForm;

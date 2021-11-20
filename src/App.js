@@ -18,7 +18,6 @@ export default App;
 const Header = () => {
   return (
     <BrowserRouter>
-      <QueryParam />
       <div>
         <Navbar bg="dark" variant="dark" expand="lg">
           <Navbar.Brand as={Link} to="/">
@@ -35,9 +34,11 @@ const Header = () => {
             </Nav>
           </Navbar.Collapse>
         </Navbar>
+        <QueryParam />
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/survey" component={Survey} />
+          <Route path="/thankyou" component={ThankYou} />
           <Route path="/*" component={Home} />
         </Switch>
       </div>
@@ -107,6 +108,15 @@ const Home = () => {
         Safari) and make sure it works for those.
         <li></li>
       </ol>
+    </div>
+  );
+};
+
+const ThankYou = () => {
+  return (
+    <div>
+      <p>Your answers have been submitted. Thank you for taking this survey!</p>
+      .
     </div>
   );
 };

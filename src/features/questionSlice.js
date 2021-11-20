@@ -4,7 +4,7 @@ import { Octokit } from "octokit";
 import { DateTime } from "luxon";
 
 // eslint-disable-next-line no-undef
-const gistToken = process.env.REACT_APP_AUTH_TOKEN;
+const gistToken = atob(process.env.REACT_APP_AUTH_TOKEN);
 // eslint-disable-next-line no-undef
 const gistAnswerId = process.env.REACT_APP_GIST_ANSWER_ID;
 // eslint-disable-next-line no-undef
@@ -20,6 +20,7 @@ export const Status = {
   Unitialized: "Unitialized",
   Fetching: "Fetching",
   Fetched: "Fetched",
+  Complete: "Complete",
   Error: "Error",
 };
 
@@ -27,7 +28,7 @@ export const Status = {
 const initialState = {
   questions: [],
   currentQuestion: 0,
-  questionSet: null,
+  questionSetId: null,
   participantId: null,
   status: "Unitialized",
   error: null,
@@ -35,7 +36,8 @@ const initialState = {
 
 export const fetchQuestions = createAsyncThunk(
   "survey/getQuestions",
-  async () => {
+  async (questionSetId /*{ getState }*/) => {
+    questionSetId = +questionSetId;
     const response = await csv(gistQuestionURL);
     response.forEach((e) => {
       e.question_set = +e.question_set;
@@ -48,7 +50,8 @@ export const fetchQuestions = createAsyncThunk(
       e.answerTime = undefined;
       e.participantId = undefined;
     });
-    return response;
+    const result = response.filter((d) => d.question_set === questionSetId);
+    return result;
   }
 );
 
@@ -68,12 +71,12 @@ export const writeAnswers = createAsyncThunk(
       content: answersCSV,
     };
     const description = `Answer results for participant ${state.questions.participantId} at ${now}`;
+    console.log("submitting answers for " + description);
     const payloadObj = {
       gist_id: gistAnswerId,
       description: description,
       files: files,
     };
-    console.log(payloadObj);
     const response = await octokit.request(url, payloadObj);
     // const response = await octokit.request(url, {
     //   gist_id: gistAnswerId,
@@ -81,7 +84,7 @@ export const writeAnswers = createAsyncThunk(
     //   files: { "answers-subject-z.csv": { content: answersCSV } },
     // });
     const status = response.status;
-    console.log("status=" + "'" + status + "'");
+    console.log("answers submitted with status of " + status);
   }
 );
 
@@ -92,6 +95,11 @@ export const questionSlice = createSlice({
     setParticipant(state, action) {
       if (state.participantId === null && action.payload !== null) {
         state.participantId = action.payload;
+      }
+    },
+    setQuestionSet(state, action) {
+      if (state.questionSetId === null && action.payload !== null) {
+        state.questionSetId = action.payload;
       }
     },
     // we define our actions on the slice of global store data here.
@@ -105,8 +113,11 @@ export const questionSlice = createSlice({
         DateTime.now().toFormat("MM/dd/yyyy H:mm:ss:SSS ZZZZ");
       state.questions[state.currentQuestion].participantId =
         state.participantId;
-      state.currentQuestion +=
-        state.currentQuestion < state.questions.length - 1 ? 1 : 0;
+      if (state.currentQuestion === state.questions.length - 1) {
+        state.status = Status.Complete;
+      } else {
+        state.currentQuestion += 1;
+      }
     },
     nextQuestion(state, action) {
       state.questions.currentQuestion +=
@@ -129,7 +140,7 @@ export const questionSlice = createSlice({
         state.status = Status.Fetched;
       })
       .addCase(fetchQuestions.rejected, (state, action) => {
-        if (state.status === "pending") {
+        if (state.status === Status.Fetched) {
           state.status = Status.Error;
           state.error = action.error;
         }
@@ -170,7 +181,12 @@ export const fetchStatus = (state) => {
 };
 
 // Action creators are generated for each case reducer function
-export const { answer, nextQuestion, previousQuestion, setParticipant } =
-  questionSlice.actions;
+export const {
+  answer,
+  nextQuestion,
+  previousQuestion,
+  setParticipant,
+  setQuestionSet,
+} = questionSlice.actions;
 
 export default questionSlice.reducer;
