@@ -6,47 +6,43 @@ import "./App.css";
 import Survey from "./components/Survey";
 import { QueryParam } from "./components/QueryParam";
 import { selectAllQuestions, writeAnswers } from "./features/questionSlice";
+import { Footer } from "./footer";
 
 const App = () => {
   return (
     <div>
-      <Header />
+      <BrowserRouter>
+        <div className="App">
+          <Navbar bg="dark" variant="dark" expand="lg">
+            <Navbar.Brand as={Link} to="/">
+              Viz Survey
+            </Navbar.Brand>
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav">
+              <Nav className="mr-auto">
+                <Nav.Item href="/survey">
+                  <Nav.Link as={Link} to="/survey">
+                    Survey
+                  </Nav.Link>
+                </Nav.Item>
+              </Nav>
+            </Navbar.Collapse>
+          </Navbar>
+          <QueryParam />
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route path="/survey" component={Survey} />
+            <Route path="/thankyou" component={ThankYou} />
+            <Route path="/*" component={Home} />
+          </Switch>
+        </div>
+        <Footer />
+      </BrowserRouter>
     </div>
   );
 };
 
 export default App;
-
-const Header = () => {
-  return (
-    <BrowserRouter>
-      <div>
-        <Navbar bg="dark" variant="dark" expand="lg">
-          <Navbar.Brand as={Link} to="/">
-            Viz Survey
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="mr-auto">
-              <Nav.Item href="/survey">
-                <Nav.Link as={Link} to="/survey">
-                  Survey
-                </Nav.Link>
-              </Nav.Item>
-            </Nav>
-          </Navbar.Collapse>
-        </Navbar>
-        <QueryParam />
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route path="/survey" component={Survey} />
-          <Route path="/thankyou" component={ThankYou} />
-          <Route path="/*" component={Home} />
-        </Switch>
-      </div>
-    </BrowserRouter>
-  );
-};
 
 const Home = () => {
   return (

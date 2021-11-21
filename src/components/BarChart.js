@@ -3,28 +3,16 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectCurrentQuestion,
-  selectMaxAmount,
   selectMaxTime,
 } from "../features/questionSlice";
 
 import { useD3 } from "../hooks/useD3";
 import * as d3 from "d3";
-import {
-  axisBottom,
-  axisLeft,
-  scaleLinear,
-  scaleBand,
-  max,
-  ticks,
-  range,
-  extent,
-} from "d3";
+import { axisBottom, axisLeft, scaleLinear, scaleBand, max, range } from "d3";
 
 function BarChart(props) {
-  const dispatch = useDispatch();
   const question = useSelector(selectCurrentQuestion);
   const maxTime = useSelector(selectMaxTime);
-  const maxAmount = useSelector(selectMaxAmount);
 
   const height = props.height;
   const width = props.width;
@@ -55,6 +43,8 @@ function BarChart(props) {
 
   return (
     <svg
+      width={width}
+      height={height}
       ref={useD3(
         (svg) => {
           const x = scaleBand()
