@@ -77,8 +77,6 @@ export const writeAnswers = createAsyncThunk(
       description: description,
       files: files,
     };
-    console.log(JSON.stringify(payloadObj));
-    console.log(state.questions);
     const response = await octokit.request(url, payloadObj);
     // const response = await octokit.request(url, {
     //   gist_id: gistAnswerId,
@@ -120,7 +118,6 @@ export const questionSlice = createSlice({
       } else {
         state.currentQuestion += 1;
       }
-      console.log("answer conplete");
     },
     nextQuestion(state, action) {
       state.questions.currentQuestion +=

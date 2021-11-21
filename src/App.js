@@ -117,7 +117,6 @@ const ThankYou = () => {
   const dispatch = useDispatch();
   const allQuestions = useSelector(selectAllQuestions);
   const csv = convertToCSV(allQuestions);
-  console.log("csv below");
   console.log(csv);
   dispatch(writeAnswers(csv));
 
