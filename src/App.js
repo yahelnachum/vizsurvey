@@ -35,8 +35,8 @@ const App = () => {
             <Route path="/thankyou" component={ThankYou} />
             <Route path="/*" component={Home} />
           </Switch>
+          <Footer className="footer bg-dark" />
         </div>
-        <Footer />
       </BrowserRouter>
     </div>
   );
@@ -46,7 +46,7 @@ export default App;
 
 const Home = () => {
   return (
-    <div>
+    <div id="home-text">
       <p>*** TODO: Inert the survey instructions for the subject here ***</p>.
       <p>
         *** TODO: Remove these notes below. They are here during development
@@ -97,14 +97,6 @@ const Home = () => {
           sheets document may be better since I can't append to a gist file
           through the API. I may create a new gist file for each survey results.
         </li>
-        <li>
-          I need to pass the question set (question configuration) through the
-          URL and use it to load the correct set of questions. Then I can change
-          the URL link that I embed into the mechanical turk experiment run.
-        </li>
-        Fix code so that it works in firefox. Test it on other browsers (Edge,
-        Safari) and make sure it works for those.
-        <li></li>
       </ol>
     </div>
   );
