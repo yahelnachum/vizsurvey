@@ -1,4 +1,4 @@
-import { Col, Container, Row, Media } from "react-bootstrap";
+import { Container, Row } from "react-bootstrap";
 import MELForm from "./MELForm";
 import BarChart from "./BarChart";
 

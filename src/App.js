@@ -1,9 +1,11 @@
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
 import { Nav, Navbar } from "react-bootstrap";
 import "./App.css";
 import Survey from "./components/Survey";
 import { QueryParam } from "./components/QueryParam";
-import React from "react";
+import { selectAllQuestions, writeAnswers } from "./features/questionSlice";
 
 const App = () => {
   return (
@@ -112,15 +114,29 @@ const Home = () => {
   );
 };
 
+function convertToCSV(answers) {
+  const header = [
+    "question_set_id,position,amount_earlier,time_earlier,amount_later,time_later,choice,answer_time,participant_id",
+  ];
+  const rows = answers.map(
+    (a) =>
+      `${a.question_set_id}, ${a.position}, ${a.amount_earlier}, ${a.time_earlier}, ${a.amount_later}, ${a.time_later}, ${a.choice}, ${a.answer_time}, ${a.participant_id}`
+  );
+  return header.concat(rows).join("\n");
+}
+
 const ThankYou = () => {
+  const dispatch = useDispatch();
+  const allQuestions = useSelector(selectAllQuestions);
+  const csv = convertToCSV(allQuestions);
+  console.log("csv below");
+  console.log(csv);
+  dispatch(writeAnswers(csv));
+
   return (
     <div>
       <p>Your answers have been submitted. Thank you for taking this survey!</p>
       .
     </div>
   );
-};
-
-const NotFound = () => {
-  return <div>The page you are looking for can't be found.</div>;
 };

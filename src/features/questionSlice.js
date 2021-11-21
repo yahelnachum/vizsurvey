@@ -28,8 +28,8 @@ export const Status = {
 const initialState = {
   questions: [],
   currentQuestion: 0,
-  questionSetId: null,
-  participantId: null,
+  question_set_id: null,
+  participant_id: null,
   status: "Unitialized",
   error: null,
 };
@@ -40,17 +40,17 @@ export const fetchQuestions = createAsyncThunk(
     questionSetId = +questionSetId;
     const response = await csv(gistQuestionURL);
     response.forEach((e) => {
-      e.question_set = +e.question_set;
+      e.question_set_id = +e.question_set_id;
       e.position = +e.position;
       e.amount_earlier = +e.amount_earlier;
       e.time_earlier = +e.time_earlier;
       e.amount_later = +e.amount_later;
       e.time_later = +e.time_later;
       e.choice = Answer.Unitialized;
-      e.answerTime = undefined;
-      e.participantId = undefined;
+      e.answer_time = undefined;
+      e.participant_id = undefined;
     });
-    const result = response.filter((d) => d.question_set === questionSetId);
+    const result = response.filter((d) => d.question_set_id === questionSetId);
     return result;
   }
 );
@@ -67,16 +67,18 @@ export const writeAnswers = createAsyncThunk(
     const now = DateTime.now().toFormat("yyyy-MM-dd-H-mm-ss-SSS-ZZZZ");
     const files = {};
     answersCSV = `${answersCSV}`;
-    files[`answers-subject-${state.questions.participantId}-${now}.csv`] = {
+    files[`answers-subject-${state.questions.participant_id}-${now}.csv`] = {
       content: answersCSV,
     };
-    const description = `Answer results for participant ${state.questions.participantId} at ${now}`;
+    const description = `Answer results for participant ${state.questions.participant_id} at ${now}`;
     console.log("submitting answers for " + description);
     const payloadObj = {
       gist_id: gistAnswerId,
       description: description,
       files: files,
     };
+    console.log(JSON.stringify(payloadObj));
+    console.log(state.questions);
     const response = await octokit.request(url, payloadObj);
     // const response = await octokit.request(url, {
     //   gist_id: gistAnswerId,
@@ -93,13 +95,13 @@ export const questionSlice = createSlice({
   initialState, // the initial state of our global data (under name slice)
   reducers: {
     setParticipant(state, action) {
-      if (state.participantId === null && action.payload !== null) {
-        state.participantId = action.payload;
+      if (state.participant_id === null && action.payload !== null) {
+        state.participant_id = action.payload;
       }
     },
     setQuestionSet(state, action) {
       if (state.questionSetId === null && action.payload !== null) {
-        state.questionSetId = action.payload;
+        state.question_set_id = action.payload;
       }
     },
     // we define our actions on the slice of global store data here.
@@ -109,15 +111,16 @@ export const questionSlice = createSlice({
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
       state.questions[state.currentQuestion].choice = action.payload;
-      state.questions[state.currentQuestion].answerTime =
+      state.questions[state.currentQuestion].answer_time =
         DateTime.now().toFormat("MM/dd/yyyy H:mm:ss:SSS ZZZZ");
-      state.questions[state.currentQuestion].participantId =
-        state.participantId;
+      state.questions[state.currentQuestion].participant_id =
+        state.participant_id;
       if (state.currentQuestion === state.questions.length - 1) {
         state.status = Status.Complete;
       } else {
         state.currentQuestion += 1;
       }
+      console.log("answer conplete");
     },
     nextQuestion(state, action) {
       state.questions.currentQuestion +=
@@ -166,8 +169,8 @@ export const selectCurrentQuestion = (state) => {
   return state.questions.questions[state.questions.currentQuestion];
 };
 
-export const selectParticipantId = (state) => {
-  return state.participantId;
+export const selectparticipantId = (state) => {
+  return state.participant_id;
 };
 
 export const isLastQuestion = (state) => {

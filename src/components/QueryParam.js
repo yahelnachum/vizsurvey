@@ -14,8 +14,8 @@ export function QueryParam() {
   const dispatch = useDispatch();
   const loadingStatus = useSelector(fetchStatus);
   const search = useLocation().search;
-  const participantId = new URLSearchParams(search).get("participantId");
-  const questionSetId = new URLSearchParams(search).get("questionSetId");
+  const participantId = new URLSearchParams(search).get("participant_id");
+  const questionSetId = new URLSearchParams(search).get("question_set_id");
 
   dispatch(setParticipant(participantId));
   dispatch(setQuestionSet(questionSetId));
