@@ -29,6 +29,9 @@ function BarChart(props) {
     marginRight: margin.right + "px",
   };
 
+  const innerHeight = height - margin.bottom - margin.top;
+  const innerWidth = width - margin.left - margin.right;
+
   const domain = Array.from(Array(maxTime + 1).keys());
 
   const data = domain.map((d) => {
@@ -49,8 +52,7 @@ function BarChart(props) {
         (svg) => {
           const x = scaleBand()
             .domain(domain)
-            .rangeRound([margin.left, width - margin.right])
-            .padding(0.1);
+            .rangeRound([margin.left, width - margin.right]);
 
           const rangeValues = [0, max(data, (d) => d.amount)];
 
@@ -68,15 +70,29 @@ function BarChart(props) {
             rangeValues[1],
             rangeValues[1] / 5
           );
+          yTickValues.push(rangeValues[1]);
 
-          svg
+          const yAxis = svg
             .select(".y-axis")
             .attr("transform", `translate(${margin.left},0)`)
-            .style("color", "steelblue")
             .call(
               axisLeft(y).tickValues(yTickValues).tickFormat(d3.format("$,.2f"))
-            )
-            .call((g) => g.select(".domain").remove());
+            );
+
+          // const yLabelG = svg
+          //   .select("#y-axis-label")
+          //   .data([1])
+          //   .join("g")
+          //   .attr("transform", "rotate(-90)");
+
+          // .data(nullData)
+          // .join("text")
+          // .attr("id", "y-axis-label")
+          // .attr("text-anchor", "middle")
+          // .attr("x", -innerHeight / 2)
+          // .attr("y", -margin.left)
+
+          // .text("Amount in USD");
 
           svg
             .select(".plot-area")
