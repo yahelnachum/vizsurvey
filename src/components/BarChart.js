@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   selectCurrentQuestion,
   selectMaxTime,
@@ -29,8 +29,8 @@ function BarChart(props) {
     marginRight: margin.right + "px",
   };
 
-  const innerHeight = height - margin.bottom - margin.top;
-  const innerWidth = width - margin.left - margin.right;
+  // const innerHeight = height - margin.bottom - margin.top;
+  // const innerWidth = width - margin.left - margin.right;
 
   const domain = Array.from(Array(maxTime + 1).keys());
 
@@ -72,7 +72,7 @@ function BarChart(props) {
           );
           yTickValues.push(rangeValues[1]);
 
-          const yAxis = svg
+          svg
             .select(".y-axis")
             .attr("transform", `translate(${margin.left},0)`)
             .call(

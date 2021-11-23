@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { csv, max } from "d3";
 import { Octokit } from "octokit";
 import { DateTime } from "luxon";
@@ -78,11 +78,7 @@ export const writeAnswers = createAsyncThunk(
       files: files,
     };
     const response = await octokit.request(url, payloadObj);
-    // const response = await octokit.request(url, {
-    //   gist_id: gistAnswerId,
-    //   description: "Answers for subject y.",
-    //   files: { "answers-subject-z.csv": { content: answersCSV } },
-    // });
+
     const status = response.status;
     console.log("answers submitted with status of " + status);
   }
@@ -119,17 +115,17 @@ export const questionSlice = createSlice({
         state.currentQuestion += 1;
       }
     },
-    nextQuestion(state, action) {
+    nextQuestion(state) {
       state.questions.currentQuestion +=
         state.currentQuestion < state.questions.length ? 1 : 0;
     },
-    previousQuestion(state, action) {
+    previousQuestion(state) {
       state.currentQuestion -= state.currentQuestion > 0 ? 1 : 0;
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchQuestions.pending, (state, action) => {
+      .addCase(fetchQuestions.pending, (state) => {
         if (state.status === Status.Unitialized) {
           state.status = Status.Fetching;
         }
