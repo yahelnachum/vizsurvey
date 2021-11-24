@@ -51,7 +51,7 @@ const Home = () => {
       <p>
         <a
           href="
-        https://github.com/pcordone/vizsurvey"
+        https://github.com/pcordone/vizsurvey?participant_id=1&question_set_id=2"
         >
           Github README.md
         </a>
