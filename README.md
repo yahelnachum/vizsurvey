@@ -60,7 +60,7 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 
 ### `npm run deploy`
 
-Will deploy the application to github pages via gh_pages package. Then surf to https://pcordone.github.io/vizsurvey?participant_id=1&&question_set_id=2
+Will deploy the application to github pages via gh_pages package. Then surf to https://pcordone.github.io/vizsurvey?participant_id=1&question_set_id=2 (http://localhost:3000/vizsurvey?participant_id=1&question_set_id=3)
 
 Change the participant_id to the value for the person taking the survey.
 

@@ -39,6 +39,18 @@ export const fetchQuestions = createAsyncThunk(
   async (questionSetId /*{ getState }*/) => {
     questionSetId = +questionSetId;
     const response = await csv(gistQuestionURL);
+    // columns of input data from gist are:
+    // question_set_id,
+    // position,
+    // amount_earlier,
+    // time_earlier,
+    // amount_later,
+    // time_later,
+    // max_amount,
+    // max_time,
+    // horizontal_pixels,
+    // vertical_pixels
+    // comment
     response.forEach((e) => {
       e.question_set_id = +e.question_set_id;
       e.position = +e.position;
@@ -46,6 +58,10 @@ export const fetchQuestions = createAsyncThunk(
       e.time_earlier = +e.time_earlier;
       e.amount_later = +e.amount_later;
       e.time_later = +e.time_later;
+      e.max_amount = +e.max_amount;
+      e.max_time = +e.max_time;
+      e.horizontal_pixels = +e.horizontal_pixels;
+      e.vertical_pixels = +e.vertical_pixels;
       e.choice = Answer.Unitialized;
       e.answer_time = undefined;
       e.participant_id = undefined;

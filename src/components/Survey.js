@@ -13,8 +13,6 @@ export function Survey() {
       <Row>
         <Col>
           <BarChart
-            width="600"
-            height="600"
             top_margin="20"
             right_margin="30"
             bottom_margin="30"

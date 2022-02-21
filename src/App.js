@@ -51,13 +51,18 @@ const Home = () => {
       <p>
         <a
           href="
-        https://github.com/pcordone/vizsurvey?participant_id=1&question_set_id=2"
+        https://github.com/pcordone/vizsurvey"
         >
           Github README.md
         </a>
       </p>
       <p>
         <a href="http://localhost:3000/vizsurvey?participant_id=1&question_set_id=2">
+          localhost
+        </a>
+      </p>
+      <p>
+        <a href="https://pcordone.github.io/vizsurvey/?participant_id=1&question_set_id=2">
           localhost
         </a>
       </p>

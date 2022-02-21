@@ -1,30 +1,32 @@
 import React from "react";
 
 import { useSelector } from "react-redux";
-import {
-  selectCurrentQuestion,
-  selectMaxTime,
-} from "../features/questionSlice";
+import { selectCurrentQuestion } from "../features/questionSlice";
 
 import { useD3 } from "../hooks/useD3";
 import * as d3 from "d3";
-import { axisBottom, axisLeft, scaleLinear, scaleBand, max, range } from "d3";
+import { axisBottom, axisLeft, scaleLinear, range } from "d3";
 
 function BarChart(props) {
   const question = useSelector(selectCurrentQuestion);
-  const maxTime = useSelector(selectMaxTime);
 
-  const height = props.height;
-  const width = props.width;
+  const barWidth = 15;
+
+  const height = question.vertical_pixels;
+  const width = question.horizontal_pixels;
   const margin = {
     top: props.top_margin,
     right: props.right_margin,
     bottom: props.bottom_margin,
     left: props.left_margin,
   };
+
+  const totalHeight = height + parseInt(margin.top) + parseInt(margin.bottom);
+  const totalWidth = width + parseInt(margin.left) + parseInt(margin.right);
+
   const style = {
-    height: height,
-    width: width,
+    height: totalHeight,
+    width: totalWidth,
     marginLeft: margin.left + "px",
     marginRight: margin.right + "px",
   };
@@ -32,9 +34,8 @@ function BarChart(props) {
   // const innerHeight = height - margin.bottom - margin.top;
   // const innerWidth = width - margin.left - margin.right;
 
-  const domain = Array.from(Array(maxTime + 1).keys());
-
-  const data = domain.map((d) => {
+  const xTickValues = Array.from(Array(question.max_time + 1).keys());
+  const data = xTickValues.map((d) => {
     if (d == question.time_earlier) {
       return { time: d, amount: question.amount_earlier };
     } else if (d == question.time_later) {
@@ -46,37 +47,46 @@ function BarChart(props) {
 
   return (
     <svg
-      width={width}
-      height={height}
       ref={useD3(
         (svg) => {
-          const x = scaleBand()
-            .domain(domain)
-            .rangeRound([margin.left, width - margin.right]);
+          var chart = svg
+            .selectAll(".plot-area")
+            .data([null])
+            .join("g")
+            .attr("class", "plot-area")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
 
-          const rangeValues = [0, max(data, (d) => d.amount)];
+          const x = scaleLinear()
+            .domain([0, question.max_time])
+            .range([0, width]);
 
-          const y = scaleLinear()
-            .domain(rangeValues)
-            .rangeRound([height - margin.bottom, margin.top]);
+          const yRange = [0, question.max_amount];
+          const y = scaleLinear().domain(yRange).range([height, 0]);
 
-          svg
-            .select(".x-axis")
-            .attr("transform", `translate(0,${height - margin.bottom})`)
-            .call(axisBottom(x).tickValues(domain).tickSizeOuter(0));
-
-          const yTickValues = range(
-            rangeValues[0],
-            rangeValues[1],
-            rangeValues[1] / 5
-          );
-          yTickValues.push(rangeValues[1]);
-
-          svg
-            .select(".y-axis")
-            .attr("transform", `translate(${margin.left},0)`)
+          chart
+            .selectAll(".x-axis")
+            .data([null])
+            .join("g")
+            .attr("transform", `translate(0,${height})`)
+            .attr("class", "x-axis")
             .call(
-              axisLeft(y).tickValues(yTickValues).tickFormat(d3.format("$,.2f"))
+              axisBottom(x)
+                .tickValues(xTickValues)
+                .tickFormat(d3.format(",.0f"))
+            );
+
+          const yTickValues = range(yRange[0], yRange[1], yRange[1] / 5);
+          yTickValues.push(yRange[1]);
+
+          chart
+            .selectAll(".y-axis")
+            .data([null])
+            .join("g")
+            .attr("class", "y-axis")
+            //.attr("transform", `translate(${margin.left},${margin.bottom})`)
+            .call(
+              //axisLeft(y).tickValues(yTickValues).tickFormat(d3.format("$,.2f"))
+              axisLeft(y).tickValues(yTickValues).tickFormat(d3.format("$,.0f"))
             );
 
           // const yLabelG = svg
@@ -94,16 +104,18 @@ function BarChart(props) {
 
           // .text("Amount in USD");
 
-          svg
-            .select(".plot-area")
-            .attr("fill", "steelblue")
-            .attr("class", "plot-area")
+          chart
+            // .selectAll(".plot-area")
+            // .attr("fill", "steelblue")
+            // .attr("class", "plot-area")
             .selectAll(".bar")
             .data(data)
             .join("rect")
+            .attr("fill", "steelblue")
             .attr("class", "bar")
-            .attr("x", (d) => x(d.time))
-            .attr("width", x.bandwidth())
+            .attr("x", (d) => x(d.time) - barWidth / 2)
+            //.attr("width", x.bandwidth())
+            .attr("width", barWidth)
             .attr("y", (d) => y(d.amount))
             .attr("height", (d) => y(0) - y(d.amount));
         },
@@ -111,9 +123,9 @@ function BarChart(props) {
       )}
       style={style}
     >
-      <g className="plot-area" />
+      {/* <g className="plot-area" />
       <g className="x-axis" />
-      <g className="y-axis" />
+      <g className="y-axis" /> */}
     </svg>
   );
 }

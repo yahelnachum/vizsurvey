@@ -26,9 +26,9 @@ export function MELForm() {
   const todayText = (sooner_time) =>
     sooner_time === 0 ? "today" : `in ${sooner_time} weeks`;
 
-  function questionText() {
-    return `${question1stPartText()} vs. ${question2ndPartText()}`;
-  }
+  // function questionText() {
+  //   return `${question1stPartText()} vs. ${question2ndPartText()}`;
+  // }
 
   function question1stPartText() {
     return `$${question.amount_earlier} ${todayText(question.time_earlier)}`;
@@ -63,8 +63,6 @@ export function MELForm() {
             aria-labelledby="my-radio-group"
             className="radio-choice-label"
           >
-            <h3>{questionText()}</h3>
-            <br></br>
             <label>
               <Field type="radio" name="choice" value={Answer.Earlier} />
               &nbsp;{question1stPartText()}
