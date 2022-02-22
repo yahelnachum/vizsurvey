@@ -51,6 +51,32 @@
   width: 100%;
 }
 
+table {
+  display: table;
+  border-collapse: separate;
+  box-sizing: border-box;
+  text-indent: initial;
+  border-spacing: 2px;
+  border-color: gray;
+}
+
+#calendar {
+  width: 600px;
+  height: 400px;
+  border-collapse: collapse;
+}
+
+#calendar thead td {
+  text-align: center;
+}
+
+#calendar tbody td {
+  border: 1px solid black;
+  text-align: right;
+  vertical-align: top;
+  width: 14%;
+}
+
 .stickRight {
   float: right;
 }

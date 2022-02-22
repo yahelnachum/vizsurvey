@@ -122,11 +122,7 @@ function BarChart(props) {
         [data]
       )}
       style={style}
-    >
-      {/* <g className="plot-area" />
-      <g className="x-axis" />
-      <g className="y-axis" /> */}
-    </svg>
+    ></svg>
   );
 }
 

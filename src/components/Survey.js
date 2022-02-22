@@ -1,6 +1,7 @@
 import { Container, Row, Col } from "react-bootstrap";
 import MELForm from "./MELForm";
-import BarChart from "./BarChart";
+//import BarChart from "./BarChart";
+import Calendar from "./Calendar";
 
 export function Survey() {
   return (
@@ -12,11 +13,17 @@ export function Survey() {
       </Row>
       <Row>
         <Col>
-          <BarChart
+          {/* <BarChart
             top_margin="20"
             right_margin="30"
             bottom_margin="30"
             left_margin="80"
+          /> */}
+          <Calendar
+            top_margin="20"
+            right_margin="20"
+            bottom_margin="30"
+            left_margin="30"
           />
         </Col>
       </Row>
