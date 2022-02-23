@@ -3,6 +3,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { selectCurrentQuestion } from "../features/questionSlice";
 
+import * as d3 from "d3";
 import { useD3 } from "../hooks/useD3";
 
 function Calendar(props) {
@@ -28,10 +29,8 @@ function Calendar(props) {
   };
 
   return (
-    <table
-      id="calendar"
-      ref={useD3((table) => {
-        // October 2017, generated with https://nodei.co/npm/calendar-matrix/
+    <g
+      ref={useD3((g) => {
         const month = [
           [1, 2, 3, 4, 5, 6, 7],
           [8, 9, 10, 11, 12, 13, 14],
@@ -53,56 +52,56 @@ function Calendar(props) {
           "November",
           "December",
         ];
-        const dayNames = [
-          "Sunday",
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday",
-        ];
-        const monthNum = 9;
 
-        const header = table.append("thead");
-        const body = table.append("tbody");
+        const monthName = monthNames[9];
 
-        header
-          .append("tr")
-          .append("td")
-          .attr("colspan", 7)
-          .style("text-align", "center")
-          .append("h2")
-          .text(monthNames[monthNum]);
+        g.html(
+          `<table id="calendar">
+          <thead>
+                <tr>
+                    <td span='7'>
+                        <h2 id='currentMonth'></h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td style='text-align: center;'>Sunday</td>
+                    <td style='text-align: center;'>Monday</td>
+                    <td style='text-align: center;'>Tuesday</td>
+                    <td style='text-align: center;'>Wednesday</td>
+                    <td style='text-align: center;'>Thursday</td>
+                    <td style='text-align: center;'>Friday</td>
+                    <td style='text-align: center;'>Saturday</td>
+                </tr>
+            </thead>
+            <tbody id='calendarBody'></tbody>
+            </table>`
+        );
 
-        header
-          .append("tr")
+        const calendar = d3.select("#calendar");
+
+        calendar
+          .select("#currentMonth")
+          .data([monthName])
+          .join("h2")
+          .text((d) => d);
+
+        const tbody = calendar.select("#calendarBody");
+
+        const rows = tbody.selectAll("tbody").data(month).join("tr");
+
+        rows
           .selectAll("td")
-          .data(dayNames)
-          .enter()
-          .append("td")
-          .style("text-align", "center")
+          .data((d) => d)
+          .join("td")
+          .attr("class", function (d) {
+            return d > 0 ? "" : "empty";
+          })
           .text(function (d) {
-            return d;
+            return d > 0 ? d : "";
           });
-
-        month.forEach(function (week) {
-          body
-            .append("tr")
-            .selectAll("td")
-            .data(week)
-            .enter()
-            .append("td")
-            .attr("class", function (d) {
-              return d > 0 ? "" : "empty";
-            })
-            .text(function (d) {
-              return d > 0 ? d : "";
-            });
-        });
-      }, null)}
+      })}
       style={style}
-    ></table>
+    ></g>
   );
 }
 
