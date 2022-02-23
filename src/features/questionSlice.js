@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { csv, max } from "d3";
 import { Octokit } from "octokit";
 import { DateTime } from "luxon";
+import { Enumify } from "enumify";
 
 // eslint-disable-next-line no-undef
 const gistToken = atob(process.env.REACT_APP_AUTH_TOKEN);
@@ -24,6 +25,12 @@ export const Status = {
   Error: "Error",
 };
 
+export class ViewType extends Enumify {
+  static barchart = new ViewType();
+  static calendar = new ViewType();
+  static _ = this.closeEnum();
+}
+
 // Define the initial state of the store for this slicer.
 const initialState = {
   questions: [],
@@ -39,25 +46,24 @@ export const fetchQuestions = createAsyncThunk(
   async (questionSetId /*{ getState }*/) => {
     questionSetId = +questionSetId;
     const response = await csv(gistQuestionURL);
-    // columns of input data from gist are:
-    // question_set_id,
-    // position,
-    // amount_earlier,
-    // time_earlier,
-    // amount_later,
-    // time_later,
-    // max_amount,
-    // max_time,
-    // horizontal_pixels,
-    // vertical_pixels
-    // comment
     response.forEach((e) => {
+      e.view_type = ViewType.enumValueOf(e.view_type);
       e.question_set_id = +e.question_set_id;
       e.position = +e.position;
       e.amount_earlier = +e.amount_earlier;
-      e.time_earlier = +e.time_earlier;
+      if (e.time_earlier) {
+        e.time_earlier = +e.time_earlier;
+      }
+      if (e.date_earlier) {
+        e.date_earlier = Date(e.date_earlier);
+      }
       e.amount_later = +e.amount_later;
-      e.time_later = +e.time_later;
+      if (e.time_later) {
+        e.time_later = +e.time_later;
+      }
+      if (e.date_later) {
+        e.date_later = Date(e.date_later);
+      }
       e.max_amount = +e.max_amount;
       e.max_time = +e.max_time;
       e.horizontal_pixels = +e.horizontal_pixels;

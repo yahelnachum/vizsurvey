@@ -29,8 +29,9 @@ function Calendar(props) {
   };
 
   return (
-    <g
-      ref={useD3((g) => {
+    <table
+      id="calendar"
+      ref={useD3((table) => {
         const month = [
           [1, 2, 3, 4, 5, 6, 7],
           [8, 9, 10, 11, 12, 13, 14],
@@ -55,9 +56,8 @@ function Calendar(props) {
 
         const monthName = monthNames[9];
 
-        g.html(
-          `<table id="calendar">
-          <thead>
+        table.html(
+          `<thead>
                 <tr>
                     <td span='7'>
                         <h2 id='currentMonth'></h2>
@@ -73,8 +73,7 @@ function Calendar(props) {
                     <td style='text-align: center;'>Saturday</td>
                 </tr>
             </thead>
-            <tbody id='calendarBody'></tbody>
-            </table>`
+            <tbody id='calendarBody'></tbody>`
         );
 
         const calendar = d3.select("#calendar");
@@ -101,7 +100,7 @@ function Calendar(props) {
           });
       })}
       style={style}
-    ></g>
+    ></table>
   );
 }
 
