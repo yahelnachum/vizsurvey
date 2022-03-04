@@ -5,6 +5,7 @@ import { selectCurrentQuestion } from "../features/questionSlice";
 
 import * as d3 from "d3";
 import { useD3 } from "../hooks/useD3";
+var calendarMatrix = require("calendar-matrix");
 
 function Calendar(props) {
   const question = useSelector(selectCurrentQuestion);
@@ -28,17 +29,14 @@ function Calendar(props) {
     marginRight: margin.right + "px",
   };
 
+  //   const dateMonth = question.date_earlier.getMonth();
+  //   const dateYear = question.date_earlier.getFullYear();
+
   return (
     <table
       id="calendar"
       ref={useD3((table) => {
-        const month = [
-          [1, 2, 3, 4, 5, 6, 7],
-          [8, 9, 10, 11, 12, 13, 14],
-          [15, 16, 17, 18, 19, 20, 21],
-          [22, 23, 24, 25, 26, 27, 28],
-          [29, 30, 31, -1, -2, -3, -4],
-        ];
+        const monthDays = calendarMatrix(question.date_earlier);
         const monthNames = [
           "January",
           "February",
@@ -53,9 +51,8 @@ function Calendar(props) {
           "November",
           "December",
         ];
-
-        const monthName = monthNames[9];
-
+        const month = question.date_earlier.getMonth();
+        const monthName = monthNames[month];
         table.html(
           `<thead>
                 <tr>
@@ -86,19 +83,51 @@ function Calendar(props) {
 
         const tbody = calendar.select("#calendarBody");
 
-        const rows = tbody.selectAll("tbody").data(month).join("tr");
+        const rows = tbody.selectAll("tbody").data(monthDays).join("tr");
 
+        const earlierDay = question.date_earlier.getDate();
+        const laterDay = question.date_later.getDate();
         rows
           .selectAll("td")
           .data((d) => d)
           .join("td")
           .attr("class", function (d) {
-            return d > 0 ? "" : "empty";
+            return d > 0 ? "calendarDay" : "calendarDayEmpty";
           })
-          .text(function (d) {
-            return d > 0 ? d : "";
+          .attr("id", (d) => "calendarDay-" + d)
+          .html((d) => {
+            if (d === earlierDay || d === laterDay) {
+              return `<div>${d}</div><svg id='${
+                d === earlierDay ? "earlierAmount" : "laterAmount"
+              }'></svg>`;
+            } else if (d > 0) {
+              return d;
+            } else {
+              return "";
+            }
           });
-      })}
+
+        const earlierAmountSVG = rows.select("#earlierAmount");
+
+        earlierAmountSVG
+          .select("text")
+          .data([question.earlier_amount])
+          .join("text")
+          .attr("text-anchor", "middle")
+          .attr("class", "earlier-amount")
+          .text((d) => d);
+
+        //   .text(function (d) {
+        //     return d > 0 ? d : "";
+        //   });
+
+        // const cellId = "#calendarDay-" + question.date_earlier.getDay();
+        // const earlierDayCell = rows.select(cellId);
+        // const earlierDayHTML = `<td id="${cellId}`
+
+        // earlierDayCell.html(earlierDayCell.node() + '<svg id=""></svg>')
+        // rows.select(cellId).data([question.amount_earlier]).join("svg");
+      }, question)}
       style={style}
     ></table>
   );

@@ -55,14 +55,14 @@ export const fetchQuestions = createAsyncThunk(
         e.time_earlier = +e.time_earlier;
       }
       if (e.date_earlier) {
-        e.date_earlier = Date(e.date_earlier);
+        e.date_earlier = new Date(e.date_earlier);
       }
       e.amount_later = +e.amount_later;
       if (e.time_later) {
         e.time_later = +e.time_later;
       }
       if (e.date_later) {
-        e.date_later = Date(e.date_later);
+        e.date_later = new Date(e.date_later);
       }
       e.max_amount = +e.max_amount;
       e.max_time = +e.max_time;
