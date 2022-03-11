@@ -1,0 +1,25 @@
+/// <reference types="cypress" />
+
+describe('vizsurvey', () => {
+  it('survey', () => {
+    cy.viewport(1200, 700)
+    cy.visit('http://localhost:3000')
+    //<p><a href="http://localhost:3000/vizsurvey?participant_id=1&amp;question_set_id=2">localhost</a></p>
+    cy.get('#getQuestionSet').click()
+    cy.get('.nav-link').contains('Survey').click()
+    cy.get('label').contains('$500 today').click()
+    cy.get('button').contains('Submit').click()
+    cy.get('p').contains('Thank you').should('exist')
+
+    cy.viewport(800, 600)
+    cy.visit('http://localhost:3000')
+    //<p><a href="http://localhost:3000/vizsurvey?participant_id=1&amp;question_set_id=2">localhost</a></p>
+    cy.get('#getQuestionSet').click()
+    cy.get('.navbar-toggler-icon').click()
+    cy.get('.nav-link').contains('Survey').click()
+    cy.get('.navbar-toggler-icon').click()
+    cy.get('label').contains('$500 today').click()
+    cy.get('button').contains('Submit').click()
+    cy.get('p').contains('Thank you').should('exist')
+  })
+})
