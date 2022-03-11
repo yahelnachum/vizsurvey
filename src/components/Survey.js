@@ -12,11 +12,6 @@ export function Survey() {
     <Container fluid>
       <Row>
         <Col>
-          <MELForm />
-        </Col>
-      </Row>
-      <Row>
-        <Col>
           {question.view_type === ViewType.barchart ? (
             <BarChart
               top_margin="20"
@@ -24,6 +19,8 @@ export function Survey() {
               bottom_margin="30"
               left_margin="80"
             />
+          ) : question.view_type === ViewType.word ? (
+            <MELForm />
           ) : (
             <Calendar
               top_margin="20"
