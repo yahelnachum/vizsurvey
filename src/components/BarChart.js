@@ -125,8 +125,12 @@ function BarChart(props) {
             //.attr("width", x.bandwidth())
             .attr("width", barWidth)
             .attr("y", (d) => y(d.amount))
-            .on("click", () => {
-              dispatch(answer(Answer.Earlier));
+            .on("click", (d) => {
+              if (d.target.__data__.amount === question.amount_earlier) {
+                dispatch(answer(Answer.Earlier));
+              } else {
+                dispatch(answer(Answer.Later));
+              }
             })
             .attr("height", (d) => y(0) - y(d.amount));
         },
