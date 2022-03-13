@@ -1,14 +1,22 @@
 import React from "react";
-
-import { useSelector } from "react-redux";
-import { selectCurrentQuestion } from "../features/questionSlice";
+import { Redirect } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  selectCurrentQuestion,
+  fetchStatus,
+  Answer,
+  answer,
+  Status,
+} from "../features/questionSlice";
 
 import { useD3 } from "../hooks/useD3";
 import * as d3 from "d3";
 import { axisBottom, axisLeft, scaleLinear, range } from "d3";
 
 function BarChart(props) {
+  const dispatch = useDispatch();
   const question = useSelector(selectCurrentQuestion);
+  const status = useSelector(fetchStatus);
 
   const barWidth = 15;
 
@@ -45,7 +53,7 @@ function BarChart(props) {
     }
   });
 
-  return (
+  const result = (
     <svg
       ref={useD3(
         (svg) => {
@@ -117,6 +125,13 @@ function BarChart(props) {
             //.attr("width", x.bandwidth())
             .attr("width", barWidth)
             .attr("y", (d) => y(d.amount))
+            .on("click", (d) => {
+              if (d.target.__data__.amount === question.amount_earlier) {
+                dispatch(answer(Answer.Earlier));
+              } else {
+                dispatch(answer(Answer.Later));
+              }
+            })
             .attr("height", (d) => y(0) - y(d.amount));
         },
         [data]
@@ -124,6 +139,12 @@ function BarChart(props) {
       style={style}
     ></svg>
   );
+
+  if (status === Status.Complete) {
+    return <Redirect to="/thankyou" />;
+  } else {
+    return result;
+  }
 }
 
 export default BarChart;

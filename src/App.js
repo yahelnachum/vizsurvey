@@ -57,7 +57,10 @@ const Home = () => {
         </a>
       </p>
       <p>
-        <a href="http://localhost:3000/vizsurvey?participant_id=1&question_set_id=2">
+        <a
+          id="getQuestionSet"
+          href="http://localhost:3000/vizsurvey?participant_id=1&question_set_id=2"
+        >
           localhost
         </a>
       </p>
