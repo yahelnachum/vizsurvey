@@ -33,9 +33,10 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "test": "react-scripts test",
+    "kill": "kill -9 $(ps | grep -e 'node\\|npm' | sed -e 's/^\\([0-9]*\\).*/\\1/')",
     "cypress-open": "./node_modules/.bin/cypress open",
     "cypress-run": "./node_modules/.bin/cypress run --spec cypress/integration/vizsurvey.spec.js --browser chrome",
-    "cypress-auto": "npm start-auto & PID_REACT=$! && cd test && npm start & PID_TEST_SERVER=$! && cd .. && npm run cypress-run",
+    "cypress-auto": "npm run start-auto & cd test && npm start & npm run cypress-run && npm run kill",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
