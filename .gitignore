@@ -30,7 +30,6 @@ yarn-error.log*
 *.swp
 
 # cypress
-cypress.json
 cypress/fixtures
 cypress/plugins
 cypress/screenshots
