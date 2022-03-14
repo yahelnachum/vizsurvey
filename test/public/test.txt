@@ -25,7 +25,6 @@ question_set_id,position,view_type,amount_earlier,time_earlier,date_earlier,amou
 1,24,barchart,333.33,0,,1333.33,3,,1333.33,3,600,600,
 1,25,barchart,500,0,,550,3,,550,3,600,600,
 2,1,word,200,0,,550,3,,550,3,600,600,
-2,2,barchart,333.33,0,,1333.33,3,,1333.33,3,600,600,
 3,1,barchart,400,1,,500,3,,500,3,600,600,baseline
 3,2,barchart,4,1,,5,3,,5,3,600,600,baseline small amounts
 3,3,barchart,400,1,,500,3,,500,3,1200,600,time elongated
