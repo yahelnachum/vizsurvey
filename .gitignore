@@ -28,3 +28,11 @@ yarn-error.log*
 
 # vim temporary files
 *.swp
+
+# cypress
+cypress.json
+cypress/fixtures
+cypress/plugins
+cypress/screenshots
+cypress/support
+cypress/videos
