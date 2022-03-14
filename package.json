@@ -32,6 +32,8 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "test": "react-scripts test",
+    "cypress-open": "./node_modules/.bin/cypress open",
+    "cypress-run": "./node_modules/.bin/cypress run --spec cypress/integration/vizsurvey.spec.js --browser chrome",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
