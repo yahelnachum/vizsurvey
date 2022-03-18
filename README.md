@@ -64,6 +64,16 @@ Will deploy the application to github pages via gh_pages package. Then surf to h
 
 Change the participant_id to the value for the person taking the survey.
 
+### `npm run cypress-open`
+
+Opens cypress window to select and run cypress tests. Make sure to already have the app running with `npm start`.
+https://docs.cypress.io/guides/guides/command-line
+
+### `npm run cypress-run`
+
+Runs cypress tests automatically in headless mode. Make sure to already have the app running with `npm start`.
+https://docs.cypress.io/guides/guides/command-line
+
 ## Learn More
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).

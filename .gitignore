@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+test/node_modules
 /.pnp
 .pnp.js
 
@@ -27,3 +28,10 @@ yarn-error.log*
 
 # vim temporary files
 *.swp
+
+# cypress
+cypress/fixtures
+cypress/plugins
+cypress/screenshots
+cypress/support
+cypress/videos

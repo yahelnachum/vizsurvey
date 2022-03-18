@@ -1,6 +1,5 @@
 {
   "name": "vizsurvey",
-  "homepage": "https://pcordone.github.io/vizsurvey/",
   "version": "1.0.1",
   "private": true,
   "main": "index.js",
@@ -29,10 +28,15 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start-auto": "export REACT_APP_GIST_QUESTION_URL=https://localhost:3002/test.txt && react-scripts start",
     "build": "react-scripts build",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "test": "react-scripts test",
+    "kill": "kill -9 $(ps | grep -e 'node\\|npm' | sed -e 's/^\\([0-9]*\\).*/\\1/')",
+    "cypress-open": "./node_modules/.bin/cypress open",
+    "cypress-run": "./node_modules/.bin/cypress run --spec cypress/integration/vizsurvey.spec.js --browser chrome",
+    "cypress-auto": "npm run start-auto & cd test && npm start & npm run cypress-run && npm run kill",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
