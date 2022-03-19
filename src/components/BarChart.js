@@ -1,12 +1,12 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { Answer } from "../features/Answer";
+import { Status } from "../features/Status";
 import {
   selectCurrentQuestion,
   fetchStatus,
-  Answer,
   answer,
-  Status,
 } from "../features/questionSlice";
 
 import { useD3 } from "../hooks/useD3";
@@ -20,8 +20,8 @@ function BarChart(props) {
 
   const barWidth = 15;
 
-  const height = question.vertical_pixels;
-  const width = question.horizontal_pixels;
+  const height = question.verticalPixels;
+  const width = question.horizontalPixels;
   const margin = {
     top: props.top_margin,
     right: props.right_margin,
@@ -42,12 +42,12 @@ function BarChart(props) {
   // const innerHeight = height - margin.bottom - margin.top;
   // const innerWidth = width - margin.left - margin.right;
 
-  const xTickValues = Array.from(Array(question.max_time + 1).keys());
+  const xTickValues = Array.from(Array(question.maxTime + 1).keys());
   const data = xTickValues.map((d) => {
-    if (d == question.time_earlier) {
-      return { time: d, amount: question.amount_earlier };
-    } else if (d == question.time_later) {
-      return { time: d, amount: question.amount_later };
+    if (d == question.timeEarlier) {
+      return { time: d, amount: question.amountEarlier };
+    } else if (d == question.timeLater) {
+      return { time: d, amount: question.amountLater };
     } else {
       return { time: d, amount: 0 };
     }
@@ -65,10 +65,10 @@ function BarChart(props) {
             .attr("transform", `translate(${margin.left},${margin.top})`);
 
           const x = scaleLinear()
-            .domain([0, question.max_time])
+            .domain([0, question.maxTime])
             .range([0, width]);
 
-          const yRange = [0, question.max_amount];
+          const yRange = [0, question.maxAmount];
           const y = scaleLinear().domain(yRange).range([height, 0]);
 
           chart
@@ -126,7 +126,7 @@ function BarChart(props) {
             .attr("width", barWidth)
             .attr("y", (d) => y(d.amount))
             .on("click", (d) => {
-              if (d.target.__data__.amount === question.amount_earlier) {
+              if (d.target.__data__.amount === question.amountEarlier) {
                 dispatch(answer(Answer.Earlier));
               } else {
                 dispatch(answer(Answer.Later));

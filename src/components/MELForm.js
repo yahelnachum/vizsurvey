@@ -1,12 +1,12 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { Answer } from "../features/Answer";
+import { Status } from "../features/Status";
 import {
   selectCurrentQuestion,
   fetchStatus,
-  Answer,
   answer,
-  Status,
 } from "../features/questionSlice";
 //import { Col, Container, Row, Media } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -31,11 +31,11 @@ export function MELForm() {
   // }
 
   function question1stPartText() {
-    return `$${question.amount_earlier} ${todayText(question.time_earlier)}`;
+    return `$${question.amountEarlier} ${todayText(question.timeEarlier)}`;
   }
 
   function question2ndPartText() {
-    return `$${question.amount_later} in ${question.time_later} weeks`;
+    return `$${question.amountLater} in ${question.timeLater} weeks`;
   }
 
   const result = (

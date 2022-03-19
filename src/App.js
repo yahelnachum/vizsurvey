@@ -79,7 +79,7 @@ function convertToCSV(answers) {
   ];
   const rows = answers.map(
     (a) =>
-      `${a.treatment_id}, ${a.position}, ${a.amount_earlier}, ${a.time_earlier}, ${a.amount_later}, ${a.time_later}, ${a.choice}, ${a.answer_time}, ${a.participant_id}`
+      `${a.treatmentId}, ${a.position}, ${a.amountEarlier}, ${a.timeEarlier}, ${a.amountLater}, ${a.timeLater}, ${a.choice}, ${a.answerTime}, ${a.participantId}`
   );
   return header.concat(rows).join("\n");
 }

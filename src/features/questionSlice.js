@@ -1,125 +1,34 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { csv, max } from "d3";
-import { Octokit } from "octokit";
+import { max } from "d3";
 import { DateTime } from "luxon";
-import { Enumify } from "enumify";
-
-// eslint-disable-next-line no-undef
-console.log(process.env.REACT_APP_AUTH_TOKEN);
-const gistToken = atob(process.env.REACT_APP_AUTH_TOKEN);
-// eslint-disable-next-line no-undef
-const gistAnswerId = process.env.REACT_APP_GIST_ANSWER_ID;
-// eslint-disable-next-line no-undef
-const gistQuestionURL = process.env.REACT_APP_GIST_QUESTION_URL;
-
-export const Answer = {
-  Unitialized: "Unitialized",
-  Earlier: "Earlier",
-  Later: "Later",
-};
-
-export const Status = {
-  Unitialized: "Unitialized",
-  Fetching: "Fetching",
-  Fetched: "Fetched",
-  Complete: "Complete",
-  Error: "Error",
-};
-
-export class ViewType extends Enumify {
-  static word = new ViewType();
-  static barchart = new ViewType();
-  static calendar = new ViewType();
-  static _ = this.closeEnum();
-}
+import { GistDesign } from "./GistDesign";
+import { Status } from "./Status";
 
 // Define the initial state of the store for this slicer.
-const initialState = {
-  questions: [],
-  currentQuestion: 0,
-  treatment_id: null,
-  participant_id: null,
-  status: "Unitialized",
-  error: null,
-};
+const gistDesign = new GistDesign();
 
 export const fetchQuestions = createAsyncThunk(
   "survey/getQuestions",
-  async (questionSetId /*{ getState }*/) => {
-    questionSetId = +questionSetId;
-    const response = await csv(gistQuestionURL);
-    response.forEach((e) => {
-      e.view_type = ViewType.enumValueOf(e.view_type);
-      e.treatment_id = +e.treatment_id;
-      e.position = +e.position;
-      e.amount_earlier = +e.amount_earlier;
-      if (e.time_earlier) {
-        e.time_earlier = +e.time_earlier;
-      }
-      if (e.date_earlier) {
-        e.date_earlier = new Date(e.date_earlier);
-      }
-      e.amount_later = +e.amount_later;
-      if (e.time_later) {
-        e.time_later = +e.time_later;
-      }
-      if (e.date_later) {
-        e.date_later = new Date(e.date_later);
-      }
-      e.max_amount = +e.max_amount;
-      e.max_time = +e.max_time;
-      e.horizontal_pixels = +e.horizontal_pixels;
-      e.vertical_pixels = +e.vertical_pixels;
-      e.choice = Answer.Unitialized;
-      e.answer_time = undefined;
-      e.participant_id = undefined;
-    });
-    const result = response.filter((d) => d.treatment_id === questionSetId);
-    return result;
-  }
+  gistDesign.fetchQuestions
 );
 
 export const writeAnswers = createAsyncThunk(
   "survey/writeAnswers",
-  async (answersCSV, { getState }) => {
-    const state = getState();
-    const octokit = new Octokit({
-      userAgent: "thesis_answers/v1.0",
-      auth: gistToken,
-    });
-    const url = `PATCH /gists/${gistAnswerId}`;
-    const now = DateTime.now().toFormat("yyyy-MM-dd-H-mm-ss-SSS-ZZZZ");
-    const files = {};
-    answersCSV = `${answersCSV}`;
-    files[`answers-subject-${state.questions.participant_id}-${now}.csv`] = {
-      content: answersCSV,
-    };
-    const description = `Answer results for participant ${state.questions.participant_id} at ${now}`;
-    console.log("submitting answers for " + description);
-    const payloadObj = {
-      gist_id: gistAnswerId,
-      description: description,
-      files: files,
-    };
-    const response = await octokit.request(url, payloadObj);
-
-    const status = response.status;
-    console.log("answers submitted with status of " + status);
-  }
+  gistDesign.writeAnswers
 );
 
 export const questionSlice = createSlice({
   name: "questions", // I believe the global state is partitioned by the name value thus the terminology "slice"
-  initialState, // the initial state of our global data (under name slice)
+  initialState: gistDesign.initialState, // the initial state of our global data (under name slice)
   reducers: {
     setParticipant(state, action) {
-      if (state.participant_id === null && action.payload !== null) {
-        state.participant_id = action.payload;
+      if (state.participantId === null && action.payload !== null) {
+        state.participantId = action.payload;
       }
     },
     setQuestionSet(state, action) {
-      if (state.questionSetId === null && action.payload !== null) {
-        state.treatment_id = action.payload;
+      if (state.treatmentId === null && action.payload !== null) {
+        state.treatmentId = action.payload;
       }
     },
     // we define our actions on the slice of global store data here.
@@ -129,7 +38,7 @@ export const questionSlice = createSlice({
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
       state.questions[state.currentQuestion].choice = action.payload;
-      state.questions[state.currentQuestion].answer_time =
+      state.questions[state.currentQuestion].answerTime =
         DateTime.now().toFormat("MM/dd/yyyy H:mm:ss:SSS ZZZZ");
       state.questions[state.currentQuestion];
       if (state.currentQuestion === state.questions.length - 1) {
@@ -168,12 +77,12 @@ export const questionSlice = createSlice({
 });
 
 export const selectMaxTime = (state) => {
-  return max(state.questions.questions, (d) => d.time_later);
+  return max(state.questions.questions, (d) => d.timeLater);
 };
 
 export const selectMaxAmount = (state) => {
   return max(state.questions.questions, (d) =>
-    d.amount_earlier > d.amount_later ? d.amount_earlier : d.amount_greater
+    d.amountEarlier > d.amountLater ? d.amountEarlier : d.amountLater
   );
 };
 
@@ -186,7 +95,7 @@ export const selectCurrentQuestion = (state) => {
 };
 
 export const selectparticipantId = (state) => {
-  return state.participant_id;
+  return state.participantId;
 };
 
 export const isLastQuestion = (state) => {

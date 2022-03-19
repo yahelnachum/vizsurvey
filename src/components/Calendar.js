@@ -10,8 +10,8 @@ var calendarMatrix = require("calendar-matrix");
 function Calendar(props) {
   const question = useSelector(selectCurrentQuestion);
 
-  const height = question.vertical_pixels;
-  const width = question.horizontal_pixels;
+  const height = question.verticalPixels;
+  const width = question.horizontalPixels;
   const margin = {
     top: props.top_margin,
     right: props.right_margin,
@@ -29,8 +29,8 @@ function Calendar(props) {
     marginRight: margin.right + "px",
   };
 
-  //   const dateMonth = question.date_earlier.getMonth();
-  //   const dateYear = question.date_earlier.getFullYear();
+  //   const dateMonth = question.dateEarlier.getMonth();
+  //   const dateYear = question.dateEarlier.getFullYear();
 
   return (
     <table
@@ -51,7 +51,7 @@ function Calendar(props) {
           "November",
           "December",
         ];
-        const month = question.date_earlier.getMonth();
+        const month = question.dateEarlier.getMonth();
         const monthName = monthNames[month];
         table.html(
           `<thead>
@@ -85,8 +85,8 @@ function Calendar(props) {
 
         const rows = tbody.selectAll("tbody").data(monthDays).join("tr");
 
-        const earlierDay = question.date_earlier.getDate();
-        const laterDay = question.date_later.getDate();
+        const earlierDay = question.dateEarlier.getDate();
+        const laterDay = question.dateLater.getDate();
         rows
           .selectAll("td")
           .data((d) => d)
@@ -121,12 +121,12 @@ function Calendar(props) {
         //     return d > 0 ? d : "";
         //   });
 
-        // const cellId = "#calendarDay-" + question.date_earlier.getDay();
+        // const cellId = "#calendarDay-" + question.dateEarlier.getDay();
         // const earlierDayCell = rows.select(cellId);
         // const earlierDayHTML = `<td id="${cellId}`
 
         // earlierDayCell.html(earlierDayCell.node() + '<svg id=""></svg>')
-        // rows.select(cellId).data([question.amount_earlier]).join("svg");
+        // rows.select(cellId).data([question.amountEarlier]).join("svg");
       }, question)}
       style={style}
     ></table>

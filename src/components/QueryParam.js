@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
+import { Status } from "../features/Status";
 import {
   fetchQuestions,
   fetchStatus,
-  Status,
   setQuestionSet,
 } from "../features/questionSlice";
 import ReactLoading from "react-loading";
@@ -13,13 +13,13 @@ export function QueryParam() {
   const dispatch = useDispatch();
   const loadingStatus = useSelector(fetchStatus);
   const search = useLocation().search;
-  const questionSetId = new URLSearchParams(search).get("treatment_id");
+  const treatmentId = new URLSearchParams(search).get("treatment_id");
 
-  dispatch(setQuestionSet(questionSetId));
+  dispatch(setQuestionSet(treatmentId));
 
   useEffect(() => {
     if (loadingStatus === Status.Unitialized) {
-      dispatch(fetchQuestions(questionSetId));
+      dispatch(fetchQuestions(treatmentId));
     }
   }, [loadingStatus, dispatch]);
 
