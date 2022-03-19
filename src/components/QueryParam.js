@@ -5,7 +5,6 @@ import {
   fetchQuestions,
   fetchStatus,
   Status,
-  setParticipant,
   setQuestionSet,
 } from "../features/questionSlice";
 import ReactLoading from "react-loading";
@@ -14,10 +13,8 @@ export function QueryParam() {
   const dispatch = useDispatch();
   const loadingStatus = useSelector(fetchStatus);
   const search = useLocation().search;
-  const participantId = new URLSearchParams(search).get("participant_id");
-  const questionSetId = new URLSearchParams(search).get("question_set_id");
+  const questionSetId = new URLSearchParams(search).get("treatment_id");
 
-  dispatch(setParticipant(participantId));
   dispatch(setQuestionSet(questionSetId));
 
   useEffect(() => {

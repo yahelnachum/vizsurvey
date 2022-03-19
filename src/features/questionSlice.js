@@ -5,6 +5,7 @@ import { DateTime } from "luxon";
 import { Enumify } from "enumify";
 
 // eslint-disable-next-line no-undef
+console.log(process.env.REACT_APP_AUTH_TOKEN);
 const gistToken = atob(process.env.REACT_APP_AUTH_TOKEN);
 // eslint-disable-next-line no-undef
 const gistAnswerId = process.env.REACT_APP_GIST_ANSWER_ID;
@@ -36,7 +37,7 @@ export class ViewType extends Enumify {
 const initialState = {
   questions: [],
   currentQuestion: 0,
-  question_set_id: null,
+  treatment_id: null,
   participant_id: null,
   status: "Unitialized",
   error: null,
@@ -49,7 +50,7 @@ export const fetchQuestions = createAsyncThunk(
     const response = await csv(gistQuestionURL);
     response.forEach((e) => {
       e.view_type = ViewType.enumValueOf(e.view_type);
-      e.question_set_id = +e.question_set_id;
+      e.treatment_id = +e.treatment_id;
       e.position = +e.position;
       e.amount_earlier = +e.amount_earlier;
       if (e.time_earlier) {
@@ -73,7 +74,7 @@ export const fetchQuestions = createAsyncThunk(
       e.answer_time = undefined;
       e.participant_id = undefined;
     });
-    const result = response.filter((d) => d.question_set_id === questionSetId);
+    const result = response.filter((d) => d.treatment_id === questionSetId);
     return result;
   }
 );
@@ -118,7 +119,7 @@ export const questionSlice = createSlice({
     },
     setQuestionSet(state, action) {
       if (state.questionSetId === null && action.payload !== null) {
-        state.question_set_id = action.payload;
+        state.treatment_id = action.payload;
       }
     },
     // we define our actions on the slice of global store data here.
@@ -130,8 +131,7 @@ export const questionSlice = createSlice({
       state.questions[state.currentQuestion].choice = action.payload;
       state.questions[state.currentQuestion].answer_time =
         DateTime.now().toFormat("MM/dd/yyyy H:mm:ss:SSS ZZZZ");
-      state.questions[state.currentQuestion].participant_id =
-        state.participant_id;
+      state.questions[state.currentQuestion];
       if (state.currentQuestion === state.questions.length - 1) {
         state.status = Status.Complete;
       } else {
