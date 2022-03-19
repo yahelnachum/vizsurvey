@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { max } from "d3";
 import { DateTime } from "luxon";
-import { GistDesign } from "./GistDesign";
+import { FileDesign } from "./FileDesign";
 import { Status } from "./Status";
 
 // Define the initial state of the store for this slicer.
-const gistDesign = new GistDesign();
+const gistDesign = new FileDesign();
 
 export const fetchQuestions = createAsyncThunk(
   "survey/getQuestions",
