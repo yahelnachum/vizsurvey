@@ -1,47 +1,24 @@
 import { csvParse } from "d3";
 import { Octokit } from "octokit";
 import { DateTime } from "luxon";
-import { ViewType } from "./ViewType";
-import { Answer } from "./Answer";
 import { treatmentsCSV } from "./treatments";
+import { Question } from "./Question";
+import { QuestionAndAnswer } from "./QuestionAndAnswer";
+import { Answer } from "./Answer";
 
 export class FileDesign {
-  initialState = {
-    questions: [],
-    currentQuestion: 0,
-    treatmentId: null,
-    participantId: null,
-    status: "Unitialized",
-    error: null,
-  };
-
   constructor() {
     console.log("FileDesign constructor");
   }
 
   fetchQuestions = async (treatmentId) => {
     treatmentId = +treatmentId;
-    const response = csvParse(treatmentsCSV, (e) => {
-      return {
-        viewType: ViewType.enumValueOf(e.view_type),
-        treatmentId: +e.treatment_id,
-        position: +e.position,
-        amountEarlier: +e.amount_earlier,
-        timeEarlier: e.time_earlier ? +(+e.time_earlier) : undefined,
-        dateEarlier: e.date_earlier ? new Date(e.date_earlier) : undefined,
-        amountLater: +e.amount_later,
-        timeLater: e.time_later ? +e.time_later : undefined,
-        dateLater: e.date_later ? new Date(e.date_later) : undefined,
-        maxAmount: +e.max_amount,
-        maxTime: +e.max_time,
-        horizontalPixels: +e.horizontal_pixels,
-        verticalPixels: +e.vertical_pixels,
-        choice: Answer.Unitialized,
-        answerTime: undefined,
-        participantId: undefined,
-      };
-    });
-    const result = response.filter((d) => d.treatmentId === treatmentId);
+    const questions = csvParse(treatmentsCSV, (e) => {
+      return Question.fromCSVRow(e);
+    }).filter((d) => d.treatmentId === treatmentId);
+    const result = questions.map((question) =>
+      QuestionAndAnswer.create(question, Answer.create())
+    );
     return result;
   };
 

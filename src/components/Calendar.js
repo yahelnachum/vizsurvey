@@ -8,10 +8,10 @@ import { useD3 } from "../hooks/useD3";
 var calendarMatrix = require("calendar-matrix");
 
 function Calendar(props) {
-  const question = useSelector(selectCurrentQuestion);
+  const QandA = useSelector(selectCurrentQuestion);
 
-  const height = question.verticalPixels;
-  const width = question.horizontalPixels;
+  const height = QandA.question.verticalPixels;
+  const width = QandA.question.horizontalPixels;
   const margin = {
     top: props.top_margin,
     right: props.right_margin,
@@ -36,7 +36,7 @@ function Calendar(props) {
     <table
       id="calendar"
       ref={useD3((table) => {
-        const monthDays = calendarMatrix(question.date_earlier);
+        const monthDays = calendarMatrix(QandA.question.dateEarlier);
         const monthNames = [
           "January",
           "February",
@@ -51,7 +51,7 @@ function Calendar(props) {
           "November",
           "December",
         ];
-        const month = question.dateEarlier.getMonth();
+        const month = QandA.question.dateEarlier.getMonth();
         const monthName = monthNames[month];
         table.html(
           `<thead>
@@ -85,8 +85,8 @@ function Calendar(props) {
 
         const rows = tbody.selectAll("tbody").data(monthDays).join("tr");
 
-        const earlierDay = question.dateEarlier.getDate();
-        const laterDay = question.dateLater.getDate();
+        const earlierDay = QandA.question.dateEarlier.getDate();
+        const laterDay = QandA.question.dateLater.getDate();
         rows
           .selectAll("td")
           .data((d) => d)
@@ -111,7 +111,7 @@ function Calendar(props) {
 
         earlierAmountSVG
           .select("text")
-          .data([question.earlier_amount])
+          .data([QandA.question.earlierAmount])
           .join("text")
           .attr("text-anchor", "middle")
           .attr("class", "earlier-amount")
@@ -127,7 +127,7 @@ function Calendar(props) {
 
         // earlierDayCell.html(earlierDayCell.node() + '<svg id=""></svg>')
         // rows.select(cellId).data([question.amountEarlier]).join("svg");
-      }, question)}
+      }, QandA)}
       style={style}
     ></table>
   );

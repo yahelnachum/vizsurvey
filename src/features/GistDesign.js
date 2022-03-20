@@ -1,43 +1,16 @@
 import { csv } from "d3";
 import { Octokit } from "octokit";
 import { DateTime } from "luxon";
-import { ViewType } from "./ViewType";
-import { Answer } from "./Answer";
+import { Question } from "./Question";
 
 export class GistDesign {
-  initialState = {
-    questions: [],
-    currentQuestion: 0,
-    treatmentId: null,
-    participantId: null,
-    status: "Unitialized",
-    error: null,
-  };
-
   constructor() {}
 
   fetchQuestions = async (treatmentId) => {
     treatmentId = +treatmentId;
     // eslint-disable-next-line no-undef
     const response = await csv(process.env.REACT_APP_GIST_QUESTION_URL, (e) => {
-      return {
-        viewType: ViewType.enumValueOf(e.view_type),
-        treatmentId: +e.treatment_id,
-        position: +e.position,
-        amountEarlier: +e.amount_earlier,
-        timeEarlier: e.time_earlier ? +(+e.time_earlier) : undefined,
-        dateEarlier: e.date_earlier ? new Date(e.date_earlier) : undefined,
-        amountLater: +e.amount_later,
-        timeLater: e.time_later ? +e.time_later : undefined,
-        dateLater: e.date_later ? new Date(e.date_later) : undefined,
-        maxAmount: +e.max_amount,
-        maxTime: +e.max_time,
-        horizontalPixels: +e.horizontal_pixels,
-        verticalPixels: +e.vertical_pixels,
-        choice: Answer.Unitialized,
-        answerTime: undefined,
-        participantId: undefined,
-      };
+      return Question.fromCSVRow(e);
     });
     const result = response.filter((d) => d.treatmentId === treatmentId);
     return result;
