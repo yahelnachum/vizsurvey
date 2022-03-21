@@ -4,9 +4,8 @@ import { DateTime } from "luxon";
 import { treatmentsCSV } from "./treatments";
 import { Question } from "./Question";
 import { QuestionAndAnswer } from "./QuestionAndAnswer";
-import { Answer } from "./Answer";
 
-export class FileDesign {
+export class FileIOAdapter {
   constructor() {
     console.log("FileDesign constructor");
   }
@@ -17,7 +16,7 @@ export class FileDesign {
       return Question.fromCSVRow(e);
     }).filter((d) => d.treatmentId === treatmentId);
     const result = questions.map((question) =>
-      QuestionAndAnswer.create(question, Answer.create())
+      QuestionAndAnswer.create(question)
     );
     return result;
   };

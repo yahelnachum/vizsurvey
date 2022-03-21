@@ -1,10 +1,13 @@
 import { ViewType } from "./ViewType";
+import { TitrationType } from "./TitrationType";
 
 export class Question {
   constructor(
     treatmentId,
     position,
     viewType,
+    titration,
+    noTitration,
     amountEarlier,
     timeEarlier,
     dateEarlier,
@@ -20,12 +23,15 @@ export class Question {
     graphWidthIn,
     graphHeightIn,
     width,
-    height
+    height,
+    comment
   ) {
     console.log("In constructor");
     this.treatmentId = treatmentId;
     this.position = position;
     this.viewType = viewType;
+    this.titration = titration;
+    this.noTitration = +noTitration;
     this.amountEarlier = amountEarlier;
     this.timeEarlier = timeEarlier;
     this.dateEarlier = dateEarlier;
@@ -42,6 +48,18 @@ export class Question {
     this.graphHeightIn = graphHeightIn;
     this.width = width;
     this.height = height;
+    this.comment = comment;
+  }
+
+  get titationAmount() {
+    switch (this.titration) {
+      case TitrationType.earlierAmount:
+        return this.earlierAmount;
+      case TitrationType.laterAmount:
+        return this.laterAmount;
+      default:
+        return undefined;
+    }
   }
 
   static fromCSVRow(row) {
@@ -50,6 +68,8 @@ export class Question {
       +row.treatment_id,
       +row.position,
       ViewType.enumValueOf(row.view_type),
+      TitrationType.enumValueOf(row.titration),
+      +row.no_titration,
       +row.amount_earlier,
       row.time_earlier ? +row.time_earlier : undefined,
       row.date_earlier ? new Date(row.date_earlier) : undefined,
@@ -65,7 +85,8 @@ export class Question {
       +row.graph_width_in,
       +row.graph_height_in,
       +row.width,
-      +row.height
+      +row.height,
+      row.comment
     );
   }
 }

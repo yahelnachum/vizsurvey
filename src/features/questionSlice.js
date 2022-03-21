@@ -1,27 +1,27 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { max } from "d3";
-import { DateTime } from "luxon";
-import { FileDesign } from "./FileDesign";
+import { FileIOAdapter } from "./FileIOAdapter";
+import { QuestionEngine } from "./QuestionEngine";
 import { StatusType } from "./StatusType";
 
 // Define the initial state of the store for this slicer.
-const design = new FileDesign();
+const io = new FileIOAdapter();
+const qe = new QuestionEngine();
 
 export const fetchQuestions = createAsyncThunk(
   "survey/getQuestions",
-  design.fetchQuestions
+  io.fetchQuestions
 );
 
 export const writeAnswers = createAsyncThunk(
   "survey/writeAnswers",
-  design.writeAnswers
+  io.writeAnswers
 );
 
 export const questionSlice = createSlice({
   name: "questions", // I believe the global state is partitioned by the name value thus the terminology "slice"
   initialState: {
     QandA: [],
-    currentQuestion: 0,
+    currentQuestionIdx: 0,
     treatmentId: null,
     participantId: null,
     status: "Unitialized",
@@ -39,31 +39,14 @@ export const questionSlice = createSlice({
       }
     },
     setQuestionShownTimestamp(state, action) {
-      state.QandA[state.currentQuestion].answer.shownTimestamp = action.payload;
+      qe.setCurrentQuestionShown(state, action);
     },
     // we define our actions on the slice of global store data here.
     answer(state, action) {
-      // Redux Toolkit allows us to write "mutating" logic in reducers. It
-      // doesn't actually mutate the state because it uses the Immer library,
-      // which detects changes to a "draft state" and produces a brand new
-      // immutable state based off those changes
-      state.QandA[state.currentQuestion].answer.choice = action.payload;
-      state.QandA[state.currentQuestion].answerTime = DateTime.now().toFormat(
-        "MM/dd/yyyy H:mm:ss:SSS ZZZZ"
-      );
-      state.QandA[state.currentQuestion];
-      if (state.currentQuestion === state.QandA.length - 1) {
-        state.status = StatusType.Complete;
-      } else {
-        state.currentQuestion += 1;
-      }
+      qe.setAnswerCurrentQuestion(state, action);
     },
     nextQuestion(state) {
-      state.QandA.currentQuestion +=
-        state.currentQuestion < state.QandA.length ? 1 : 0;
-    },
-    previousQuestion(state) {
-      state.currentQuestion -= state.currentQuestion > 0 ? 1 : 0;
+      qe.nextQuestion(state);
     },
   },
   extraReducers: (builder) => {
@@ -75,8 +58,8 @@ export const questionSlice = createSlice({
       })
       .addCase(fetchQuestions.fulfilled, (state, action) => {
         state.QandA = action.payload;
-        state.currentQuestion = 0;
         state.status = StatusType.Fetched;
+        qe.startSurvey(state);
       })
       .addCase(fetchQuestions.rejected, (state, action) => {
         if (state.status === StatusType.Fetched) {
@@ -87,35 +70,12 @@ export const questionSlice = createSlice({
   },
 });
 
-export const selectMaxTime = (state) => {
-  return max(state.questions.QandA, (d) => d.question.timeLater);
-};
-
-export const selectMaxAmount = (state) => {
-  return max(state.questions.QandA, (d) =>
-    d.question.amountEarlier > d.question.amountLater
-      ? d.question.amountEarlier
-      : d.question.amountLater
-  );
-};
-
 export const selectAllQuestions = (state) => {
-  return state.questions.QandA;
+  return qe.selectAllQuestions(state);
 };
 
 export const selectCurrentQuestion = (state) => {
-  const result = state.questions.QandA[state.questions.currentQuestion];
-  return result;
-};
-
-export const selectparticipantId = (state) => {
-  return state.participantId;
-};
-
-export const isLastQuestion = (state) => {
-  const result =
-    state.questions.currentQuestion === state.questions.QandA.length - 1;
-  return result;
+  return qe.getCurrentQuestion(state);
 };
 
 export const fetchStatus = (state) => {
@@ -127,7 +87,6 @@ export const {
   setQuestionShownTimestamp,
   answer,
   nextQuestion,
-  previousQuestion,
   setParticipant,
   setTreatment,
 } = questionSlice.actions;

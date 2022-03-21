@@ -1,5 +1,21 @@
 export class Answer {
-  constructor(choice, shownTimestamp, choiceTimestamp) {
+  constructor(
+    amountEarlier,
+    timeEarlier,
+    dateEarlier,
+    amountLater,
+    timeLater,
+    dateLater,
+    choice,
+    shownTimestamp,
+    choiceTimestamp
+  ) {
+    this.amountEarlier = amountEarlier;
+    this.timeEarlier = timeEarlier;
+    this.dateEarlier = dateEarlier;
+    this.amountLater = amountLater;
+    this.timeLater = timeLater;
+    this.dateLater = dateLater;
     this.choice = choice;
     this.shownTimestamp = shownTimestamp;
     this.choiceTimestamp = choiceTimestamp;
@@ -10,7 +26,25 @@ export class Answer {
     this.choice = choice;
   }
 
-  static create() {
-    return new Answer(null, null, null);
+  setShownTimestamp(shownTimestamp) {
+    this.shownTimestamp = shownTimestamp;
+  }
+
+  static create(
+    amountEarlier,
+    timeEarlier,
+    dateEarlier,
+    amountLater,
+    timeLater,
+    dateLater
+  ) {
+    return new Answer(
+      amountEarlier,
+      timeEarlier,
+      dateEarlier,
+      amountLater,
+      timeLater,
+      dateLater
+    );
   }
 }
