@@ -1,12 +1,11 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
+import { StatusType } from "../features/StatusType";
 import {
   fetchQuestions,
   fetchStatus,
-  Status,
-  setParticipant,
-  setQuestionSet,
+  setTreatment,
 } from "../features/questionSlice";
 import ReactLoading from "react-loading";
 
@@ -14,21 +13,19 @@ export function QueryParam() {
   const dispatch = useDispatch();
   const loadingStatus = useSelector(fetchStatus);
   const search = useLocation().search;
-  const participantId = new URLSearchParams(search).get("participant_id");
-  const questionSetId = new URLSearchParams(search).get("question_set_id");
+  const treatmentId = new URLSearchParams(search).get("treatment_id");
 
-  dispatch(setParticipant(participantId));
-  dispatch(setQuestionSet(questionSetId));
+  dispatch(setTreatment(treatmentId));
 
   useEffect(() => {
-    if (loadingStatus === Status.Unitialized) {
-      dispatch(fetchQuestions(questionSetId));
+    if (loadingStatus === StatusType.Unitialized) {
+      dispatch(fetchQuestions(treatmentId));
     }
   }, [loadingStatus, dispatch]);
 
   return (
     <div>
-      {loadingStatus === Status.Fetching && (
+      {loadingStatus === StatusType.Fetching && (
         <ReactLoading type="spinningBubbles" color="#444" />
       )}
     </div>

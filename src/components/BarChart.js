@@ -1,12 +1,13 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { ChoiceType } from "../features/ChoiceType";
+import { StatusType } from "../features/StatusType";
 import {
   selectCurrentQuestion,
   fetchStatus,
-  Answer,
+  setQuestionShownTimestamp,
   answer,
-  Status,
 } from "../features/questionSlice";
 
 import { useD3 } from "../hooks/useD3";
@@ -15,13 +16,13 @@ import { axisBottom, axisLeft, scaleLinear, range } from "d3";
 
 function BarChart(props) {
   const dispatch = useDispatch();
-  const question = useSelector(selectCurrentQuestion);
+  const QandA = useSelector(selectCurrentQuestion);
   const status = useSelector(fetchStatus);
 
   const barWidth = 15;
 
-  const height = question.vertical_pixels;
-  const width = question.horizontal_pixels;
+  const height = QandA.question.verticalPixels;
+  const width = QandA.question.horizontalPixels;
   const margin = {
     top: props.top_margin,
     right: props.right_margin,
@@ -42,12 +43,12 @@ function BarChart(props) {
   // const innerHeight = height - margin.bottom - margin.top;
   // const innerWidth = width - margin.left - margin.right;
 
-  const xTickValues = Array.from(Array(question.max_time + 1).keys());
+  const xTickValues = Array.from(Array(QandA.question.maxTime + 1).keys());
   const data = xTickValues.map((d) => {
-    if (d == question.time_earlier) {
-      return { time: d, amount: question.amount_earlier };
-    } else if (d == question.time_later) {
-      return { time: d, amount: question.amount_later };
+    if (d === QandA.question.timeEarlier) {
+      return { time: d, amount: QandA.question.amountEarlier };
+    } else if (d === QandA.question.timeLater) {
+      return { time: d, amount: QandA.question.amountLater };
     } else {
       return { time: d, amount: 0 };
     }
@@ -65,10 +66,10 @@ function BarChart(props) {
             .attr("transform", `translate(${margin.left},${margin.top})`);
 
           const x = scaleLinear()
-            .domain([0, question.max_time])
+            .domain([0, QandA.question.maxTime])
             .range([0, width]);
 
-          const yRange = [0, question.max_amount];
+          const yRange = [0, QandA.question.maxAmount];
           const y = scaleLinear().domain(yRange).range([height, 0]);
 
           chart
@@ -126,10 +127,10 @@ function BarChart(props) {
             .attr("width", barWidth)
             .attr("y", (d) => y(d.amount))
             .on("click", (d) => {
-              if (d.target.__data__.amount === question.amount_earlier) {
-                dispatch(answer(Answer.Earlier));
+              if (d.target.__data__.amount === QandA.question.amountEarlier) {
+                dispatch(answer(ChoiceType.Earlier));
               } else {
-                dispatch(answer(Answer.Later));
+                dispatch(answer(ChoiceType.Later));
               }
             })
             .attr("height", (d) => y(0) - y(d.amount));
@@ -140,9 +141,10 @@ function BarChart(props) {
     ></svg>
   );
 
-  if (status === Status.Complete) {
+  if (status === StatusType.Complete) {
     return <Redirect to="/thankyou" />;
   } else {
+    dispatch(setQuestionShownTimestamp(Date.now));
     return result;
   }
 }

@@ -59,13 +59,13 @@ const Home = () => {
       <p>
         <a
           id="getQuestionSet"
-          href="http://localhost:3000/vizsurvey?participant_id=1&question_set_id=2"
+          href="http://localhost:3000/vizsurvey?treatment_id=2"
         >
           localhost
         </a>
       </p>
       <p>
-        <a href="https://pcordone.github.io/vizsurvey/?participant_id=1&question_set_id=2">
+        <a href="https://pcordone.github.io/vizsurvey/?treatment_id=2">
           localhost
         </a>
       </p>
@@ -75,11 +75,11 @@ const Home = () => {
 
 function convertToCSV(answers) {
   const header = [
-    "question_set_id,position,amount_earlier,time_earlier,amount_later,time_later,choice,answer_time,participant_id",
+    "treatment_id,position,amount_earlier,time_earlier,amount_later,time_later,choice,answer_time,participant_id",
   ];
   const rows = answers.map(
     (a) =>
-      `${a.question_set_id}, ${a.position}, ${a.amount_earlier}, ${a.time_earlier}, ${a.amount_later}, ${a.time_later}, ${a.choice}, ${a.answer_time}, ${a.participant_id}`
+      `${a.treatmentId}, ${a.position}, ${a.amountEarlier}, ${a.timeEarlier}, ${a.amountLater}, ${a.timeLater}, ${a.choice}, ${a.answerTime}, ${a.participantId}`
   );
   return header.concat(rows).join("\n");
 }

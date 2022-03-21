@@ -3,23 +3,24 @@ import MELForm from "./MELForm";
 import BarChart from "./BarChart";
 import Calendar from "./Calendar";
 import { useSelector } from "react-redux";
-import { selectCurrentQuestion, ViewType } from "../features/questionSlice";
+import { ViewType } from "../features/ViewType";
+import { selectCurrentQuestion } from "../features/questionSlice";
 
 export function Survey() {
-  const question = useSelector(selectCurrentQuestion);
+  const QandA = useSelector(selectCurrentQuestion);
 
   return (
     <Container fluid>
       <Row>
         <Col>
-          {question.view_type === ViewType.barchart ? (
+          {QandA.question.viewType === ViewType.barchart ? (
             <BarChart
               top_margin="20"
               right_margin="30"
               bottom_margin="30"
               left_margin="80"
             />
-          ) : question.view_type === ViewType.word ? (
+          ) : QandA.question.viewType === ViewType.word ? (
             <MELForm />
           ) : (
             <Calendar

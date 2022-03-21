@@ -1,4 +1,4 @@
-treatment_id,position,view_type,amount_earlier,time_earlier,date_earlier,amount_later,time_later,date_later,max_amount,max_time,horizontal_pixels,vertical_pixels,left_margin_width_in,bottom_margin_height_in,graph_width_in,graph_height_in,width_in,height_in,comment
+export const treatmentsCSV = `treatment_id,position,view_type,amount_earlier,time_earlier,date_earlier,amount_later,time_later,date_later,max_amount,max_time,horizontal_pixels,vertical_pixels,left_margin_width_in,bottom_margin_height_in,graph_width_in,graph_height_in,width_in,height_in,comment
 1,1,barchart,1,2,,1.5,3,,1.5,3,600,600,,,,,,,
 1,2,barchart,0.67,0,,2.67,1,,2.67,1,600,600,,,,,,,
 1,3,barchart,1000,2,,1010,3,,1010,3,600,600,,,,,,,
@@ -37,3 +37,11 @@ treatment_id,position,view_type,amount_earlier,time_earlier,date_earlier,amount_
 4,1,calendar,400,1,2/1/22,500,,2/22/22,,,600,600,,,,,,,calendar view
 5,1,barchart,400,1,,500,3,,500,8,240,240,0.5,0.5,3,3,3.5,3.5,Absolute size
 5,2,barchart,400,1,,500,3,,500,8,480,480,0.5,0.5,6,6,6.5,6.5,Absolute size
+5,3,word,400,1,,500,3,,500,8,480,480,0.5,0.5,6,6,6.5,6.5,Absolute size
+`;
+
+//export const treatment
+
+// REACT_APP_TREATMENT_DATA=treatment_id,time_earlier,time_later,horizontal_pixels,vertical_pixels,left_margin_width_in,
+// bottom_margin_height_in,graph_width_in,graph_height_in
+// 0,0.25,3,600,600,0.5,0.5,3,3
