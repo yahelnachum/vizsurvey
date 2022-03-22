@@ -1,5 +1,5 @@
 export const ChoiceType = {
-  Unitialized: "Unitialized",
-  Earlier: "Earlier",
-  Later: "Later",
+  unitialized: "unitialized",
+  earlier: "earlier",
+  later: "later",
 };

@@ -1,6 +1,9 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { axisBottom, axisLeft, scaleLinear, range } from "d3";
+import { DateTime } from "luxon";
+import { useD3 } from "../hooks/useD3";
 import { ChoiceType } from "../features/ChoiceType";
 import { StatusType } from "../features/StatusType";
 import {
@@ -9,10 +12,6 @@ import {
   setQuestionShownTimestamp,
   answer,
 } from "../features/questionSlice";
-
-import { useD3 } from "../hooks/useD3";
-import * as d3 from "d3";
-import { axisBottom, axisLeft, scaleLinear, range } from "d3";
 
 function BarChart(props) {
   const dispatch = useDispatch();
@@ -128,9 +127,19 @@ function BarChart(props) {
             .attr("y", (d) => y(d.amount))
             .on("click", (d) => {
               if (d.target.__data__.amount === QandA.question.amountEarlier) {
-                dispatch(answer(ChoiceType.Earlier));
+                dispatch(
+                  answer({
+                    choice: ChoiceType.earlier,
+                    choiceTimestamp: DateTime.now,
+                  })
+                );
               } else {
-                dispatch(answer(ChoiceType.Later));
+                dispatch(
+                  answer({
+                    choice: ChoiceType.later,
+                    choiceTimestamp: DateTime.now,
+                  })
+                );
               }
             })
             .attr("height", (d) => y(0) - y(d.amount));

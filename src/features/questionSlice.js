@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { FileIOAdapter } from "./FileIOAdapter";
 import { QuestionEngine } from "./QuestionEngine";
 import { StatusType } from "./StatusType";
+import { TitrationStateType } from "./TitrationStateType";
 
 // Define the initial state of the store for this slicer.
 const io = new FileIOAdapter();
@@ -22,6 +23,8 @@ export const questionSlice = createSlice({
   initialState: {
     QandA: [],
     currentQuestionIdx: 0,
+    titrationState: TitrationStateType.uninitialized,
+    currentQuestionTitrateIdx: 0,
     treatmentId: null,
     participantId: null,
     status: "Unitialized",
@@ -44,9 +47,6 @@ export const questionSlice = createSlice({
     // we define our actions on the slice of global store data here.
     answer(state, action) {
       qe.setAnswerCurrentQuestion(state, action);
-    },
-    nextQuestion(state) {
-      qe.nextQuestion(state);
     },
   },
   extraReducers: (builder) => {
@@ -71,11 +71,11 @@ export const questionSlice = createSlice({
 });
 
 export const selectAllQuestions = (state) => {
-  return qe.selectAllQuestions(state);
+  return qe.allQuestions(state);
 };
 
 export const selectCurrentQuestion = (state) => {
-  return qe.getCurrentQuestion(state);
+  return qe.currentQuestion(state);
 };
 
 export const fetchStatus = (state) => {
@@ -86,7 +86,6 @@ export const fetchStatus = (state) => {
 export const {
   setQuestionShownTimestamp,
   answer,
-  nextQuestion,
   setParticipant,
   setTreatment,
 } = questionSlice.actions;

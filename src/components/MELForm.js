@@ -1,6 +1,10 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { DateTime } from "luxon";
+//import { Col, Container, Row, Media } from "react-bootstrap";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Button } from "react-bootstrap";
 import { ChoiceType } from "../features/ChoiceType";
 import { StatusType } from "../features/StatusType";
 import {
@@ -9,9 +13,6 @@ import {
   setQuestionShownTimestamp,
   answer,
 } from "../features/questionSlice";
-//import { Col, Container, Row, Media } from "react-bootstrap";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { Button } from "react-bootstrap";
 
 export function MELForm() {
   const dispatch = useDispatch();
@@ -43,17 +44,22 @@ export function MELForm() {
 
   const result = (
     <Formik
-      initialValues={{ choice: ChoiceType.Unitialized }}
+      initialValues={{ choice: ChoiceType.unitialized }}
       validate={(values) => {
         let errors = {};
-        if (!values.choice || values.choice === ChoiceType.Unitialized) {
+        if (!values.choice || values.choice === ChoiceType.unitialized) {
           errors.choice = "Please choose a selection to continue.";
         }
         return errors;
       }}
       onSubmit={(values, { setSubmitting, resetForm }) => {
         setTimeout(() => {
-          dispatch(answer(values.choice));
+          dispatch(
+            answer({
+              choice: values.choice,
+              choiceTimestamp: DateTime.now,
+            })
+          );
           setSubmitting(false);
           resetForm();
         }, 400);
@@ -67,12 +73,12 @@ export function MELForm() {
             className="radio-choice-label"
           >
             <label>
-              <Field type="radio" name="choice" value={ChoiceType.Earlier} />
+              <Field type="radio" name="choice" value={ChoiceType.earlier} />
               &nbsp;{question1stPartText()}
             </label>
             <br></br>
             <label>
-              <Field type="radio" name="choice" value={ChoiceType.Later} />
+              <Field type="radio" name="choice" value={ChoiceType.later} />
               &nbsp;{question2ndPartText()}
             </label>
             <span style={{ color: "red", fontWeight: "bold" }}>
