@@ -7,8 +7,11 @@ import Survey from "./components/Survey";
 import { QueryParam } from "./components/QueryParam";
 import { selectAllQuestions, writeAnswers } from "./features/questionSlice";
 import { Footer } from "./footer";
+import { FullScreen, useFullScreenHandle } from "react-full-screen";
 
 const App = () => {
+  const handle = useFullScreenHandle();
+
   return (
     <div>
       <BrowserRouter>
@@ -21,7 +24,7 @@ const App = () => {
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="mr-auto">
                 <Nav.Item href="/survey">
-                  <Nav.Link as={Link} to="/survey">
+                  <Nav.Link as={Link} to="/survey" onClick={handle.enter}>
                     Survey
                   </Nav.Link>
                 </Nav.Item>
@@ -31,7 +34,9 @@ const App = () => {
           <QueryParam />
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route path="/survey" component={Survey} />
+            <FullScreen handle={handle}>
+              <Route path="/survey" component={Survey} />
+            </FullScreen>
             <Route path="/thankyou" component={ThankYou} />
             <Route path="/*" component={Home} />
           </Switch>
