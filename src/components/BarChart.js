@@ -1,7 +1,7 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { axisBottom, axisLeft, scaleLinear, range } from "d3";
+import { axisBottom, axisLeft, scaleLinear, range, format } from "d3";
 import { DateTime } from "luxon";
 import { useD3 } from "../hooks/useD3";
 import { ChoiceType } from "../features/ChoiceType";
@@ -78,9 +78,7 @@ function BarChart(props) {
             .attr("transform", `translate(0,${height})`)
             .attr("class", "x-axis")
             .call(
-              axisBottom(x)
-                .tickValues(xTickValues)
-                .tickFormat(d3.format(",.0f"))
+              axisBottom(x).tickValues(xTickValues).tickFormat(format(",.0f"))
             );
 
           const yTickValues = range(yRange[0], yRange[1], yRange[1] / 5);

@@ -9,7 +9,7 @@ export class QuestionAndAnswer {
      * answer is an array to store titration question parameters (like earlier amounts used in the
      * titraiton) and to capture all answer information like shown timestamp, answered timestamp
      */
-    this.answer = [];
+    this.answers = [];
   }
 
   static create(question) {

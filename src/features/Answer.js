@@ -36,7 +36,8 @@ export class Answer {
     dateEarlier,
     amountLater,
     timeLater,
-    dateLater
+    dateLater,
+    choice
   ) {
     return new Answer(
       amountEarlier,
@@ -44,7 +45,8 @@ export class Answer {
       dateEarlier,
       amountLater,
       timeLater,
-      dateLater
+      dateLater,
+      choice
     );
   }
 }

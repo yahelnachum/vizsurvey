@@ -13,23 +13,37 @@ export class QuestionEngine {
   }
 
   currentQuestion(state) {
-    return state.QandA[state.currentQuestionIdx];
+    return state.QandA[state.currentQuestionIdx].answers[
+      state.currentQuestionTitrateIdx
+    ];
   }
 
   currentAnswerArray(state) {
-    return state.QandA[state.currentQuestionIdx].answer;
+    return state.QandA[state.currentQuestionIdx].answers;
   }
 
   currentAnswer(state) {
     return this.currentAnswerArray(state)[state.currentQuestionTitrateIdx];
   }
 
-  lastChoiceEarlier(state) {
+  currentChoiceEarlier(state) {
     return this.currentAnswer(state).choice === ChoiceType.earlier;
   }
 
-  lastChoiceLater(state) {
+  currentChoiceLater(state) {
     return this.currentAnswer(state).choice === ChoiceType.later;
+  }
+
+  firstAnswer(state) {
+    return state.QandA[0].answers;
+  }
+
+  isTitrationAtMinAmount(state) {
+    return state.currentQuestionTitrateIdx === this.currentAnswerArray.length;
+  }
+
+  isTitrationAtMaxAmount(state) {
+    return state.currentQuestionTitrateIdx === 0;
   }
 
   titrationAtMinOrMax(state) {
@@ -37,6 +51,17 @@ export class QuestionEngine {
       state.currentQuestionTitrateIdx === this.currentAnswerArray.length ||
       state.currentQuestionTitrateIdx === 0
     );
+  }
+
+  countChoiceSwitches(answers) {
+    const choices = answers.filter((e) => e.choice !== ChoiceType.unitialized);
+    var transitionCount = 0;
+    for (var i = 1; i < choices.length; i++) {
+      if (choices[i - 1].choice !== choices[i]) {
+        transitionCount++;
+      }
+    }
+    return transitionCount;
   }
 
   generateAnswerArray(q) {
@@ -49,7 +74,8 @@ export class QuestionEngine {
           q.dateEarlier,
           q.amountLater,
           q.timeLater,
-          q.dateLater
+          q.dateLater,
+          ChoiceType.unitialized
         )
       );
     } else {
@@ -61,7 +87,8 @@ export class QuestionEngine {
             q.dateEarlier,
             q.amountLater,
             q.timeLater,
-            q.dateLater
+            q.dateLater,
+            ChoiceType.unitialized
           )
         );
       }
@@ -74,7 +101,7 @@ export class QuestionEngine {
     state.currentQuestionTitrateIdx = 0;
     state.titrationState = TitrationStateType.uninitialized;
     for (const q of state.QandA) {
-      q.answer = this.generateAnswerArray(q);
+      q.answers = this.generateAnswerArray(q);
     }
   }
 
@@ -83,8 +110,9 @@ export class QuestionEngine {
   }
 
   setAnswerCurrentQuestion(state, action) {
-    this.currentQuestion(state).answer[state.currentQuestionTitrateIdx].choice =
-      action.payload.choice;
+    this.currentQuestion(state).answers[
+      state.currentQuestionTitrateIdx
+    ].choice = action.payload.choice;
     this.currentAnswer(state).answerTime =
       action.payload.choiceTimestamp.toFormat("MM/dd/yyyy H:mm:ss:SSS ZZZZ");
     if (this.currentQuestion(state).titration === TitrationType.none) {
@@ -105,17 +133,18 @@ export class QuestionEngine {
         case TitrationStateType.start:
           // detect and handle edge cases of at the largest soonest amount and choice is later or
           // smallest sooner amount and choice is earlier
-          if (
-            this.titrationAtMinOrMax(state) &&
-            (this.currentAnswer(state).choice === ChoiceType.earlier ||
-              this.currentAnswer(state).choice === ChoiceType.later)
-          ) {
-            alert("TODO: handle this condition!");
-          } else {
-            if (this.lastChoiceEarlier(state)) {
-            } else if (this.lastChoiceLater(state)) {
-            }
-          }
+          // if (isTitrationAtMinAmount(state) && this.currentChoiceEarlier(state))
+          //   this.titrationAtMinOrMax(state) &&
+          //   (this.currentAnswer(state).choice === ChoiceType.earlier ||
+          //     this.currentAnswer(state).choice === ChoiceType.later)
+          // ) {
+          //   alert("TODO: handle this condition!");
+          // } else {
+          //   if (this.currentChoiceEarlier(state)) {
+          //     state.
+          //   } else if (this.currentChoiceLater(state)) {
+          //   }
+          // }
 
           break;
         case TitrationStateType.topOrBottom:
