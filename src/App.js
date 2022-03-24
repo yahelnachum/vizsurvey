@@ -62,17 +62,12 @@ const Home = () => {
         </a>
       </p>
       <p>
-        <a
-          id="getQuestionSet"
-          href="http://localhost:3000/vizsurvey?treatment_id=2"
-        >
-          localhost
+        <a id="getQuestionSet" href="vizsurvey?treatment_id=2">
+          relative treatment_id=2
         </a>
       </p>
       <p>
-        <a href="https://pcordone.github.io/vizsurvey/?treatment_id=2">
-          localhost
-        </a>
+        <a href="https://pcordone.github.io">public website</a>
       </p>
     </div>
   );
