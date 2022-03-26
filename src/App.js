@@ -52,7 +52,19 @@ export default App;
 const Home = () => {
   return (
     <div id="home-text">
-      <p>*** TODO: Inert the survey instructions for the subject here ***</p>
+      <p>
+        General Instructions: You will be presented with two choices about
+        receiving money, one earlier and one later in time. Pick the amount that
+        you would like to receive.
+      </p>
+      <p>
+        Bar Chart Specific Instructions: Click on the bar that represents the
+        amount that you would like to receive.
+      </p>
+      <p>
+        Calendar Specific Instructions: Click on the day that contains the
+        amount that you would like to receive.
+      </p>
       <p>
         <a
           href="
