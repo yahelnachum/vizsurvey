@@ -1,140 +1,125 @@
-// import React from "react"
-// import { render } from "react-testing-library"
-// import App from "../../../src/index"
-// import { Provider } from "react-redux"
-// import configureStore from "redux-mock-store"
-
-import { DateTime } from "luxon";
 import { QuestionEngine } from "./QuestionEngine";
 import { ViewType } from "./ViewType";
-import { TitrationType } from "./TitrationType";
-import { Question } from "./Question";
 import { ChoiceType } from "./ChoiceType";
-import { Answer } from "./Answer";
-
-// treatment_id,position,view_type,titration,no_titration,amount_earlier,time_earlier,date_earlier,amount_later,time_later,date_later,max_amount,max_time,horizontal_pixels,vertical_pixels,left_margin_width_in,bottom_margin_height_in,graph_width_in,graph_height_in,width_in,height_in,comment
-const questionEarlierTitrate = new Question(
-  1,
-  1,
-  ViewType.enumValueOf("barchart"),
-  TitrationType.enumValueOf("earlierAmount"),
-  10,
-  400,
-  1,
-  undefined,
-  500,
-  3,
-  undefined,
-  500,
-  8,
-  480,
-  480,
-  0.5,
-  0.5,
-  6,
-  6,
-  6.5,
-  6.5,
-  "Titration earlier amount test case."
-);
-
-const questionNoTitrate = new Question(
-  1,
-  1,
-  ViewType.enumValueOf("barchart"),
-  TitrationType.enumValueOf("none"),
-  10,
-  400,
-  1,
-  undefined,
-  500,
-  3,
-  undefined,
-  500,
-  8,
-  480,
-  480,
-  0.5,
-  0.5,
-  6,
-  6,
-  6.5,
-  6.5,
-  "No titration test case."
-);
+import { TitrationType } from "./TitrationType";
+import { QuestionAndAnswer } from "./QuestionAndAnswer";
+import { Question } from "./Question";
 
 describe("QuestionEngine tests", () => {
-  const qe = new QuestionEngine();
-  const state = {
-    QandA: [questionEarlierTitrate],
-    currentQuestionIdx: 0,
-    currentQuestionTitrateIdx: 0,
-  };
-  qe.startSurvey(state);
-
-  test("startSurvey should create an answer array under each Q and A object in state with the titration amounts.", () => {
-    expect(state.currentQuestionIdx).toBe(0);
-    expect(state.currentQuestionTitrateIdx).toBe(0);
+  test("1: Initial question and answer will initialize to empty answer array and highup and lowdown to undefined.", () => {
+    const q = TestDataFactory.createQuestionLaterTitrate();
+    const state = {
+      QandA: [QuestionAndAnswer.create(q)],
+      currentQuestionIdx: 0,
+    };
     expect(state.QandA[0].answers).not.toBeUndefined();
-    expect(state.QandA[0].answers.length).toBe(10);
-    expect(state.QandA[0].answers[0].amountEarlier).toBe(50);
-    expect(state.QandA[0].answers[1].amountEarlier).toBe(100);
-    expect(state.QandA[0].answers[2].amountEarlier).toBe(150);
-    expect(state.QandA[0].answers[3].amountEarlier).toBe(200);
-    expect(state.QandA[0].answers[4].amountEarlier).toBe(250);
-    expect(state.QandA[0].answers[5].amountEarlier).toBe(300);
-    expect(state.QandA[0].answers[6].amountEarlier).toBe(350);
-    expect(state.QandA[0].answers[7].amountEarlier).toBe(400);
-    expect(state.QandA[0].answers[8].amountEarlier).toBe(450);
-    expect(state.QandA[0].answers[9].amountEarlier).toBe(500);
+    expect(state.QandA[0].answers.length).toBe(0);
+    expect(state.QandA[0].highup).toBeUndefined();
+    expect(state.QandA[0].lowdown).toBeUndefined();
   });
 
-  const state2 = {
-    QandA: [questionNoTitrate],
-    currentQuestionIdx: 0,
-  };
-
-  const qe2 = new QuestionEngine();
-  qe2.startSurvey(state2);
-  test("startSurvey should create a single answer entry for each question.", () => {
-    expect(state2.currentQuestionIdx).toBe(0);
-    expect(state2.currentQuestionTitrateIdx).toBe(0);
-    expect(state2.QandA[0].answers).not.toBeUndefined();
-    expect(state2.QandA[0].answers.length).toBe(1);
-    expect(state2.QandA[0].answers[0].amountEarlier).toBe(400);
+  test("startSurvey should create a single answer entry for titration question.", () => {
+    const state = {
+      QandA: [
+        QuestionAndAnswer.create(
+          TestDataFactory.createQuestionLaterTitrate(),
+          1000,
+          undefined
+        ),
+      ],
+      currentQuestionIdx: 0,
+    };
+    const qe = new QuestionEngine();
+    qe.startSurvey(state);
+    expect(state.currentQuestionIdx).toBe(0);
+    expect(state.QandA[0].answers).not.toBeUndefined();
+    expect(state.QandA[0].answers.length).toBe(1);
+    expect(state.QandA[0].answers[0].amountEarlier).toBe(500);
+    expect(state.QandA[0].answers[0].timeEarlier).toBe(1);
+    expect(state.QandA[0].answers[0].amountLater).toBe(1000);
+    expect(state.QandA[0].answers[0].timeLater).toBe(3);
+    expect(state.QandA[0].highup).toBe(500);
+    expect(state.QandA[0].lowdown).toBeUndefined();
   });
 
-  const titrationAnswers = new Array();
-  for (var i = 0; i < 10; i++) {
-    titrationAnswers.push(
-      Answer.create(null, null, null, null, null, null, ChoiceType.unitialized)
+  test("startSurvey should create a single answer entry for non titraiton question.", () => {
+    const state = {
+      QandA: [
+        QuestionAndAnswer.create(
+          TestDataFactory.createQuestionNoTitrate(),
+          undefined,
+          undefined
+        ),
+      ],
+      currentQuestionIdx: 0,
+    };
+    const qe = new QuestionEngine();
+    qe.startSurvey(state);
+    expect(state.currentQuestionIdx).toBe(0);
+    expect(state.QandA[0].answers).not.toBeUndefined();
+    expect(state.QandA[0].answers.length).toBe(1);
+    expect(state.QandA[0].answers[0].amountEarlier).toBe(400);
+  });
+
+  test("Test example for the values from Read 2001 paper.", () => {
+    const QandA = QuestionAndAnswer.create(
+      TestDataFactory.createQuestionLaterTitrate()
     );
-  }
-  titrationAnswers[5].choice = ChoiceType.earlier;
-  titrationAnswers[0].choice = ChoiceType.later;
-  titrationAnswers[2].choice = ChoiceType.later;
-  titrationAnswers[3].choice = ChoiceType.earlier;
-  const siwtchCount = qe.countChoiceSwitches(titrationAnswers);
-  test("countChoiceSwitches should return 3 for normal detection of discount rate.", () => {
-    expect(siwtchCount).toBe(3);
+    QandA.highup = 500;
+    QandA.createNextAnswer(
+      QandA.question.amountEarlier,
+      QandA.question.amountLater
+    );
+    const a = QandA.latestAnswer;
+    const qe = new QuestionEngine();
+    // initial condition from paper
+    expect(QandA.highup).toBe(500);
+    expect(QandA.lowdown).toBeUndefined();
+    expect(a.amountEarlier).toBe(500);
+    expect(a.amountLater).toBe(1000);
+    QandA.setLatestAnswer(ChoiceType.earlier, null);
+    // first calc from paper example
+    expect(qe.calcTitrationAmount(undefined, 500)).toBe(250);
+    qe.updateHighupOrLowdown(QandA);
+    expect(QandA.highup).toBe(1000);
+    expect(QandA.lowdown).toBeUndefined();
+    QandA.latestAnswer.amountLater = 1250;
+    QandA.setLatestAnswer(ChoiceType.later, null);
+    // second calc from paper example
+    expect(qe.calcTitrationAmount(1250, 1000)).toBe(120);
+    qe.updateHighupOrLowdown(QandA);
+    expect(QandA.highup).toBe(1000);
+    expect(QandA.lowdown).toBe(1250);
+    QandA.latestAnswer.amountLater = 1120;
+    QandA.setLatestAnswer(ChoiceType.later, null);
+    // third calc from paper example
+    expect(qe.calcTitrationAmount(1130, 1000)).toBe(60);
+    qe.updateHighupOrLowdown(QandA);
+    expect(QandA.highup).toBe(1000);
+    expect(QandA.lowdown).toBe(1120);
+    QandA.latestAnswer.amountLater = 1060;
+    QandA.setLatestAnswer(ChoiceType.earlier, null);
+    // fourth calc from paper example
+    expect(qe.calcTitrationAmount(1120, 1060)).toBe(30);
+    qe.updateHighupOrLowdown(QandA);
+    expect(QandA.highup).toBe(1060);
+    expect(QandA.lowdown).toBe(1120);
+    QandA.latestAnswer.amountLater = 1090;
+    QandA.setLatestAnswer(ChoiceType.later, null);
+    // fifth calc from paper example
+    expect(qe.calcTitrationAmount(1090, 1060)).toBe(10);
+    qe.updateHighupOrLowdown(QandA);
+    expect(QandA.highup).toBe(1060);
+    expect(QandA.lowdown).toBe(1090);
+    QandA.latestAnswer.amountLater = 1070;
+    QandA.setLatestAnswer(ChoiceType.earlier, null);
+    // sixth calc from paper example
+    expect(qe.calcTitrationAmount(1070, 1060)).toBe(0);
+    qe.updateHighupOrLowdown(QandA);
+    expect(QandA.highup).toBe(1070);
+    expect(QandA.lowdown).toBe(1090); // different from the paper
   });
-  titrationAnswers.forEach((a) => {
-    a.choiceType = ChoiceType.unitialized;
-  });
-  titrationAnswers[5].choice = ChoiceType.later;
-  titrationAnswers[9].choice = ChoiceType.earlier;
-  titrationAnswers[7].choice = ChoiceType.earlier;
-  titrationAnswers[8].choice = ChoiceType.later;
-  test("countChoiceSwitches should return 3 for normal detection of discount rate.", () => {
-    expect(siwtchCount).toBe(3);
-  });
-  titrationAnswers.forEach((a) => {
-    a.choiceType = ChoiceType.unitialized;
-  });
-  titrationAnswers[0].choice = ChoiceType.later;
-  titrationAnswers[9].choice = ChoiceType.earlier;
-  titrationAnswers[4].choice = ChoiceType.;
-  titrationAnswers[3].choice = ChoiceType.earlier;
+
   // const action = {
   //   payload: {
   //     choice: ChoiceType.earlier,
@@ -142,3 +127,57 @@ describe("QuestionEngine tests", () => {
   //   },
   // };
 });
+
+class TestDataFactory {
+  static createQuestionLaterTitrate() {
+    return new Question(
+      1,
+      1,
+      ViewType.enumValueOf("barchart"),
+      TitrationType.enumValueOf("laterAmount"),
+      500,
+      1,
+      undefined,
+      1000,
+      3,
+      undefined,
+      2000,
+      8,
+      480,
+      480,
+      0.5,
+      0.5,
+      6,
+      6,
+      6.5,
+      6.5,
+      "Titration earlier amount test case."
+    );
+  }
+
+  static createQuestionNoTitrate() {
+    return new Question(
+      1,
+      1,
+      ViewType.enumValueOf("barchart"),
+      TitrationType.enumValueOf("none"),
+      400,
+      1,
+      undefined,
+      500,
+      3,
+      undefined,
+      500,
+      8,
+      480,
+      480,
+      0.5,
+      0.5,
+      6,
+      6,
+      6.5,
+      6.5,
+      "No titration test case."
+    );
+  }
+}

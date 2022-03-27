@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { FileIOAdapter } from "./FileIOAdapter";
 import { QuestionEngine } from "./QuestionEngine";
 import { StatusType } from "./StatusType";
-import { TitrationStateType } from "./TitrationStateType";
 
 // Define the initial state of the store for this slicer.
 const io = new FileIOAdapter();
@@ -23,8 +22,6 @@ export const questionSlice = createSlice({
   initialState: {
     QandA: [],
     currentQuestionIdx: 0,
-    titrationState: TitrationStateType.uninitialized,
-    currentQuestionTitrateIdx: 0,
     treatmentId: null,
     participantId: null,
     status: "Unitialized",

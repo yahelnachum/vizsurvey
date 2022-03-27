@@ -1,9 +1,8 @@
-import { randomInt } from "d3";
 import { StatusType } from "./StatusType";
 import { TitrationType } from "./TitrationType";
-import { Answer } from "./Answer";
-import { TitrationStateType } from "./TitrationStateType";
 import { ChoiceType } from "./ChoiceType";
+
+export const TIMESTAMP_FORMAT = "MM/dd/yyyy H:mm:ss:SSS ZZZZ";
 
 export class QuestionEngine {
   constructor() {}
@@ -12,147 +11,139 @@ export class QuestionEngine {
     return state.questions.QandA;
   }
 
-  currentQuestion(state) {
-    return state.QandA[state.currentQuestionIdx].answers[
-      state.currentQuestionTitrateIdx
-    ];
-  }
-
-  currentAnswerArray(state) {
-    return state.QandA[state.currentQuestionIdx].answers;
-  }
-
-  currentAnswer(state) {
-    return this.currentAnswerArray(state)[state.currentQuestionTitrateIdx];
-  }
-
-  currentChoiceEarlier(state) {
-    return this.currentAnswer(state).choice === ChoiceType.earlier;
-  }
-
-  currentChoiceLater(state) {
-    return this.currentAnswer(state).choice === ChoiceType.later;
-  }
-
-  firstAnswer(state) {
-    return state.QandA[0].answers;
-  }
-
-  isTitrationAtMinAmount(state) {
-    return state.currentQuestionTitrateIdx === this.currentAnswerArray.length;
-  }
-
-  isTitrationAtMaxAmount(state) {
-    return state.currentQuestionTitrateIdx === 0;
-  }
-
-  titrationAtMinOrMax(state) {
-    return (
-      state.currentQuestionTitrateIdx === this.currentAnswerArray.length ||
-      state.currentQuestionTitrateIdx === 0
-    );
-  }
-
-  countChoiceSwitches(answers) {
-    const choices = answers.filter((e) => e.choice !== ChoiceType.unitialized);
-    var transitionCount = 0;
-    for (var i = 1; i < choices.length; i++) {
-      if (choices[i - 1].choice !== choices[i]) {
-        transitionCount++;
-      }
-    }
-    return transitionCount;
-  }
-
-  generateAnswerArray(q) {
-    const answerAry = Array();
-    if (q.titration === TitrationType.none) {
-      answerAry.push(
-        Answer.create(
-          q.amountEarlier,
-          q.timeEarlier,
-          q.dateEarlier,
-          q.amountLater,
-          q.timeLater,
-          q.dateLater,
-          ChoiceType.unitialized
-        )
-      );
-    } else {
-      for (var i = 1; i <= q.noTitration; i++) {
-        answerAry.push(
-          new Answer(
-            (q.amountLater / q.noTitration) * i,
-            q.timeEarlier,
-            q.dateEarlier,
-            q.amountLater,
-            q.timeLater,
-            q.dateLater,
-            ChoiceType.unitialized
-          )
-        );
-      }
-    }
-    return answerAry;
+  currentQuestionAndAnswer(state) {
+    return state.QandA[state.currentQuestionIdx];
   }
 
   startSurvey(state) {
     state.currentQuestionIdx = 0;
-    state.currentQuestionTitrateIdx = 0;
-    state.titrationState = TitrationStateType.uninitialized;
-    for (const q of state.QandA) {
-      q.answers = this.generateAnswerArray(q);
-    }
+    const cqa = this.currentQuestionAndAnswer(state);
+    cqa.highup = cqa.question.amountEarlier;
+    cqa.lowdown = undefined;
+    cqa.createNextAnswer(cqa.question.amountEarlier, cqa.question.amountLater);
   }
 
   setCurrentQuestionShown(state, action) {
-    this.currentAnswer(state).shownTimestamp = action.payload;
+    this.currentQuestionAndAnswer(state).latestAnswer.shownTimestamp =
+      action.payload;
+  }
+
+  isLastQandA(state) {
+    return state.currentQuestionIdx === state.QandA.length - 1;
+  }
+
+  incNextQuestion(state) {
+    if (this.isLastQandA(state)) {
+      state.status = StatusType.Complete;
+    } else {
+      state.currentQuestionIdx += 1;
+      const cqa = this.currentQuestionAndAnswer(state);
+      cqa.createNextAnswer(
+        cqa.question.amountEarlier,
+        cqa.question.amountLater
+      );
+    }
+  }
+
+  updateHighupOrLowdown(currentQandA) {
+    console.assert(
+      currentQandA.question.titration !== TitrationType.none,
+      "Question titration value not set before calling updateHighupOrLowdown."
+    );
+    console.assert(
+      currentQandA.choice !== null &&
+        currentQandA.choice !== ChoiceType.unitialized
+    );
+    const ca = currentQandA.latestAnswer;
+    switch (ca.choice) {
+      case ChoiceType.earlier:
+        var possibleHighup =
+          currentQandA.question.titration === TitrationType.laterAmount
+            ? ca.amountLater
+            : ca.amountEarlier;
+        if (!currentQandA.highup || possibleHighup > currentQandA.highup)
+          currentQandA.highup = possibleHighup;
+        break;
+      case ChoiceType.later:
+        var possibleLowdown =
+          currentQandA.question.titration === TitrationType.laterAmount
+            ? ca.amountLater
+            : ca.amountEarlier;
+        if (!currentQandA.lowdown || possibleLowdown < currentQandA.lowdown)
+          currentQandA.lowdown = possibleLowdown;
+        break;
+      default:
+        console.assert(
+          true,
+          "Invalid value for current answer in setAnswerCurrentQuestion"
+        );
+        break;
+    }
+  }
+
+  calcTitrationAmount(lowdown, highup) {
+    const difference = lowdown ? lowdown - highup : highup;
+    var result = difference / 2;
+    result = result / 10.0;
+    result = parseInt(result);
+    result = result * 10;
+    return result;
+  }
+
+  calcEarlierAndLaterAmounts(QandA, titrationAmount) {
+    var earlierAmount;
+    var laterAmount;
+    const currentAnswer = QandA.latestAnswer;
+    switch (currentAnswer.choice) {
+      case ChoiceType.earlier:
+        earlierAmount =
+          QandA.question.titration === TitrationType.earlierAmount
+            ? currentAnswer.amountEarlier - titrationAmount
+            : QandA.question.amountEarlier;
+        laterAmount =
+          QandA.question.titration === TitrationType.laterAmount
+            ? currentAnswer.amountLater + titrationAmount
+            : QandA.question.amountLater;
+        return { earlierAmount, laterAmount };
+      case ChoiceType.later:
+        earlierAmount =
+          QandA.question.titration === TitrationType.earlierAmount
+            ? currentAnswer.amountEarlier + titrationAmount
+            : QandA.question.amountEarlier;
+        laterAmount =
+          QandA.question.titration === TitrationType.laterAmount
+            ? currentAnswer.amountLater - titrationAmount
+            : QandA.question.amountLater;
+        return { earlierAmount, laterAmount };
+      default:
+        console.assert(
+          true,
+          "Invalid value for current answer choice in calcEarlierAndLaterAmounts"
+        );
+    }
   }
 
   setAnswerCurrentQuestion(state, action) {
-    this.currentQuestion(state).answers[
-      state.currentQuestionTitrateIdx
-    ].choice = action.payload.choice;
-    this.currentAnswer(state).answerTime =
-      action.payload.choiceTimestamp.toFormat("MM/dd/yyyy H:mm:ss:SSS ZZZZ");
-    if (this.currentQuestion(state).titration === TitrationType.none) {
-      if (state.currentQuestionIdx === state.QandA.length - 1) {
-        state.status = StatusType.Complete;
-      } else {
-        state.currentQuestionIdx += 1;
-      }
+    const cqa = this.currentQuestionAndAnswer(state);
+    const cq = cqa.question;
+    cqa.setLatestAnswer(
+      action.payload.choice,
+      action.payload.choiceTimestamp.toFormat(TIMESTAMP_FORMAT)
+    );
+    if (cq.titration === TitrationType.none) {
+      this.incNextQuestion(state);
     } else {
-      switch (state.titrationState) {
-        case TitrationStateType.uninitialized:
-          state.currentQuestionTitrateIdx = randomInt(
-            0,
-            this.currentAnswerArray.length
-          )();
-          state.titrationState = TitrationStateType.start;
-          break;
-        case TitrationStateType.start:
-          // detect and handle edge cases of at the largest soonest amount and choice is later or
-          // smallest sooner amount and choice is earlier
-          // if (isTitrationAtMinAmount(state) && this.currentChoiceEarlier(state))
-          //   this.titrationAtMinOrMax(state) &&
-          //   (this.currentAnswer(state).choice === ChoiceType.earlier ||
-          //     this.currentAnswer(state).choice === ChoiceType.later)
-          // ) {
-          //   alert("TODO: handle this condition!");
-          // } else {
-          //   if (this.currentChoiceEarlier(state)) {
-          //     state.
-          //   } else if (this.currentChoiceLater(state)) {
-          //   }
-          // }
-
-          break;
-        case TitrationStateType.topOrBottom:
-          break;
-        case TitrationStateType.titrate:
-          break;
-        case TitrationStateType.last:
-          break;
+      const titrationAmount = this.calcTitrationAmount(cqa.lowdown, cqa.highup);
+      this.updateHighupOrLowdown(cqa);
+      // TODO we need a termination condition for runaway titration
+      if (cqa.lowdown - cqa.highup < 10) {
+        this.incNextQuestion(state);
+      } else {
+        const { earlierAmount, laterAmount } = this.calcEarlierAndLaterAmounts(
+          cqa,
+          titrationAmount
+        );
+        cqa.createNextAnswer(earlierAmount, laterAmount);
       }
     }
   }

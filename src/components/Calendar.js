@@ -111,7 +111,7 @@ function Calendar(props) {
 
         earlierAmountSVG
           .select("text")
-          .data([QandA.question.earlierAmount])
+          .data([QandA.question.amountEarlier])
           .join("text")
           .attr("text-anchor", "middle")
           .attr("class", "earlier-amount")

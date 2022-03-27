@@ -8,7 +8,9 @@ export class Answer {
     dateLater,
     choice,
     shownTimestamp,
-    choiceTimestamp
+    choiceTimestamp,
+    highup,
+    lowdown
   ) {
     this.amountEarlier = amountEarlier;
     this.timeEarlier = timeEarlier;
@@ -19,15 +21,13 @@ export class Answer {
     this.choice = choice;
     this.shownTimestamp = shownTimestamp;
     this.choiceTimestamp = choiceTimestamp;
+    this.highup = highup;
+    this.lowdown = lowdown;
   }
 
   setAnswer(choiceTimestamp, choice) {
     this.choiceTimestamp = choiceTimestamp;
     this.choice = choice;
-  }
-
-  setShownTimestamp(shownTimestamp) {
-    this.shownTimestamp = shownTimestamp;
   }
 
   static create(
@@ -37,7 +37,9 @@ export class Answer {
     amountLater,
     timeLater,
     dateLater,
-    choice
+    choice,
+    highup,
+    lowdown
   ) {
     return new Answer(
       amountEarlier,
@@ -46,7 +48,9 @@ export class Answer {
       amountLater,
       timeLater,
       dateLater,
-      choice
+      choice,
+      highup,
+      lowdown
     );
   }
 }

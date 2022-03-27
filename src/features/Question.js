@@ -7,7 +7,6 @@ export class Question {
     position,
     viewType,
     titration,
-    noTitration,
     amountEarlier,
     timeEarlier,
     dateEarlier,
@@ -26,12 +25,10 @@ export class Question {
     height,
     comment
   ) {
-    console.log("In constructor");
     this.treatmentId = treatmentId;
     this.position = position;
     this.viewType = viewType;
     this.titration = titration;
-    this.noTitration = +noTitration;
     this.amountEarlier = amountEarlier;
     this.timeEarlier = timeEarlier;
     this.dateEarlier = dateEarlier;
@@ -51,17 +48,6 @@ export class Question {
     this.comment = comment;
   }
 
-  get titationAmount() {
-    switch (this.titration) {
-      case TitrationType.earlierAmount:
-        return this.earlierAmount;
-      case TitrationType.laterAmount:
-        return this.laterAmount;
-      default:
-        return undefined;
-    }
-  }
-
   static fromCSVRow(row) {
     console.log("in fromCSVRow");
     return new Question(
@@ -69,7 +55,6 @@ export class Question {
       +row.position,
       ViewType.enumValueOf(row.view_type),
       TitrationType.enumValueOf(row.titration),
-      +row.no_titration,
       +row.amount_earlier,
       row.time_earlier ? +row.time_earlier : undefined,
       row.date_earlier ? new Date(row.date_earlier) : undefined,
