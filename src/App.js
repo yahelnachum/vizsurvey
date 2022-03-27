@@ -32,14 +32,14 @@ const App = () => {
             </Navbar.Collapse>
           </Navbar>
           <QueryParam />
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <FullScreen handle={handle}>
+          <FullScreen handle={handle}>
+            <Switch>
+              <Route exact path="/" component={Home} />
               <Route path="/survey" component={Survey} />
-            </FullScreen>
-            <Route path="/thankyou" component={ThankYou} />
-            <Route path="/*" component={Home} />
-          </Switch>
+              <Route path="/thankyou" component={ThankYou} />
+              <Route path="/*" component={Home} />
+            </Switch>
+          </FullScreen>
           <Footer className="footer bg-dark" />
         </div>
       </BrowserRouter>
