@@ -9,6 +9,10 @@ export class QuestionAndAnswer {
     this.lowdown = undefined; // the current lowest value judged as too high
   }
 
+  get isFirstAnswer() {
+    return this.answers.length === 1;
+  }
+
   get latestAnswer() {
     console.assert(
       this.answers.length != 0,

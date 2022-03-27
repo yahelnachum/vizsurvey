@@ -19,7 +19,10 @@ export class QuestionEngine {
   startSurvey(state) {
     state.currentQuestionIdx = 0;
     const cqa = this.currentQuestionAndAnswer(state);
-    cqa.highup = cqa.question.amountEarlier;
+    cqa.highup =
+      cqa.titration === TitrationType.later
+        ? cqa.question.amountEarlier
+        : cqa.question.amountLater;
     cqa.lowdown = undefined;
     cqa.createNextAnswer(cqa.question.amountEarlier, cqa.question.amountLater);
   }
@@ -82,13 +85,8 @@ export class QuestionEngine {
     }
   }
 
-  calcTitrationAmount(lowdown, highup, amountLater) {
-    const difference = lowdown ? lowdown - highup : highup;
-    var result = difference / 2;
-    result = result / 10.0;
-    result = parseInt(result);
-    result = result * 10;
-    return result;
+  calcTitrationAmount(titratingAmount, highup, override) {
+    return (titratingAmount ? titratingAmount - highup : override) / 2;
   }
 
   calcNewAmount(QandA, titrationAmount) {
@@ -103,13 +101,19 @@ export class QuestionEngine {
           QandA.latestAnswer.choice === ChoiceType.earlier
             ? titrationAmount
             : -1 * titrationAmount;
-        return QandA.latestAnswer.amountLater + adjustmentAmount;
+        return (
+          parseInt((QandA.latestAnswer.amountLater + adjustmentAmount) / 10) *
+          10
+        );
       case TitrationType.earlierAmount:
         adjustmentAmount =
           QandA.latestAnswer.choice === ChoiceType.earlier
             ? -1 * titrationAmount
             : titrationAmount;
-        return QandA.latestAnswer.amountEarlier + adjustmentAmount;
+        return (
+          parseInt((QandA.latestAnswer.amountEarlier + adjustmentAmount) / 10) *
+          10
+        );
       default:
         console.assert(
           true,
@@ -130,11 +134,11 @@ export class QuestionEngine {
       this.incNextQuestion(state);
     } else {
       const titrationAmount = this.calcTitrationAmount(
-        cqa.lowdown,
-        cqa.highup,
         cqa.question.titration === TitrationType.laterAmount
           ? cqa.latestAnswer.amountLater
-          : cqa.latestAnswer.amountEarlier
+          : cqa.latestAnswer.amountEarlier,
+        cqa.highup,
+        cqa.isFirstAnswer ? cqa.highup : null
       );
       this.updateHighupOrLowdown(cqa);
       // TODO we need a termination condition for runaway titration
