@@ -2,6 +2,7 @@ import { DateTime } from "luxon";
 import { QuestionEngine } from "./QuestionEngine";
 import { ViewType } from "./ViewType";
 import { ChoiceType } from "./ChoiceType";
+import { StatusType } from "./StatusType";
 import { TitrationType } from "./TitrationType";
 import { QuestionAndAnswer } from "./QuestionAndAnswer";
 import { Question } from "./Question";
@@ -220,18 +221,22 @@ describe("QuestionEngine tests", () => {
     // sixth answer
     qe.answerCurrentQuestion(state, {
       payload: {
-        choice: ChoiceType.earlier,
+        // the paper said the last choice was earlier; however, I think it is wrong and meant later.
+        // Choice of later seems to make the last value of lowdown work according to the algorithm
+        // I derived from the earlier steps in the example.
+        choice: ChoiceType.later,
         choiceTimestamp: DateTime.now(),
       },
     });
     expect(state.currentQuestionIdx).toBe(0);
-    expect(state.status).toBe("Unitialized");
+    expect(state.status).toBe("Complete");
     expect(state.error).toBeNull();
-    expect(cQA.highup).toBe(1070);
-    expect(cQA.lowdown).toBe(1090);
-    expect(cQA.answers.length).toBe(7);
+    expect(cQA.highup).toBe(1060);
+    expect(cQA.lowdown).toBe(1070);
+    expect(cQA.answers.length).toBe(6);
     expect(cQA.latestAnswer.amountEarlier).toBe(500);
     expect(cQA.latestAnswer.amountLater).toBe(1070);
+    expect(state.status).toBe(StatusType.Complete);
   });
 });
 

@@ -142,7 +142,7 @@ export class QuestionEngine {
       );
       this.updateHighupOrLowdown(cqa);
       // TODO we need a termination condition for runaway titration
-      if (cqa.lowdown - cqa.highup < 10) {
+      if (cqa.lowdown - cqa.highup <= 10) {
         this.incNextQuestion(state);
       } else {
         const newAmount = this.calcNewAmount(cqa, titrationAmount);
