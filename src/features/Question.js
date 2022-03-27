@@ -2,7 +2,7 @@ import { ViewType } from "./ViewType";
 import { TitrationType } from "./TitrationType";
 
 export class Question {
-  constructor(
+  constructor({
     treatmentId,
     position,
     viewType,
@@ -23,8 +23,8 @@ export class Question {
     graphHeightIn,
     width,
     height,
-    comment
-  ) {
+    comment,
+  }) {
     this.treatmentId = treatmentId;
     this.position = position;
     this.viewType = viewType;
@@ -50,28 +50,28 @@ export class Question {
 
   static fromCSVRow(row) {
     console.log("in fromCSVRow");
-    return new Question(
-      +row.treatment_id,
-      +row.position,
-      ViewType.enumValueOf(row.view_type),
-      TitrationType.enumValueOf(row.titration),
-      +row.amount_earlier,
-      row.time_earlier ? +row.time_earlier : undefined,
-      row.date_earlier ? new Date(row.date_earlier) : undefined,
-      +row.amount_later,
-      row.time_later ? +row.time_later : undefined,
-      row.date_later ? new Date(row.date_later) : undefined,
-      +row.max_amount,
-      +row.max_time,
-      +row.horizontal_pixels,
-      +row.vertical_pixels,
-      +row.left_margin_width,
-      +row.bottom_margin_height,
-      +row.graph_width_in,
-      +row.graph_height_in,
-      +row.width,
-      +row.height,
-      row.comment
-    );
+    return new Question({
+      treatmentId: +row.treatment_id,
+      position: +row.position,
+      viewType: ViewType.enumValueOf(row.view_type),
+      titration: TitrationType.enumValueOf(row.titration),
+      amountEarlier: +row.amount_earlier,
+      timeEarlier: row.time_earlier ? +row.time_earlier : undefined,
+      dateEarlier: row.date_earlier ? new Date(row.date_earlier) : undefined,
+      amountLater: +row.amount_later,
+      timeLater: row.time_later ? +row.time_later : undefined,
+      dateLater: row.date_later ? new Date(row.date_later) : undefined,
+      maxAmount: +row.max_amount,
+      maxTime: +row.max_time,
+      horizontalPixels: +row.horizontal_pixels,
+      verticalPixels: +row.vertical_pixels,
+      leftMarginWidthIn: +row.left_margin_width,
+      bottomMarginHeightIn: +row.bottom_margin_height,
+      graphWidthIn: +row.graph_width_in,
+      graphHeightIn: +row.graph_height_in,
+      width: +row.width,
+      height: +row.height,
+      comment: row.comment,
+    });
   }
 }

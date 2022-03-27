@@ -25,17 +25,17 @@ export class QuestionAndAnswer {
 
   createNextAnswer(amountEarlier, amountLater) {
     this.answers.push(
-      Answer.create(
-        amountEarlier,
-        this.question.timeEarlier,
-        this.question.dateEarlier,
-        amountLater,
-        this.question.timeLater,
-        this.question.dateLater,
-        ChoiceType.unitialized,
-        this.highup,
-        this.lowdown
-      )
+      Answer.create({
+        amountEarlier: amountEarlier,
+        timeEarlier: this.question.timeEarlier,
+        dateEarlier: this.question.dateEarlier,
+        amountLater: amountLater,
+        timeLater: this.question.timeLater,
+        dateLater: this.question.dateLater,
+        choice: ChoiceType.unitialized,
+        highup: this.highup,
+        lowdown: this.lowdown,
+      })
     );
   }
 

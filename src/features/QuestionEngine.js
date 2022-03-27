@@ -90,36 +90,28 @@ export class QuestionEngine {
     return result;
   }
 
-  calcEarlierAndLaterAmounts(QandA, titrationAmount) {
-    var earlierAmount;
-    var laterAmount;
-    const currentAnswer = QandA.latestAnswer;
-    switch (currentAnswer.choice) {
-      case ChoiceType.earlier:
-        earlierAmount =
-          QandA.question.titration === TitrationType.earlierAmount
-            ? currentAnswer.amountEarlier - titrationAmount
-            : QandA.question.amountEarlier;
-        laterAmount =
-          QandA.question.titration === TitrationType.laterAmount
-            ? currentAnswer.amountLater + titrationAmount
-            : QandA.question.amountLater;
-        return { earlierAmount, laterAmount };
-      case ChoiceType.later:
-        earlierAmount =
-          QandA.question.titration === TitrationType.earlierAmount
-            ? currentAnswer.amountEarlier + titrationAmount
-            : QandA.question.amountEarlier;
-        laterAmount =
-          QandA.question.titration === TitrationType.laterAmount
-            ? currentAnswer.amountLater - titrationAmount
-            : QandA.question.amountLater;
-        return { earlierAmount, laterAmount };
+  calcNewAmount(QandA, titrationAmount) {
+    switch (QandA.question.titration) {
+      case TitrationType.laterAmount:
+        console.assert(
+          QandA.lastAnswer.choice &&
+            QandA.lastAnswer.choice !== ChoiceType.unitialized
+        );
+        return QandA.lastAnswer.amountLater + QandA.lastAnswer.choice ===
+          ChoiceType.earlier
+          ? titrationAmount
+          : -1 * titrationAmount;
+      case TitrationType.earlierAmount:
+        return QandA.lastAnswer.amountEarlier + QandA.lastAnswer.choice ===
+          ChoiceType.earlier
+          ? -1 * titrationAmount
+          : titrationAmount;
       default:
         console.assert(
           true,
-          "Invalid value for current answer choice in calcEarlierAndLaterAmounts"
+          "Invalid value for question titration type in calcEarlierAndLaterAmounts"
         );
+        break;
     }
   }
 
@@ -139,11 +131,12 @@ export class QuestionEngine {
       if (cqa.lowdown - cqa.highup < 10) {
         this.incNextQuestion(state);
       } else {
-        const { earlierAmount, laterAmount } = this.calcEarlierAndLaterAmounts(
-          cqa,
-          titrationAmount
-        );
-        cqa.createNextAnswer(earlierAmount, laterAmount);
+        const newAmount = this.calcNewAmount(cqa, titrationAmount);
+        if (cq.titration === TitrationType.later) {
+          cqa.createNextAnswer(cqa.question.amountEarlier, newAmount);
+        } else {
+          cqa.createNextAnswer(newAmount, cqa.question.amountLater);
+        }
       }
     }
   }

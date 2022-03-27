@@ -120,6 +120,8 @@ describe("QuestionEngine tests", () => {
     expect(QandA.lowdown).toBe(1090); // different from the paper
   });
 
+  test("Integration test QuestionEngine titrationfrom Read 2001 paper.", () => {});
+
   // const action = {
   //   payload: {
   //     choice: ChoiceType.earlier,
@@ -130,54 +132,54 @@ describe("QuestionEngine tests", () => {
 
 class TestDataFactory {
   static createQuestionLaterTitrate() {
-    return new Question(
-      1,
-      1,
-      ViewType.enumValueOf("barchart"),
-      TitrationType.enumValueOf("laterAmount"),
-      500,
-      1,
-      undefined,
-      1000,
-      3,
-      undefined,
-      2000,
-      8,
-      480,
-      480,
-      0.5,
-      0.5,
-      6,
-      6,
-      6.5,
-      6.5,
-      "Titration earlier amount test case."
-    );
+    return new Question({
+      treatmentId: 1,
+      position: 1,
+      viewType: ViewType.enumValueOf("barchart"),
+      titration: TitrationType.enumValueOf("laterAmount"),
+      amountEarlier: 500,
+      timeEarlier: 1,
+      dateEarlier: undefined,
+      amountLater: 1000,
+      timeLater: 3,
+      dateLater: undefined,
+      maxAmount: 2000,
+      maxTime: 8,
+      horizontalPixels: 480,
+      verticalPixels: 480,
+      leftMarginWidthIn: 0.5,
+      bottomMarginHeightIn: 0.5,
+      graphWidthIn: 6,
+      graphHeightIn: 6,
+      width: 6.5,
+      height: 6.5,
+      comment: "Titration earlier amount test case.",
+    });
   }
 
   static createQuestionNoTitrate() {
-    return new Question(
-      1,
-      1,
-      ViewType.enumValueOf("barchart"),
-      TitrationType.enumValueOf("none"),
-      400,
-      1,
-      undefined,
-      500,
-      3,
-      undefined,
-      500,
-      8,
-      480,
-      480,
-      0.5,
-      0.5,
-      6,
-      6,
-      6.5,
-      6.5,
-      "No titration test case."
-    );
+    return new Question({
+      treatmentId: 1,
+      position: 1,
+      viewType: ViewType.enumValueOf("barchart"),
+      titration: TitrationType.enumValueOf("none"),
+      amountEarlier: 400,
+      timeEarlier: 1,
+      dateEarlier: undefined,
+      amountLater: 500,
+      timeLater: 3,
+      dateLater: undefined,
+      maxAmount: 500,
+      maxTime: 8,
+      horizontalPixels: 480,
+      verticalPixels: 480,
+      leftMarginWidthIn: 0.5,
+      bottomMarginHeightIn: 0.5,
+      graphWidthIn: 6,
+      graphHeightIn: 6,
+      width: 6.5,
+      height: 6.5,
+      comment: "No titration test case.",
+    });
   }
 }

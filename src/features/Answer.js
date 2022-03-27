@@ -1,17 +1,17 @@
 export class Answer {
-  constructor(
-    amountEarlier,
-    timeEarlier,
-    dateEarlier,
-    amountLater,
-    timeLater,
-    dateLater,
-    choice,
-    shownTimestamp,
-    choiceTimestamp,
-    highup,
-    lowdown
-  ) {
+  constructor({
+    amountEarlier: amountEarlier,
+    timeEarlier: timeEarlier,
+    dateEarlier: dateEarlier,
+    amountLater: amountLater,
+    timeLater: timeLater,
+    dateLater: dateLater,
+    choice: choice,
+    shownTimestamp: shownTimestamp,
+    choiceTimestamp: choiceTimestamp,
+    highup: highup,
+    lowdown: lowdown,
+  }) {
     this.amountEarlier = amountEarlier;
     this.timeEarlier = timeEarlier;
     this.dateEarlier = dateEarlier;
@@ -30,27 +30,27 @@ export class Answer {
     this.choice = choice;
   }
 
-  static create(
-    amountEarlier,
-    timeEarlier,
-    dateEarlier,
-    amountLater,
-    timeLater,
-    dateLater,
-    choice,
-    highup,
-    lowdown
-  ) {
-    return new Answer(
-      amountEarlier,
-      timeEarlier,
-      dateEarlier,
-      amountLater,
-      timeLater,
-      dateLater,
-      choice,
-      highup,
-      lowdown
-    );
+  static create({
+    amountEarlier: amountEarlier,
+    timeEarlier: timeEarlier,
+    dateEarlier: dateEarlier,
+    amountLater: amountLater,
+    timeLater: timeLater,
+    dateLater: dateLater,
+    choice: choice,
+    highup: highup,
+    lowdown: lowdown,
+  }) {
+    return new Answer({
+      amountEarlier: amountEarlier,
+      timeEarlier: timeEarlier,
+      dateEarlier: dateEarlier,
+      amountLater: amountLater,
+      timeLater: timeLater,
+      dateLater: dateLater,
+      choice: choice,
+      highup: highup,
+      lowdown: lowdown,
+    });
   }
 }
