@@ -77,6 +77,10 @@ table {
   width: 14%;
 }
 
+::backdrop {
+    background-color: white;
+}
+
 /* .stickRight {
   float: right;
 } */

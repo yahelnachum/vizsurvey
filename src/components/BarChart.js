@@ -123,6 +123,9 @@ function BarChart(props) {
             //.attr("width", x.bandwidth())
             .attr("width", barWidth)
             .attr("y", (d) => y(d.amount))
+            .attr("id", (d) => {
+              return "id" + d.time;
+            })
             .on("click", (d) => {
               if (d.target.__data__.amount === QandA.question.amountEarlier) {
                 dispatch(
