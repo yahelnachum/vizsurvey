@@ -4,6 +4,7 @@ import { ChoiceType } from "./ChoiceType";
 
 export const TIMESTAMP_FORMAT = "MM/dd/yyyy H:mm:ss:SSS ZZZZ";
 
+// TODO Need to capture errors in processing by settings state.status = StatusType.Error
 export class QuestionEngine {
   constructor() {}
 
@@ -81,7 +82,7 @@ export class QuestionEngine {
     }
   }
 
-  calcTitrationAmount(lowdown, highup) {
+  calcTitrationAmount(lowdown, highup, amountLater) {
     const difference = lowdown ? lowdown - highup : highup;
     var result = difference / 2;
     result = result / 10.0;
@@ -91,21 +92,24 @@ export class QuestionEngine {
   }
 
   calcNewAmount(QandA, titrationAmount) {
+    var adjustmentAmount;
     switch (QandA.question.titration) {
       case TitrationType.laterAmount:
         console.assert(
-          QandA.lastAnswer.choice &&
-            QandA.lastAnswer.choice !== ChoiceType.unitialized
+          QandA.latestAnswer.choice &&
+            QandA.latestAnswer.choice !== ChoiceType.unitialized
         );
-        return QandA.lastAnswer.amountLater + QandA.lastAnswer.choice ===
-          ChoiceType.earlier
-          ? titrationAmount
-          : -1 * titrationAmount;
+        adjustmentAmount =
+          QandA.latestAnswer.choice === ChoiceType.earlier
+            ? titrationAmount
+            : -1 * titrationAmount;
+        return QandA.latestAnswer.amountLater + adjustmentAmount;
       case TitrationType.earlierAmount:
-        return QandA.lastAnswer.amountEarlier + QandA.lastAnswer.choice ===
-          ChoiceType.earlier
-          ? -1 * titrationAmount
-          : titrationAmount;
+        adjustmentAmount =
+          QandA.latestAnswer.choice === ChoiceType.earlier
+            ? -1 * titrationAmount
+            : titrationAmount;
+        return QandA.latestAnswer.amountEarlier + adjustmentAmount;
       default:
         console.assert(
           true,
@@ -115,7 +119,7 @@ export class QuestionEngine {
     }
   }
 
-  setAnswerCurrentQuestion(state, action) {
+  answerCurrentQuestion(state, action) {
     const cqa = this.currentQuestionAndAnswer(state);
     const cq = cqa.question;
     cqa.setLatestAnswer(
@@ -125,17 +129,28 @@ export class QuestionEngine {
     if (cq.titration === TitrationType.none) {
       this.incNextQuestion(state);
     } else {
-      const titrationAmount = this.calcTitrationAmount(cqa.lowdown, cqa.highup);
+      const titrationAmount = this.calcTitrationAmount(
+        cqa.lowdown,
+        cqa.highup,
+        cqa.question.titration === TitrationType.laterAmount
+          ? cqa.latestAnswer.amountLater
+          : cqa.latestAnswer.amountEarlier
+      );
       this.updateHighupOrLowdown(cqa);
       // TODO we need a termination condition for runaway titration
       if (cqa.lowdown - cqa.highup < 10) {
         this.incNextQuestion(state);
       } else {
         const newAmount = this.calcNewAmount(cqa, titrationAmount);
-        if (cq.titration === TitrationType.later) {
+        if (cq.titration === TitrationType.laterAmount) {
           cqa.createNextAnswer(cqa.question.amountEarlier, newAmount);
-        } else {
+        } else if (cq.titration === TitrationType.earlierAmount) {
           cqa.createNextAnswer(newAmount, cqa.question.amountLater);
+        } else {
+          console.assert(
+            true,
+            "Titration not set to amountEarlier or amountLater before calling answerCurrentQuestion"
+          );
         }
       }
     }

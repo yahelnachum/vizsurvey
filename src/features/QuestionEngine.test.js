@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import { QuestionEngine } from "./QuestionEngine";
 import { ViewType } from "./ViewType";
 import { ChoiceType } from "./ChoiceType";
@@ -120,14 +121,62 @@ describe("QuestionEngine tests", () => {
     expect(QandA.lowdown).toBe(1090); // different from the paper
   });
 
-  test("Integration test QuestionEngine titrationfrom Read 2001 paper.", () => {});
+  test("Integration test QuestionEngine titrationfrom Read 2001 paper.", () => {
+    const testQandA = QuestionAndAnswer.create(
+      TestDataFactory.createQuestionLaterTitrate()
+    );
 
-  // const action = {
-  //   payload: {
-  //     choice: ChoiceType.earlier,
-  //     choiceTimestamp: DateTime.now,
-  //   },
-  // };
+    const state = {
+      QandA: [testQandA],
+      currentQuestionIdx: 0,
+      treatmentId: 1,
+      participantId: 1,
+      status: "Unitialized",
+      error: null,
+    };
+
+    const qe = new QuestionEngine();
+    qe.startSurvey(state);
+    var cQA = qe.currentQuestionAndAnswer(state);
+    expect(cQA.highup).toBe(500);
+    expect(cQA.lowdown).toBeUndefined();
+    expect(cQA.latestAnswer.amountEarlier).toBe(500);
+    expect(cQA.latestAnswer.amountLater).toBe(1000);
+    qe.answerCurrentQuestion(state, {
+      payload: {
+        choice: ChoiceType.earlier,
+        choiceTimestamp: DateTime.now(),
+      },
+    });
+    expect(state.currentQuestionIdx).toBe(0);
+    expect(state.status).toBe("Unitialized");
+    expect(state.error).toBeNull();
+    expect(cQA.highup).toBe(1000);
+    expect(cQA.lowdown).toBeUndefined();
+    expect(cQA.answers.length).toBe(2);
+    expect(cQA.latestAnswer.amountEarlier).toBe(500);
+    expect(cQA.latestAnswer.amountLater).toBe(1250);
+    qe.answerCurrentQuestion(state, {
+      payload: {
+        choice: ChoiceType.later,
+        choiceTimestamp: DateTime.now(),
+      },
+    });
+    expect(state.currentQuestionIdx).toBe(0);
+    expect(state.status).toBe("Unitialized");
+    expect(state.error).toBeNull();
+    expect(cQA.highup).toBe(1000);
+    expect(cQA.lowdown).toBe(1250);
+    expect(cQA.answers.length).toBe(3);
+    expect(cQA.latestAnswer.amountEarlier).toBe(500);
+    expect(cQA.latestAnswer.amountLater).toBe(1120);
+    qe.answerCurrentQuestion(state, {
+      payload: {
+        choice: ChoiceType.later,
+        choiceTimestamp: DateTime.now(),
+      },
+    });
+  });
 });
 
 class TestDataFactory {
