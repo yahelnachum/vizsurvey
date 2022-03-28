@@ -49,7 +49,6 @@ export class Question {
   }
 
   static fromCSVRow(row) {
-    console.log("in fromCSVRow");
     return new Question({
       treatmentId: +row.treatment_id,
       position: +row.position,

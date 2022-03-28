@@ -92,7 +92,7 @@ function BarChart(props) {
             //.attr("transform", `translate(${margin.left},${margin.bottom})`)
             .call(
               //axisLeft(y).tickValues(yTickValues).tickFormat(d3.format("$,.2f"))
-              axisLeft(y).tickValues(yTickValues).tickFormat(d3.format("$,.0f"))
+              axisLeft(y).tickValues(yTickValues).tickFormat(format("$,.0f"))
             );
 
           // const yLabelG = svg
