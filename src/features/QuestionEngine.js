@@ -13,11 +13,11 @@ export class QuestionEngine {
   }
 
   currentQuestionAndAnswer(state) {
-    return state.QandA[state.currentQuestionIdx];
+    return state.questions.QandA[state.questions.currentQuestionIdx];
   }
 
   startSurvey(state) {
-    state.currentQuestionIdx = 0;
+    state.questions.currentQuestionIdx = 0;
     const cqa = this.currentQuestionAndAnswer(state);
     cqa.highup =
       cqa.titration === TitrationType.later
@@ -33,14 +33,16 @@ export class QuestionEngine {
   }
 
   isLastQandA(state) {
-    return state.currentQuestionIdx === state.QandA.length - 1;
+    return (
+      state.questions.currentQuestionIdx === state.questions.QandA.length - 1
+    );
   }
 
   incNextQuestion(state) {
     if (this.isLastQandA(state)) {
-      state.status = StatusType.Complete;
+      state.questions.status = StatusType.Complete;
     } else {
-      state.currentQuestionIdx += 1;
+      state.questions.currentQuestionIdx += 1;
       const cqa = this.currentQuestionAndAnswer(state);
       cqa.createNextAnswer(
         cqa.question.amountEarlier,

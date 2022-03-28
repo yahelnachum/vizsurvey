@@ -24,7 +24,7 @@ export const questionSlice = createSlice({
     currentQuestionIdx: 0,
     treatmentId: null,
     participantId: null,
-    status: "Unitialized",
+    status: StatusType.Unitialized,
     error: null,
   }, // the initial state of our global data (under name slice)
   reducers: {
