@@ -8,6 +8,7 @@ import { QueryParam } from "./components/QueryParam";
 import { selectAllQuestions, writeAnswers } from "./features/questionSlice";
 import { Footer } from "./footer";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
+import { v4 as uuidv4 } from "uuid";
 
 const App = () => {
   const handle = useFullScreenHandle();
@@ -103,8 +104,7 @@ const ThankYou = () => {
   console.log(csv);
   dispatch(writeAnswers(csv));
 
-  const uuid = Date.now();
-  // TODO: YAHEL: base64 encode this so its easier to type
+  const uuid = uuidv4();
   return (
     <div>
       <p>Your answers have been submitted. Thank you for taking this survey!</p>
