@@ -103,10 +103,15 @@ const ThankYou = () => {
   console.log(csv);
   dispatch(writeAnswers(csv));
 
+  const uuid = Date.now();
+  // TODO: YAHEL: base64 encode this so its easier to type
   return (
     <div>
       <p>Your answers have been submitted. Thank you for taking this survey!</p>
-      .
+      <p>
+        Your unique ID is: {uuid}. Please go back to Amazon Turk and present
+        this unique ID in the form.
+      </p>
     </div>
   );
 };
