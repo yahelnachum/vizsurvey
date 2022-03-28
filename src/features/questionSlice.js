@@ -43,7 +43,7 @@ export const questionSlice = createSlice({
     },
     // we define our actions on the slice of global store data here.
     answer(state, action) {
-      qe.answerCurrentQuestion(state, action);
+      qe.answerCurrentQuestion(state.questions, action);
     },
   },
   extraReducers: (builder) => {
@@ -68,11 +68,11 @@ export const questionSlice = createSlice({
 });
 
 export const selectAllQuestions = (state) => {
-  return qe.allQuestions(state);
+  return qe.allQuestions(state.questions);
 };
 
 export const selectCurrentQuestion = (state) => {
-  return qe.currentQuestionAndAnswer(state);
+  return qe.currentQuestionAndAnswer(state.questions);
 };
 
 export const fetchStatus = (state) => {

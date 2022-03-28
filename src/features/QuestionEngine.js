@@ -9,15 +9,16 @@ export class QuestionEngine {
   constructor() {}
 
   allQuestions(state) {
-    return state.questions.QandA;
+    return state.QandA;
   }
 
   currentQuestionAndAnswer(state) {
-    return state.questions.QandA[state.questions.currentQuestionIdx];
+    const result = state.QandA[state.currentQuestionIdx];
+    return result;
   }
 
   startSurvey(state) {
-    state.questions.currentQuestionIdx = 0;
+    state.currentQuestionIdx = 0;
     const cqa = this.currentQuestionAndAnswer(state);
     cqa.highup =
       cqa.titration === TitrationType.later
@@ -25,6 +26,8 @@ export class QuestionEngine {
         : cqa.question.amountLater;
     cqa.lowdown = undefined;
     cqa.createNextAnswer(cqa.question.amountEarlier, cqa.question.amountLater);
+    console.log("startSurvey presenting:");
+    console.log(JSON.stringify(cqa.latestAnswer()));
   }
 
   setCurrentQuestionShown(state, action) {
@@ -33,16 +36,14 @@ export class QuestionEngine {
   }
 
   isLastQandA(state) {
-    return (
-      state.questions.currentQuestionIdx === state.questions.QandA.length - 1
-    );
+    return state.currentQuestionIdx === state.QandA.length - 1;
   }
 
   incNextQuestion(state) {
     if (this.isLastQandA(state)) {
-      state.questions.status = StatusType.Complete;
+      state.status = StatusType.Complete;
     } else {
-      state.questions.currentQuestionIdx += 1;
+      state.currentQuestionIdx += 1;
       const cqa = this.currentQuestionAndAnswer(state);
       cqa.createNextAnswer(
         cqa.question.amountEarlier,
