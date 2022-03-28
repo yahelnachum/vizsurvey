@@ -65,14 +65,6 @@ function BarChart(props) {
             .attr("class", "plot-area")
             .attr("transform", `translate(${margin.left},${margin.top})`);
 
-          svg.on("click", (d) => {
-            console.log("yahel", d);
-          });
-          var drag = d3.drag().on("drag", function (d) {
-            console.log("drage", d);
-          });
-          drag(svg.selectAll(".plot-area"));
-
           const x = scaleLinear()
             .domain([0, QandA.question.maxTime])
             .range([0, width]);
@@ -138,26 +130,12 @@ function BarChart(props) {
               return "id" + d.time;
             })
             .on("click", (d) => {
-              console.log("yahel", d);
-              //console.log("yahel", d.clientX);
-              console.log("yahel", d.clientY);
-              //console.log("yahel", d.layerX);
-              console.log("yahel", d.layerY);
-              console.log("yahel", d.movementY);
-              console.log("yahel", d.offsetY);
-              console.log("yahel", d.pageY);
-              console.log("yahel", d.screenY);
-              console.log("yahel", d.y);
               if (d.target.__data__.amount === QandA.question.amountEarlier) {
                 //dispatch(answer(ChoiceType.Earlier));
               } else {
                 //dispatch(answer(ChoiceType.Later));
               }
             })
-            /*        .on("drag", function (d) {
-              d3.select(this).attr("y", (d.y = d.pageY));
-              console.log("drage", d);
-            }) */
             .attr("height", (d) => y(0) - y(d.amount));
           var dragHandler = d3.drag().on("drag", function (d) {
             d3.select(this)
