@@ -41,9 +41,6 @@ function BarChart(props) {
     marginRight: margin.right + "px",
   };
 
-  // const innerHeight = height - margin.bottom - margin.top;
-  // const innerWidth = width - margin.left - margin.right;
-
   const xTickValues = Array.from(Array(q.maxTime + 1).keys());
   const data = xTickValues.map((d) => {
     if (d === la.timeEarlier) {
