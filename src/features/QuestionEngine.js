@@ -90,7 +90,7 @@ export class QuestionEngine {
   }
 
   calcTitrationAmount(titratingAmount, highup, override) {
-    return (titratingAmount ? titratingAmount - highup : override) / 2;
+    return (override ? override : titratingAmount - highup) / 2;
   }
 
   calcNewAmount(QandA, titrationAmount) {
@@ -134,38 +134,36 @@ export class QuestionEngine {
       action.payload.choice,
       action.payload.choiceTimestamp.toFormat(TIMESTAMP_FORMAT)
     );
-    switch (cq.interaction) {
-      case (InteractionType.none, InteractionType.drag):
+    if (
+      cq.interaction === InteractionType.none ||
+      cq.interaction === InteractionType.drag
+    ) {
+      this.incNextQuestion(state);
+    } else if (cq.interaction === InteractionType.titration) {
+      const titrationAmount = this.calcTitrationAmount(
+        cqa.question.variableAmount === VariableType.laterAmount
+          ? cqa.latestAnswer.amountLater
+          : cqa.latestAnswer.amountEarlier,
+        cqa.highup,
+        cqa.isFirstAnswer ? cqa.highup : null
+      );
+      this.updateHighupOrLowdown(cqa);
+      // TODO we need a termination condition for runaway titration
+      if (cqa.lowdown - cqa.highup <= 10) {
         this.incNextQuestion(state);
-        break;
-      case InteractionType.titration:
-        var titrationAmount = this.calcTitrationAmount(
-          cqa.question.variableAmount === VariableType.laterAmount
-            ? cqa.latestAnswer.amountLater
-            : cqa.latestAnswer.amountEarlier,
-          cqa.highup,
-          cqa.isFirstAnswer ? cqa.highup : null
-        );
-        this.updateHighupOrLowdown(cqa);
-        // TODO we need a termination condition for runaway titration
-        if (cqa.lowdown - cqa.highup <= 10) {
-          this.incNextQuestion(state);
+      } else {
+        const newAmount = this.calcNewAmount(cqa, titrationAmount);
+        if (cq.variableAmount === VariableType.laterAmount) {
+          cqa.createNextAnswer(cqa.question.amountEarlier, newAmount);
+        } else if (cq.variableAmount === VariableType.earlierAmount) {
+          cqa.createNextAnswer(newAmount, cqa.question.amountLater);
         } else {
-          const newAmount = this.calcNewAmount(cqa, titrationAmount);
-          if (cq.variableAmount === VariableType.laterAmount) {
-            cqa.createNextAnswer(cqa.question.amountEarlier, newAmount);
-          } else if (cq.variableAmount === VariableType.earlierAmount) {
-            cqa.createNextAnswer(newAmount, cqa.question.amountLater);
-          } else {
-            console.assert(
-              true,
-              "Titration not set to amountEarlier or amountLater before calling answerCurrentQuestion"
-            );
-          }
+          console.assert(
+            true,
+            "Titration not set to amountEarlier or amountLater before calling answerCurrentQuestion"
+          );
         }
-        break;
-      case InteractionType.drag:
-        break;
+      }
     }
   }
 }

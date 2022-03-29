@@ -21,10 +21,10 @@ export class QuestionAndAnswer {
     return this.answers[this.answers.length - 1];
   }
 
-  setLatestAnswer(choice, answerTime) {
+  setLatestAnswer(choice, choiceTimestamp) {
     const a = this.answers[this.answers.length - 1];
     a.choice = choice;
-    a.answerTime = answerTime;
+    a.choiceTimestamp = choiceTimestamp;
   }
 
   createNextAnswer(amountEarlier, amountLater) {

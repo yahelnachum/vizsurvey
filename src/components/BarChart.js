@@ -16,12 +16,14 @@ import {
 function BarChart(props) {
   const dispatch = useDispatch();
   const QandA = useSelector(selectCurrentQuestion);
+  const q = QandA.question;
+  const la = QandA.latestAnswer;
   const status = useSelector(fetchStatus);
 
   const barWidth = 15;
 
-  const height = QandA.question.verticalPixels;
-  const width = QandA.question.horizontalPixels;
+  const height = q.verticalPixels;
+  const width = q.horizontalPixels;
   const margin = {
     top: props.top_margin,
     right: props.right_margin,
@@ -42,12 +44,12 @@ function BarChart(props) {
   // const innerHeight = height - margin.bottom - margin.top;
   // const innerWidth = width - margin.left - margin.right;
 
-  const xTickValues = Array.from(Array(QandA.question.maxTime + 1).keys());
+  const xTickValues = Array.from(Array(q.maxTime + 1).keys());
   const data = xTickValues.map((d) => {
-    if (d === QandA.question.timeEarlier) {
-      return { time: d, amount: QandA.question.amountEarlier };
-    } else if (d === QandA.question.timeLater) {
-      return { time: d, amount: QandA.question.amountLater };
+    if (d === la.timeEarlier) {
+      return { time: d, amount: la.amountEarlier };
+    } else if (d === la.timeLater) {
+      return { time: d, amount: la.amountLater };
     } else {
       return { time: d, amount: 0 };
     }
@@ -64,11 +66,9 @@ function BarChart(props) {
             .attr("class", "plot-area")
             .attr("transform", `translate(${margin.left},${margin.top})`);
 
-          const x = scaleLinear()
-            .domain([0, QandA.question.maxTime])
-            .range([0, width]);
+          const x = scaleLinear().domain([0, q.maxTime]).range([0, width]);
 
-          const yRange = [0, QandA.question.maxAmount];
+          const yRange = [0, q.maxAmount];
           const y = scaleLinear().domain(yRange).range([height, 0]);
 
           chart
@@ -127,18 +127,18 @@ function BarChart(props) {
               return "id" + d.time;
             })
             .on("click", (d) => {
-              if (d.target.__data__.amount === QandA.question.amountEarlier) {
+              if (d.target.__data__.amount === la.amountEarlier) {
                 dispatch(
                   answer({
                     choice: ChoiceType.earlier,
-                    choiceTimestamp: DateTime.now,
+                    choiceTimestamp: DateTime.now(),
                   })
                 );
               } else {
                 dispatch(
                   answer({
                     choice: ChoiceType.later,
-                    choiceTimestamp: DateTime.now,
+                    choiceTimestamp: DateTime.now(),
                   })
                 );
               }

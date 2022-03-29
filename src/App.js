@@ -80,7 +80,7 @@ const Home = () => {
 
 function convertToCSV(answers) {
   const header = [
-    "treatment_id,position,amount_earlier,time_earlier,amount_later,time_later,choice,answer_time,participant_id",
+    "treatment_id,position,amount_earlier,time_earlier,amount_later,time_later,choice,choice_time,participant_id",
   ];
   const rows = answers.map(
     (a) =>

@@ -57,7 +57,7 @@ export function MELForm() {
           dispatch(
             answer({
               choice: values.choice,
-              choiceTimestamp: DateTime.now,
+              choiceTimestamp: DateTime.now(),
             })
           );
           setSubmitting(false);
