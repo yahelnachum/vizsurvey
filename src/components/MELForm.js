@@ -16,6 +16,7 @@ import {
 export function MELForm() {
   const dispatch = useDispatch();
   const QandA = useSelector(selectCurrentQuestion);
+  const la = QandA.latestAnswer;
   const status = useSelector(fetchStatus);
 
   // Absolute money value, delay framing (e.g., $5 today vs. $5 plus an additional $5 in 4 weeks)
@@ -32,13 +33,11 @@ export function MELForm() {
   // }
 
   function question1stPartText() {
-    return `$${QandA.question.amountEarlier} ${todayText(
-      QandA.question.timeEarlier
-    )}`;
+    return `$${la.amountEarlier} ${todayText(la.timeEarlier)}`;
   }
 
   function question2ndPartText() {
-    return `$${QandA.question.amountLater} in ${QandA.question.timeLater} weeks`;
+    return `$${la.amountLater} in ${la.timeLater} weeks`;
   }
 
   const result = (

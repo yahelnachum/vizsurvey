@@ -108,16 +108,12 @@ function BarChart(props) {
           // .text("Amount in USD");
 
           chart
-            // .selectAll(".plot-area")
-            // .attr("fill", "steelblue")
-            // .attr("class", "plot-area")
             .selectAll(".bar")
             .data(data)
             .join("rect")
             .attr("fill", "steelblue")
             .attr("class", "bar")
             .attr("x", (d) => x(d.time) - barWidth / 2)
-            //.attr("width", x.bandwidth())
             .attr("width", barWidth)
             .attr("y", (d) => y(d.amount))
             .attr("id", (d) => {
