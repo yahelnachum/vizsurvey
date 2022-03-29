@@ -31,7 +31,7 @@ export class Question {
     this.position = position;
     this.viewType = viewType;
     this.interaction = interaction;
-    this.variable = variableAmount;
+    this.variableAmount = variableAmount;
     this.amountEarlier = amountEarlier;
     this.timeEarlier = timeEarlier;
     this.dateEarlier = dateEarlier;

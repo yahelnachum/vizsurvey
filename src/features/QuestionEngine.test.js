@@ -3,9 +3,10 @@ import { QuestionEngine } from "./QuestionEngine";
 import { ViewType } from "./ViewType";
 import { ChoiceType } from "./ChoiceType";
 import { StatusType } from "./StatusType";
-import { TitrationType } from "./TitrationType";
 import { QuestionAndAnswer } from "./QuestionAndAnswer";
 import { Question } from "./Question";
+import { InteractionType } from "./InteractionType";
+import { VariableType } from "./VariableType";
 
 describe("QuestionEngine tests", () => {
   test("1: Initial question and answer will initialize to empty answer array and highup and lowdown to undefined.", () => {
@@ -245,8 +246,9 @@ class TestDataFactory {
     return new Question({
       treatmentId: 1,
       position: 1,
-      viewType: ViewType.enumValueOf("barchart"),
-      titration: TitrationType.enumValueOf("laterAmount"),
+      viewType: ViewType.barchart,
+      interaction: InteractionType.titration,
+      variableAmount: VariableType.laterAmount,
       amountEarlier: 500,
       timeEarlier: 1,
       dateEarlier: undefined,
@@ -271,8 +273,9 @@ class TestDataFactory {
     return new Question({
       treatmentId: 1,
       position: 1,
-      viewType: ViewType.enumValueOf("barchart"),
-      titration: TitrationType.enumValueOf("none"),
+      viewType: ViewType.barchart,
+      interaction: InteractionType.none,
+      variableAmount: VariableType.laterAmount,
       amountEarlier: 400,
       timeEarlier: 1,
       dateEarlier: undefined,

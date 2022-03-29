@@ -1,5 +1,6 @@
 import { StatusType } from "./StatusType";
-import { TitrationType } from "./TitrationType";
+import { VariableType } from "./VariableType";
+import { InteractionType } from "./InteractionType";
 import { ChoiceType } from "./ChoiceType";
 
 export const TIMESTAMP_FORMAT = "MM/dd/yyyy H:mm:ss:SSS ZZZZ";
@@ -21,13 +22,13 @@ export class QuestionEngine {
     state.currentQuestionIdx = 0;
     const cqa = this.currentQuestionAndAnswer(state);
     cqa.highup =
-      cqa.titration === TitrationType.later
+      cqa.question.variableAmount === VariableType.laterAmount
         ? cqa.question.amountEarlier
         : cqa.question.amountLater;
     cqa.lowdown = undefined;
     cqa.createNextAnswer(cqa.question.amountEarlier, cqa.question.amountLater);
     console.log("startSurvey presenting:");
-    console.log(JSON.stringify(cqa.latestAnswer()));
+    //console.log(JSON.stringify(cqa.latestAnswer()));
   }
 
   setCurrentQuestionShown(state, action) {
@@ -54,8 +55,8 @@ export class QuestionEngine {
 
   updateHighupOrLowdown(currentQandA) {
     console.assert(
-      currentQandA.question.titration !== TitrationType.none,
-      "Question titration value not set before calling updateHighupOrLowdown."
+      currentQandA.question.variableAmount !== VariableType.none,
+      "Question variable amount value not set before calling updateHighupOrLowdown."
     );
     console.assert(
       currentQandA.choice !== null &&
@@ -65,7 +66,7 @@ export class QuestionEngine {
     switch (ca.choice) {
       case ChoiceType.earlier:
         var possibleHighup =
-          currentQandA.question.titration === TitrationType.laterAmount
+          currentQandA.question.variableAmount === VariableType.laterAmount
             ? ca.amountLater
             : ca.amountEarlier;
         if (!currentQandA.highup || possibleHighup > currentQandA.highup)
@@ -73,7 +74,7 @@ export class QuestionEngine {
         break;
       case ChoiceType.later:
         var possibleLowdown =
-          currentQandA.question.titration === TitrationType.laterAmount
+          currentQandA.question.variableAmount === VariableType.laterAmount
             ? ca.amountLater
             : ca.amountEarlier;
         if (!currentQandA.lowdown || possibleLowdown < currentQandA.lowdown)
@@ -94,8 +95,8 @@ export class QuestionEngine {
 
   calcNewAmount(QandA, titrationAmount) {
     var adjustmentAmount;
-    switch (QandA.question.titration) {
-      case TitrationType.laterAmount:
+    switch (QandA.question.variableAmount) {
+      case VariableType.laterAmount:
         console.assert(
           QandA.latestAnswer.choice &&
             QandA.latestAnswer.choice !== ChoiceType.unitialized
@@ -108,7 +109,7 @@ export class QuestionEngine {
           parseInt((QandA.latestAnswer.amountLater + adjustmentAmount) / 10) *
           10
         );
-      case TitrationType.earlierAmount:
+      case VariableType.earlierAmount:
         adjustmentAmount =
           QandA.latestAnswer.choice === ChoiceType.earlier
             ? -1 * titrationAmount
@@ -133,33 +134,38 @@ export class QuestionEngine {
       action.payload.choice,
       action.payload.choiceTimestamp.toFormat(TIMESTAMP_FORMAT)
     );
-    if (cq.titration === TitrationType.none) {
-      this.incNextQuestion(state);
-    } else {
-      const titrationAmount = this.calcTitrationAmount(
-        cqa.question.titration === TitrationType.laterAmount
-          ? cqa.latestAnswer.amountLater
-          : cqa.latestAnswer.amountEarlier,
-        cqa.highup,
-        cqa.isFirstAnswer ? cqa.highup : null
-      );
-      this.updateHighupOrLowdown(cqa);
-      // TODO we need a termination condition for runaway titration
-      if (cqa.lowdown - cqa.highup <= 10) {
+    switch (cq.interaction) {
+      case (InteractionType.none, InteractionType.drag):
         this.incNextQuestion(state);
-      } else {
-        const newAmount = this.calcNewAmount(cqa, titrationAmount);
-        if (cq.titration === TitrationType.laterAmount) {
-          cqa.createNextAnswer(cqa.question.amountEarlier, newAmount);
-        } else if (cq.titration === TitrationType.earlierAmount) {
-          cqa.createNextAnswer(newAmount, cqa.question.amountLater);
+        break;
+      case InteractionType.titration:
+        var titrationAmount = this.calcTitrationAmount(
+          cqa.question.variableAmount === VariableType.laterAmount
+            ? cqa.latestAnswer.amountLater
+            : cqa.latestAnswer.amountEarlier,
+          cqa.highup,
+          cqa.isFirstAnswer ? cqa.highup : null
+        );
+        this.updateHighupOrLowdown(cqa);
+        // TODO we need a termination condition for runaway titration
+        if (cqa.lowdown - cqa.highup <= 10) {
+          this.incNextQuestion(state);
         } else {
-          console.assert(
-            true,
-            "Titration not set to amountEarlier or amountLater before calling answerCurrentQuestion"
-          );
+          const newAmount = this.calcNewAmount(cqa, titrationAmount);
+          if (cq.variableAmount === VariableType.laterAmount) {
+            cqa.createNextAnswer(cqa.question.amountEarlier, newAmount);
+          } else if (cq.variableAmount === VariableType.earlierAmount) {
+            cqa.createNextAnswer(newAmount, cqa.question.amountLater);
+          } else {
+            console.assert(
+              true,
+              "Titration not set to amountEarlier or amountLater before calling answerCurrentQuestion"
+            );
+          }
         }
-      }
+        break;
+      case InteractionType.drag:
+        break;
     }
   }
 }
