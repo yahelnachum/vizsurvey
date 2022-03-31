@@ -50,31 +50,31 @@ export class Question {
     this.height = height;
     this.comment = comment;
   }
+}
 
-  static fromCSVRow(row) {
-    return new Question({
-      treatmentId: +row.treatment_id,
-      position: +row.position,
-      viewType: ViewType.enumValueOf(row.view_type),
-      interaction: InteractionType.enumValueOf(row.interaction),
-      variableAmount: VariableType.enumValueOf(row.variable_amount),
-      amountEarlier: +row.amount_earlier,
-      timeEarlier: row.time_earlier ? +row.time_earlier : undefined,
-      dateEarlier: row.date_earlier ? new Date(row.date_earlier) : undefined,
-      amountLater: +row.amount_later,
-      timeLater: row.time_later ? +row.time_later : undefined,
-      dateLater: row.date_later ? new Date(row.date_later) : undefined,
-      maxAmount: +row.max_amount,
-      maxTime: +row.max_time,
-      horizontalPixels: +row.horizontal_pixels,
-      verticalPixels: +row.vertical_pixels,
-      leftMarginWidthIn: +row.left_margin_width,
-      bottomMarginHeightIn: +row.bottom_margin_height,
-      graphWidthIn: +row.graph_width_in,
-      graphHeightIn: +row.graph_height_in,
-      width: +row.width,
-      height: +row.height,
-      comment: row.comment,
-    });
-  }
+export function fromCSVRow(row) {
+  return new Question({
+    treatmentId: +row.treatment_id,
+    position: +row.position,
+    viewType: ViewType.enumValueOf(row.view_type),
+    interaction: InteractionType.enumValueOf(row.interaction),
+    variableAmount: VariableType.enumValueOf(row.variable_amount),
+    amountEarlier: +row.amount_earlier,
+    timeEarlier: row.time_earlier ? +row.time_earlier : undefined,
+    dateEarlier: row.date_earlier ? new Date(row.date_earlier) : undefined,
+    amountLater: +row.amount_later,
+    timeLater: row.time_later ? +row.time_later : undefined,
+    dateLater: row.date_later ? new Date(row.date_later) : undefined,
+    maxAmount: +row.max_amount,
+    maxTime: +row.max_time,
+    horizontalPixels: +row.horizontal_pixels,
+    verticalPixels: +row.vertical_pixels,
+    leftMarginWidthIn: +row.left_margin_width,
+    bottomMarginHeightIn: +row.bottom_margin_height,
+    graphWidthIn: +row.graph_width_in,
+    graphHeightIn: +row.graph_height_in,
+    width: +row.width,
+    height: +row.height,
+    comment: row.comment,
+  });
 }

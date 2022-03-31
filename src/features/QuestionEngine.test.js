@@ -3,7 +3,12 @@ import { QuestionEngine } from "./QuestionEngine";
 import { ViewType } from "./ViewType";
 import { ChoiceType } from "./ChoiceType";
 import { StatusType } from "./StatusType";
-import { QuestionAndAnswer } from "./QuestionAndAnswer";
+import {
+  createQuestionAndAnswer,
+  createNextAnswer,
+  latestAnswer,
+  setLatestAnswerChoice,
+} from "./QuestionAndAnswer";
 import { Question } from "./Question";
 import { InteractionType } from "./InteractionType";
 import { VariableType } from "./VariableType";
@@ -12,7 +17,7 @@ describe("QuestionEngine tests", () => {
   test("1: Initial question and answer will initialize to empty answer array and highup and lowdown to undefined.", () => {
     const q = TestDataFactory.createQuestionLaterTitrate();
     const state = {
-      QandA: [QuestionAndAnswer.create(q)],
+      QandA: [createQuestionAndAnswer(q)],
       currentQuestionIdx: 0,
     };
     expect(state.QandA[0].answers).not.toBeUndefined();
@@ -24,11 +29,7 @@ describe("QuestionEngine tests", () => {
   test("startSurvey should create a single answer entry for titration question.", () => {
     const state = {
       QandA: [
-        QuestionAndAnswer.create(
-          TestDataFactory.createQuestionLaterTitrate(),
-          1000,
-          undefined
-        ),
+        createQuestionAndAnswer(TestDataFactory.createQuestionLaterTitrate()),
       ],
       currentQuestionIdx: 0,
     };
@@ -48,11 +49,7 @@ describe("QuestionEngine tests", () => {
   test("startSurvey should create a single answer entry for non titraiton question.", () => {
     const state = {
       QandA: [
-        QuestionAndAnswer.create(
-          TestDataFactory.createQuestionNoTitrate(),
-          undefined,
-          undefined
-        ),
+        createQuestionAndAnswer(TestDataFactory.createQuestionNoTitrate()),
       ],
       currentQuestionIdx: 0,
     };
@@ -65,57 +62,58 @@ describe("QuestionEngine tests", () => {
   });
 
   test("Test example for the values from Read 2001 paper.", () => {
-    const QandA = QuestionAndAnswer.create(
+    const QandA = createQuestionAndAnswer(
       TestDataFactory.createQuestionLaterTitrate()
     );
     QandA.highup = 500;
-    QandA.createNextAnswer(
+    createNextAnswer(
+      QandA,
       QandA.question.amountEarlier,
       QandA.question.amountLater
     );
-    const a = QandA.latestAnswer;
+    const a = latestAnswer(QandA);
     const qe = new QuestionEngine();
     // initial condition from paper uses earlier amount as difference override when calculation titration amount.
     expect(QandA.highup).toBe(500);
     expect(QandA.lowdown).toBeUndefined();
     expect(a.amountEarlier).toBe(500);
     expect(a.amountLater).toBe(1000);
-    QandA.setLatestAnswer(ChoiceType.earlier, null);
+    setLatestAnswerChoice(QandA, ChoiceType.earlier, null);
     // first calc from paper example, use highdown which is initilly set equal to earlier amount
     qe.updateHighupOrLowdown(QandA);
     expect(QandA.highup).toBe(1000);
     expect(QandA.lowdown).toBeUndefined();
     expect(qe.calcTitrationAmount(undefined, 500, 500)).toBe(250);
-    QandA.latestAnswer.amountLater = 1250;
-    QandA.setLatestAnswer(ChoiceType.later, null);
+    latestAnswer(QandA).amountLater = 1250;
+    setLatestAnswerChoice(QandA, ChoiceType.later, null);
     // second calc from paper example there is no lowdown, so passes larger later amount as lowdown
     qe.updateHighupOrLowdown(QandA);
     expect(QandA.highup).toBe(1000);
     expect(QandA.lowdown).toBe(1250);
     expect(qe.calcTitrationAmount(1250, 1000, null)).toBe(125);
-    QandA.latestAnswer.amountLater = 1120;
-    QandA.setLatestAnswer(ChoiceType.later, null);
+    latestAnswer(QandA).amountLater = 1120;
+    setLatestAnswerChoice(QandA, ChoiceType.later, null);
     // third calc from paper example
     qe.updateHighupOrLowdown(QandA);
     expect(QandA.highup).toBe(1000);
     expect(QandA.lowdown).toBe(1120);
     expect(qe.calcTitrationAmount(1120, 1000, null)).toBe(60);
-    QandA.latestAnswer.amountLater = 1060;
-    QandA.setLatestAnswer(ChoiceType.earlier, null);
+    latestAnswer(QandA).amountLater = 1060;
+    setLatestAnswerChoice(QandA, ChoiceType.earlier, null);
     // fourth calc from paper example
     qe.updateHighupOrLowdown(QandA);
     expect(QandA.highup).toBe(1060);
     expect(QandA.lowdown).toBe(1120);
     expect(qe.calcTitrationAmount(1120, 1060, null)).toBe(30);
-    QandA.latestAnswer.amountLater = 1090;
-    QandA.setLatestAnswer(ChoiceType.later, null);
+    latestAnswer(QandA).amountLater = 1090;
+    setLatestAnswerChoice(QandA, ChoiceType.later, null);
     // fifth calc from paper example
     qe.updateHighupOrLowdown(QandA);
     expect(QandA.highup).toBe(1060);
     expect(QandA.lowdown).toBe(1090);
     expect(qe.calcTitrationAmount(1090, 1060, null)).toBe(15);
-    QandA.latestAnswer.amountLater = 1070;
-    QandA.setLatestAnswer(ChoiceType.earlier, null);
+    latestAnswer(QandA).amountLater = 1070;
+    setLatestAnswerChoice(QandA, ChoiceType.earlier, null);
     // sixth calc from paper example
     qe.updateHighupOrLowdown(QandA);
     expect(QandA.highup).toBe(1070);
@@ -124,7 +122,7 @@ describe("QuestionEngine tests", () => {
   });
 
   test("Integration test QuestionEngine titrationfrom Read 2001 paper.", () => {
-    const testQandA = QuestionAndAnswer.create(
+    const testQandA = createQuestionAndAnswer(
       TestDataFactory.createQuestionLaterTitrate()
     );
 
@@ -142,8 +140,8 @@ describe("QuestionEngine tests", () => {
     var cQA = qe.currentQuestionAndAnswer(state);
     expect(cQA.highup).toBe(500);
     expect(cQA.lowdown).toBeUndefined();
-    expect(cQA.latestAnswer.amountEarlier).toBe(500);
-    expect(cQA.latestAnswer.amountLater).toBe(1000);
+    expect(latestAnswer(cQA).amountEarlier).toBe(500);
+    expect(latestAnswer(cQA).amountLater).toBe(1000);
     // first answer
     qe.answerCurrentQuestion(state, {
       payload: {
@@ -157,8 +155,8 @@ describe("QuestionEngine tests", () => {
     expect(cQA.highup).toBe(1000);
     expect(cQA.lowdown).toBeUndefined();
     expect(cQA.answers.length).toBe(2);
-    expect(cQA.latestAnswer.amountEarlier).toBe(500);
-    expect(cQA.latestAnswer.amountLater).toBe(1250);
+    expect(latestAnswer(cQA).amountEarlier).toBe(500);
+    expect(latestAnswer(cQA).amountLater).toBe(1250);
     // second answer
     qe.answerCurrentQuestion(state, {
       payload: {
@@ -172,8 +170,8 @@ describe("QuestionEngine tests", () => {
     expect(cQA.highup).toBe(1000);
     expect(cQA.lowdown).toBe(1250);
     expect(cQA.answers.length).toBe(3);
-    expect(cQA.latestAnswer.amountEarlier).toBe(500);
-    expect(cQA.latestAnswer.amountLater).toBe(1120);
+    expect(latestAnswer(cQA).amountEarlier).toBe(500);
+    expect(latestAnswer(cQA).amountLater).toBe(1120);
     // third answer
     qe.answerCurrentQuestion(state, {
       payload: {
@@ -187,8 +185,8 @@ describe("QuestionEngine tests", () => {
     expect(cQA.highup).toBe(1000);
     expect(cQA.lowdown).toBe(1120);
     expect(cQA.answers.length).toBe(4);
-    expect(cQA.latestAnswer.amountEarlier).toBe(500);
-    expect(cQA.latestAnswer.amountLater).toBe(1060);
+    expect(latestAnswer(cQA).amountEarlier).toBe(500);
+    expect(latestAnswer(cQA).amountLater).toBe(1060);
     // fourth answer
     qe.answerCurrentQuestion(state, {
       payload: {
@@ -202,8 +200,8 @@ describe("QuestionEngine tests", () => {
     expect(cQA.highup).toBe(1060);
     expect(cQA.lowdown).toBe(1120);
     expect(cQA.answers.length).toBe(5);
-    expect(cQA.latestAnswer.amountEarlier).toBe(500);
-    expect(cQA.latestAnswer.amountLater).toBe(1090);
+    expect(latestAnswer(cQA).amountEarlier).toBe(500);
+    expect(latestAnswer(cQA).amountLater).toBe(1090);
     // fifth answer
     qe.answerCurrentQuestion(state, {
       payload: {
@@ -217,8 +215,8 @@ describe("QuestionEngine tests", () => {
     expect(cQA.highup).toBe(1060);
     expect(cQA.lowdown).toBe(1090);
     expect(cQA.answers.length).toBe(6);
-    expect(cQA.latestAnswer.amountEarlier).toBe(500);
-    expect(cQA.latestAnswer.amountLater).toBe(1070);
+    expect(latestAnswer(cQA).amountEarlier).toBe(500);
+    expect(latestAnswer(cQA).amountLater).toBe(1070);
     // sixth answer
     qe.answerCurrentQuestion(state, {
       payload: {
@@ -235,8 +233,8 @@ describe("QuestionEngine tests", () => {
     expect(cQA.highup).toBe(1060);
     expect(cQA.lowdown).toBe(1070);
     expect(cQA.answers.length).toBe(6);
-    expect(cQA.latestAnswer.amountEarlier).toBe(500);
-    expect(cQA.latestAnswer.amountLater).toBe(1070);
+    expect(latestAnswer(cQA).amountEarlier).toBe(500);
+    expect(latestAnswer(cQA).amountLater).toBe(1070);
     expect(state.status).toBe(StatusType.Complete);
   });
 });

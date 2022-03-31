@@ -5,4 +5,5 @@ export const store = configureStore({
   reducer: {
     questions: questionReducer,
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });

@@ -72,7 +72,7 @@ export const selectAllQuestions = (state) => {
 };
 
 export const selectCurrentQuestion = (state) => {
-  return qe.currentQuestionAndAnswer(state.questions);
+  return qe.selectCurrentQuestion(state.questions);
 };
 
 export const fetchStatus = (state) => {

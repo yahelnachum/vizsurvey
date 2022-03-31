@@ -1,4 +1,4 @@
-import { Answer } from "./Answer";
+import { createAnswer } from "./Answer";
 import { ChoiceType } from "./ChoiceType";
 
 export class QuestionAndAnswer {
@@ -8,42 +8,39 @@ export class QuestionAndAnswer {
     this.highup = undefined; // the current highest value judged as too low
     this.lowdown = undefined; // the current lowest value judged as too high
   }
+}
 
-  get isFirstAnswer() {
-    return this.answers.length === 1;
-  }
+export function createQuestionAndAnswer(question) {
+  return new QuestionAndAnswer(question);
+}
 
-  get latestAnswer() {
-    console.assert(
-      this.answers.length != 0,
-      "answer array is empty so there isn't a latest answer to return."
-    );
-    return this.answers[this.answers.length - 1];
-  }
+export function createNextAnswer(QandA, amountEarlier, amountLater) {
+  QandA.answers.push(
+    createAnswer({
+      viewType: QandA.question.viewType,
+      amountEarlier: amountEarlier,
+      timeEarlier: QandA.question.timeEarlier,
+      dateEarlier: QandA.question.dateEarlier,
+      amountLater: amountLater,
+      timeLater: QandA.question.timeLater,
+      dateLater: QandA.question.dateLater,
+      maxAmount: QandA.question.maxAmount,
+      maxTime: QandA.question.maxTime,
+      verticalPixels: QandA.question.verticalPixels,
+      horizontalPixels: QandA.question.horizontalPixels,
+      choice: ChoiceType.unitialized,
+      highup: QandA.highup,
+      lowdown: QandA.lowdown,
+    })
+  );
+}
 
-  setLatestAnswer(choice, choiceTimestamp) {
-    const a = this.answers[this.answers.length - 1];
-    a.choice = choice;
-    a.choiceTimestamp = choiceTimestamp;
-  }
+export function latestAnswer(QandA) {
+  return QandA.length === 0 ? null : QandA.answers[QandA.answers.length - 1];
+}
 
-  createNextAnswer(amountEarlier, amountLater) {
-    this.answers.push(
-      Answer.create({
-        amountEarlier: amountEarlier,
-        timeEarlier: this.question.timeEarlier,
-        dateEarlier: this.question.dateEarlier,
-        amountLater: amountLater,
-        timeLater: this.question.timeLater,
-        dateLater: this.question.dateLater,
-        choice: ChoiceType.unitialized,
-        highup: this.highup,
-        lowdown: this.lowdown,
-      })
-    );
-  }
-
-  static create(question) {
-    return new QuestionAndAnswer(question);
-  }
+export function setLatestAnswerChoice(QandA, choice, choiceTimestamp) {
+  const a = latestAnswer(QandA);
+  a.choice = choice;
+  a.choiceTimestamp = choiceTimestamp;
 }

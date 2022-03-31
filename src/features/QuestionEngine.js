@@ -2,6 +2,11 @@ import { StatusType } from "./StatusType";
 import { VariableType } from "./VariableType";
 import { InteractionType } from "./InteractionType";
 import { ChoiceType } from "./ChoiceType";
+import {
+  createNextAnswer,
+  latestAnswer,
+  setLatestAnswerChoice,
+} from "./QuestionAndAnswer";
 
 export const TIMESTAMP_FORMAT = "MM/dd/yyyy H:mm:ss:SSS ZZZZ";
 
@@ -13,12 +18,17 @@ export class QuestionEngine {
     return state.QandA;
   }
 
+  selectCurrentQuestion(state) {
+    return latestAnswer(this.currentQuestionAndAnswer(state));
+  }
+
   currentQuestionAndAnswer(state) {
     const result = state.QandA[state.currentQuestionIdx];
     return result;
   }
 
   startSurvey(state) {
+    console.log(JSON.stringify(state));
     state.currentQuestionIdx = 0;
     const cqa = this.currentQuestionAndAnswer(state);
     cqa.highup =
@@ -26,13 +36,13 @@ export class QuestionEngine {
         ? cqa.question.amountEarlier
         : cqa.question.amountLater;
     cqa.lowdown = undefined;
-    cqa.createNextAnswer(cqa.question.amountEarlier, cqa.question.amountLater);
+    createNextAnswer(cqa, cqa.question.amountEarlier, cqa.question.amountLater);
     console.log("startSurvey presenting:");
-    //console.log(JSON.stringify(cqa.latestAnswer()));
+    //console.log(JSON.stringify(cqa.latestAnswer(cqa)));
   }
 
   setCurrentQuestionShown(state, action) {
-    this.currentQuestionAndAnswer(state).latestAnswer.shownTimestamp =
+    latestAnswer(this.currentQuestionAndAnswer(state)).shownTimestamp =
       action.payload;
   }
 
@@ -46,7 +56,8 @@ export class QuestionEngine {
     } else {
       state.currentQuestionIdx += 1;
       const cqa = this.currentQuestionAndAnswer(state);
-      cqa.createNextAnswer(
+      createNextAnswer(
+        cqa,
         cqa.question.amountEarlier,
         cqa.question.amountLater
       );
@@ -62,7 +73,7 @@ export class QuestionEngine {
       currentQandA.choice !== null &&
         currentQandA.choice !== ChoiceType.unitialized
     );
-    const ca = currentQandA.latestAnswer;
+    const ca = latestAnswer(currentQandA);
     switch (ca.choice) {
       case ChoiceType.earlier:
         var possibleHighup =
@@ -98,25 +109,26 @@ export class QuestionEngine {
     switch (QandA.question.variableAmount) {
       case VariableType.laterAmount:
         console.assert(
-          QandA.latestAnswer.choice &&
-            QandA.latestAnswer.choice !== ChoiceType.unitialized
+          latestAnswer(QandA).choice &&
+            latestAnswer(QandA).choice !== ChoiceType.unitialized
         );
         adjustmentAmount =
-          QandA.latestAnswer.choice === ChoiceType.earlier
+          latestAnswer(QandA).choice === ChoiceType.earlier
             ? titrationAmount
             : -1 * titrationAmount;
         return (
-          parseInt((QandA.latestAnswer.amountLater + adjustmentAmount) / 10) *
+          parseInt((latestAnswer(QandA).amountLater + adjustmentAmount) / 10) *
           10
         );
       case VariableType.earlierAmount:
         adjustmentAmount =
-          QandA.latestAnswer.choice === ChoiceType.earlier
+          latestAnswer(QandA).choice === ChoiceType.earlier
             ? -1 * titrationAmount
             : titrationAmount;
         return (
-          parseInt((QandA.latestAnswer.amountEarlier + adjustmentAmount) / 10) *
-          10
+          parseInt(
+            (latestAnswer(QandA).amountEarlier + adjustmentAmount) / 10
+          ) * 10
         );
       default:
         console.assert(
@@ -130,7 +142,8 @@ export class QuestionEngine {
   answerCurrentQuestion(state, action) {
     const cqa = this.currentQuestionAndAnswer(state);
     const cq = cqa.question;
-    cqa.setLatestAnswer(
+    setLatestAnswerChoice(
+      cqa,
       action.payload.choice,
       action.payload.choiceTimestamp.toFormat(TIMESTAMP_FORMAT)
     );
@@ -142,10 +155,10 @@ export class QuestionEngine {
     } else if (cq.interaction === InteractionType.titration) {
       const titrationAmount = this.calcTitrationAmount(
         cqa.question.variableAmount === VariableType.laterAmount
-          ? cqa.latestAnswer.amountLater
-          : cqa.latestAnswer.amountEarlier,
+          ? latestAnswer(cqa).amountLater
+          : latestAnswer(cqa).amountEarlier,
         cqa.highup,
-        cqa.isFirstAnswer ? cqa.highup : null
+        cqa.answers.length === 1 ? cqa.highup : null
       );
       this.updateHighupOrLowdown(cqa);
       // TODO we need a termination condition for runaway titration
@@ -154,9 +167,9 @@ export class QuestionEngine {
       } else {
         const newAmount = this.calcNewAmount(cqa, titrationAmount);
         if (cq.variableAmount === VariableType.laterAmount) {
-          cqa.createNextAnswer(cqa.question.amountEarlier, newAmount);
+          createNextAnswer(cqa, cqa.question.amountEarlier, newAmount);
         } else if (cq.variableAmount === VariableType.earlierAmount) {
-          cqa.createNextAnswer(newAmount, cqa.question.amountLater);
+          createNextAnswer(cqa, newAmount, cqa.question.amountLater);
         } else {
           console.assert(
             true,

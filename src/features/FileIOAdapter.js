@@ -2,8 +2,8 @@ import { csvParse } from "d3";
 import { Octokit } from "octokit";
 import { DateTime } from "luxon";
 import { treatmentsCSV } from "./treatments";
-import { Question } from "./Question";
-import { QuestionAndAnswer } from "./QuestionAndAnswer";
+import { fromCSVRow } from "./Question";
+import { createQuestionAndAnswer } from "./QuestionAndAnswer";
 
 export class FileIOAdapter {
   constructor() {
@@ -13,10 +13,10 @@ export class FileIOAdapter {
   fetchQuestions = async (treatmentId) => {
     treatmentId = +treatmentId;
     const questions = csvParse(treatmentsCSV, (e) => {
-      return Question.fromCSVRow(e);
+      return fromCSVRow(e);
     }).filter((d) => d.treatmentId === treatmentId);
     const result = questions.map((question) =>
-      QuestionAndAnswer.create(question)
+      createQuestionAndAnswer(question)
     );
     return result;
   };

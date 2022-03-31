@@ -12,6 +12,9 @@ import { FullScreen, useFullScreenHandle } from "react-full-screen";
 const App = () => {
   const handle = useFullScreenHandle();
 
+  // eslint-disable-next-line no-undef
+  console.log("Running in " + process.env.NODE_ENV + " mode.");
+
   return (
     <div>
       <BrowserRouter>

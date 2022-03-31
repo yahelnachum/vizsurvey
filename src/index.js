@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { enableAllPlugins } from "immer";
 
 import { Provider } from "react-redux";
 import { store } from "./app/store";
@@ -7,6 +8,8 @@ import { store } from "./app/store";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+
+enableAllPlugins();
 
 ReactDOM.render(
   <React.StrictMode>

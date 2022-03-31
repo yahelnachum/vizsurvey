@@ -15,9 +15,7 @@ import {
 
 function BarChart(props) {
   const dispatch = useDispatch();
-  const QandA = useSelector(selectCurrentQuestion);
-  const q = QandA.question;
-  const la = QandA.latestAnswer;
+  const q = useSelector(selectCurrentQuestion);
   const status = useSelector(fetchStatus);
 
   const barWidth = 15;
@@ -43,10 +41,10 @@ function BarChart(props) {
 
   const xTickValues = Array.from(Array(q.maxTime + 1).keys());
   const data = xTickValues.map((d) => {
-    if (d === la.timeEarlier) {
-      return { time: d, amount: la.amountEarlier };
-    } else if (d === la.timeLater) {
-      return { time: d, amount: la.amountLater };
+    if (d === q.timeEarlier) {
+      return { time: d, amount: q.amountEarlier };
+    } else if (d === q.timeLater) {
+      return { time: d, amount: q.amountLater };
     } else {
       return { time: d, amount: 0 };
     }
@@ -120,7 +118,7 @@ function BarChart(props) {
               return "id" + d.time;
             })
             .on("click", (d) => {
-              if (d.target.__data__.amount === la.amountEarlier) {
+              if (d.target.__data__.amount === q.amountEarlier) {
                 dispatch(
                   answer({
                     choice: ChoiceType.earlier,
@@ -138,7 +136,7 @@ function BarChart(props) {
             })
             .attr("height", (d) => y(0) - y(d.amount));
         },
-        [data]
+        [q]
       )}
       style={style}
     ></svg>
