@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
-import { Nav, Navbar } from "react-bootstrap";
+import { /*Nav,*/ Navbar } from "react-bootstrap";
 import "./App.css";
 import Survey from "./components/Survey";
 import { QueryParam } from "./components/QueryParam";
@@ -21,16 +21,6 @@ const App = () => {
             <Navbar.Brand as={Link} to="/">
               Viz Survey
             </Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="mr-auto">
-                <Nav.Item href="/survey">
-                  <Nav.Link as={Link} to="/survey" onClick={handle.enter}>
-                    Survey
-                  </Nav.Link>
-                </Nav.Item>
-              </Nav>
-            </Navbar.Collapse>
           </Navbar>
           <QueryParam />
           <FullScreen handle={handle}>
@@ -50,21 +40,46 @@ const App = () => {
 
 export default App;
 
+import { ViewType } from "./features/ViewType";
+import { selectCurrentQuestion } from "./features/questionSlice";
+
 const Home = () => {
+  const QandA = useSelector(selectCurrentQuestion);
   return (
     <div id="home-text">
       <p>
-        General Instructions: You will be presented with two choices about
-        receiving money, one earlier and one later in time. Pick the amount that
-        you would like to receive.
-      </p>
-      <p>
-        Bar Chart Specific Instructions: Click on the bar that represents the
-        amount that you would like to receive.
-      </p>
-      <p>
-        Calendar Specific Instructions: Click on the day that contains the
-        amount that you would like to receive.
+        {QandA === undefined ? (
+          <div>
+            Cannot display <b>common</b> instructions since a treatment has not
+            been selected. Please select a treatment
+          </div>
+        ) : (
+          <div>
+            You will be presented with two choices about receiving money, one
+            earlier and one later in time.
+          </div>
+        )}
+        {QandA === undefined ? (
+          <div>
+            Cannot display <b>specific</b> instructions since a treatment has
+            not been selected. Please select a treatment
+          </div>
+        ) : QandA.question.viewType === ViewType.barchart ? (
+          <div>
+            Click on the bar that represents the amount that you would like to
+            receive.
+          </div>
+        ) : QandA.question.viewType === ViewType.word ? (
+          <div>
+            Click on the radio button that contains the amount you would like to
+            receive.
+          </div>
+        ) : (
+          <div>
+            Click on the day that contains the amount that you would like to
+            receive.
+          </div>
+        )}
       </p>
       <p>
         <a
