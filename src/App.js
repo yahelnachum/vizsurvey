@@ -1,7 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
-import { /*Nav,*/ Navbar } from "react-bootstrap";
 import "./App.css";
 import Survey from "./components/Survey";
 import { QueryParam } from "./components/QueryParam";
@@ -11,26 +10,17 @@ import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { v4 as uuidv4 } from "uuid";
 
 const App = () => {
-  const handle = useFullScreenHandle();
-
   return (
     <div>
       <BrowserRouter>
         <div className="App">
-          <Navbar bg="dark" variant="dark" expand="lg">
-            <Navbar.Brand as={Link} to="/">
-              Viz Survey
-            </Navbar.Brand>
-          </Navbar>
           <QueryParam />
-          <FullScreen handle={handle}>
-            <Switch>
-              <Route exact path="/" component={Home} />
-              <Route path="/survey" component={Survey} />
-              <Route path="/thankyou" component={ThankYou} />
-              <Route path="/*" component={Home} />
-            </Switch>
-          </FullScreen>
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route path="/survey" component={Survey} />
+            <Route path="/thankyou" component={ThankYou} />
+            <Route path="/*" component={Home} />
+          </Switch>
           <Footer className="footer bg-dark" />
         </div>
       </BrowserRouter>
@@ -42,9 +32,11 @@ export default App;
 
 import { ViewType } from "./features/ViewType";
 import { selectCurrentQuestion } from "./features/questionSlice";
+import { Button } from "react-bootstrap";
 
 const Home = () => {
   const QandA = useSelector(selectCurrentQuestion);
+  const handle = useFullScreenHandle();
   return (
     <div id="home-text">
       <p>
@@ -81,22 +73,38 @@ const Home = () => {
           </div>
         )}
       </p>
-      <p>
-        <a
-          href="
+      {QandA === undefined ? (
+        <div>
+          <p>
+            Cannot display <b>Start Survey button</b> since a treatment has not
+            been selected. Please select a treatment
+          </p>
+          <p>
+            <a
+              href="
         https://github.com/pcordone/vizsurvey"
-        >
-          Github README.md
-        </a>
-      </p>
-      <p>
-        <a id="getQuestionSet" href="vizsurvey?treatment_id=2">
-          relative treatment_id=2
-        </a>
-      </p>
-      <p>
-        <a href="https://pcordone.github.io">public website</a>
-      </p>
+            >
+              Github README.md
+            </a>
+          </p>
+          <p>
+            <a id="getQuestionSet" href="vizsurvey?treatment_id=2">
+              relative treatment_id=2
+            </a>
+          </p>
+          <p>
+            <a href="https://pcordone.github.io">public website</a>
+          </p>
+        </div>
+      ) : (
+        <FullScreen handle={handle}>
+          <Link to="/survey">
+            <Button size="lg" onClick={handle.enter}>
+              Start Survey
+            </Button>
+          </Link>
+        </FullScreen>
+      )}
     </div>
   );
 };
