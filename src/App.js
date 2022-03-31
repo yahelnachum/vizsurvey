@@ -34,9 +34,10 @@ import { ViewType } from "./features/ViewType";
 import { selectCurrentQuestion } from "./features/questionSlice";
 import { Button } from "react-bootstrap";
 
+var handle = undefined;
 const Home = () => {
   const QandA = useSelector(selectCurrentQuestion);
-  const handle = useFullScreenHandle();
+  handle = useFullScreenHandle();
   return (
     <div id="home-text">
       <p>
@@ -126,15 +127,31 @@ const ThankYou = () => {
   const csv = convertToCSV(allQuestions);
   console.log(csv);
   dispatch(writeAnswers(csv));
+  handle = useFullScreenHandle();
 
   const uuid = uuidv4();
   return (
-    <div>
-      <p>Your answers have been submitted. Thank you for taking this survey!</p>
-      <p>
-        Your unique ID is: {uuid}. Please go back to Amazon Turk and present
-        this unique ID in the form.
-      </p>
-    </div>
+    <FullScreen handle={handle}>
+      <div>
+        <p>
+          Your answers have been submitted. Thank you for taking this survey!
+        </p>
+        <p>
+          Your unique ID is: {uuid}. Please go back to Amazon Turk and present
+          this unique ID in the form.
+        </p>
+        <Button
+          size="lg"
+          onClick={() => {
+            handle.enter();
+            setTimeout(() => {
+              handle.exit();
+            }, 400);
+          }}
+        >
+          Exit Fullscreen
+        </Button>
+      </div>
+    </FullScreen>
   );
 };
