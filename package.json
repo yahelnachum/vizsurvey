@@ -25,6 +25,7 @@
     "react-redux": "^7.2.5",
     "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
+    "uuid": "^8.3.2",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
@@ -38,6 +39,7 @@
     "cypress-open": "./node_modules/.bin/cypress open",
     "cypress-run": "./node_modules/.bin/cypress run --spec cypress/integration/vizsurvey.spec.js --browser chrome",
     "cypress-auto": "npm run start-auto & cd test && npm start & npm run cypress-run && npm run kill",
+    "format": "./node_modules/prettier/bin-prettier.js --write '**/*.js'",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
