@@ -49,6 +49,8 @@ export class Question {
     this.width = width;
     this.height = height;
     this.comment = comment;
+    this.highup = null;
+    this.lowdown = null;
   }
 }
 

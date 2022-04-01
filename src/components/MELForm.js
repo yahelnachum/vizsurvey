@@ -6,7 +6,6 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Button } from "react-bootstrap";
 import { ChoiceType } from "../features/ChoiceType";
 import { StatusType } from "../features/StatusType";
-import { latestAnswer } from "../features/QuestionAndAnswer";
 import {
   selectCurrentQuestion,
   fetchStatus,
@@ -16,8 +15,7 @@ import {
 
 export function MELForm() {
   const dispatch = useDispatch();
-  const QandA = useSelector(selectCurrentQuestion);
-  const la = latestAnswer(QandA);
+  const q = useSelector(selectCurrentQuestion);
   const status = useSelector(fetchStatus);
 
   // Absolute money value, delay framing (e.g., $5 today vs. $5 plus an additional $5 in 4 weeks)
@@ -34,11 +32,11 @@ export function MELForm() {
   // }
 
   function question1stPartText() {
-    return `$${la.amountEarlier} ${todayText(la.timeEarlier)}`;
+    return `$${q.amountEarlier} ${todayText(q.timeEarlier)}`;
   }
 
   function question2ndPartText() {
-    return `$${la.amountLater} in ${la.timeLater} weeks`;
+    return `$${q.amountLater} in ${q.timeLater} weeks`;
   }
 
   const result = (

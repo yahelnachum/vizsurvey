@@ -1,5 +1,6 @@
 export class Answer {
   constructor({
+    treatmentId: treatmentId,
     viewType: viewType,
     amountEarlier: amountEarlier,
     timeEarlier: timeEarlier,
@@ -17,6 +18,7 @@ export class Answer {
     highup: highup,
     lowdown: lowdown,
   }) {
+    this.treatmentId = treatmentId;
     this.viewType = viewType;
     this.amountEarlier = amountEarlier;
     this.timeEarlier = timeEarlier;
@@ -34,43 +36,4 @@ export class Answer {
     this.highup = highup;
     this.lowdown = lowdown;
   }
-
-  setAnswer(choiceTimestamp, choice) {
-    this.choiceTimestamp = choiceTimestamp;
-    this.choice = choice;
-  }
-}
-
-export function createAnswer({
-  viewType: viewType,
-  amountEarlier: amountEarlier,
-  timeEarlier: timeEarlier,
-  dateEarlier: dateEarlier,
-  amountLater: amountLater,
-  timeLater: timeLater,
-  dateLater: dateLater,
-  maxAmount: maxAmount,
-  maxTime: maxTime,
-  verticalPixels: verticalPixels,
-  horizontalPixels: horizontalPixels,
-  choice: choice,
-  highup: highup,
-  lowdown: lowdown,
-}) {
-  return new Answer({
-    viewType: viewType,
-    amountEarlier: amountEarlier,
-    timeEarlier: timeEarlier,
-    dateEarlier: dateEarlier,
-    amountLater: amountLater,
-    timeLater: timeLater,
-    dateLater: dateLater,
-    maxAmount: maxAmount,
-    maxTime: maxTime,
-    verticalPixels: verticalPixels,
-    horizontalPixels: horizontalPixels,
-    choice: choice,
-    highup: highup,
-    lowdown: lowdown,
-  });
 }

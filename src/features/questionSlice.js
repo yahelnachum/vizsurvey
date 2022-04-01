@@ -20,10 +20,14 @@ export const writeAnswers = createAsyncThunk(
 export const questionSlice = createSlice({
   name: "questions", // I believe the global state is partitioned by the name value thus the terminology "slice"
   initialState: {
-    QandA: [],
-    currentQuestionIdx: 0,
     treatmentId: null,
     participantId: null,
+    QandA: [],
+    questions: [],
+    answers: [],
+    currentQuestionIdx: 0,
+    highup: undefined,
+    lowdown: undefined,
     status: StatusType.Unitialized,
     error: null,
   }, // the initial state of our global data (under name slice)
@@ -39,7 +43,7 @@ export const questionSlice = createSlice({
       }
     },
     setQuestionShownTimestamp(state, action) {
-      qe.setCurrentQuestionShown(state, action);
+      qe.setLatestAnswerShown(state, action);
     },
     // we define our actions on the slice of global store data here.
     answer(state, action) {
@@ -54,7 +58,7 @@ export const questionSlice = createSlice({
         }
       })
       .addCase(fetchQuestions.fulfilled, (state, action) => {
-        state.QandA = action.payload;
+        state.questions = action.payload;
         state.status = StatusType.Fetched;
         qe.startSurvey(state);
       })
@@ -72,7 +76,7 @@ export const selectAllQuestions = (state) => {
 };
 
 export const selectCurrentQuestion = (state) => {
-  return qe.selectCurrentQuestion(state.questions);
+  return qe.selectCurrentQuestion(state);
 };
 
 export const fetchStatus = (state) => {
