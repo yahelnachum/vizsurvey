@@ -1,10 +1,14 @@
 import { ViewType } from "./ViewType";
+import { VariableType } from "./VariableType";
+import { InteractionType } from "./InterationType";
 
 export class Question {
   constructor(
     treatmentId,
     position,
     viewType,
+    interaction,
+    variableAmount,
     amountEarlier,
     timeEarlier,
     dateEarlier,
@@ -26,6 +30,8 @@ export class Question {
     this.treatmentId = treatmentId;
     this.position = position;
     this.viewType = viewType;
+    this.interaction = interaction;
+    this.variable = variableAmount;
     this.amountEarlier = amountEarlier;
     this.timeEarlier = timeEarlier;
     this.dateEarlier = dateEarlier;
@@ -50,6 +56,8 @@ export class Question {
       +row.treatment_id,
       +row.position,
       ViewType.enumValueOf(row.view_type),
+      InteractionType.enumValueOf(row.interaction),
+      VariableType.enumValueOf(row.variable_amount),
       +row.amount_earlier,
       row.time_earlier ? +row.time_earlier : undefined,
       row.date_earlier ? new Date(row.date_earlier) : undefined,
