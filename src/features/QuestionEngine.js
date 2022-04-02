@@ -59,10 +59,6 @@ export class QuestionEngine {
     return state.answers;
   }
 
-  selectCurrentQuestion(state) {
-    return this.latestAnswer(state);
-  }
-
   startSurvey(state) {
     state.currentQuestionIdx = 0;
     const treatment = this.currentTreatment(state);

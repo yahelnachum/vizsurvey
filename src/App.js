@@ -1,13 +1,16 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
+import { FullScreen, useFullScreenHandle } from "react-full-screen";
+import { v4 as uuidv4 } from "uuid";
+import { Button } from "react-bootstrap";
 import "./App.css";
 import Survey from "./components/Survey";
 import { QueryParam } from "./components/QueryParam";
 import { selectAllQuestions, writeAnswers } from "./features/questionSlice";
+import { ViewType } from "./features/ViewType";
+import { selectCurrentTreatment } from "./features/questionSlice";
 import { Footer } from "./footer";
-import { FullScreen, useFullScreenHandle } from "react-full-screen";
-import { v4 as uuidv4 } from "uuid";
 
 const App = () => {
   return (
@@ -30,13 +33,9 @@ const App = () => {
 
 export default App;
 
-import { ViewType } from "./features/ViewType";
-import { selectCurrentQuestion } from "./features/questionSlice";
-import { Button } from "react-bootstrap";
-
 var handle = undefined;
 const Home = () => {
-  const QandA = useSelector(selectCurrentQuestion);
+  const QandA = useSelector(selectCurrentTreatment);
   handle = useFullScreenHandle();
   return (
     <div id="home-text">
@@ -90,7 +89,7 @@ const Home = () => {
           </p>
           <p>
             <a id="getQuestionSet" href="vizsurvey?treatment_id=2">
-              relative treatment_id=2
+              relative treatment_id=4
             </a>
           </p>
           <p>
@@ -112,7 +111,7 @@ const Home = () => {
 
 function convertToCSV(answers) {
   const header = [
-    "treatment_id,position,amount_earlier,time_earlier,amount_later,time_later,choice,choice_time,participant_id",
+    "treatment_id,position,amount_earlier,time_earlier,amount_later,time_later,choice,answer_time,participant_id",
   ];
   const rows = answers.map(
     (a) =>

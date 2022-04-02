@@ -22,7 +22,6 @@ export const questionSlice = createSlice({
   initialState: {
     treatmentId: null,
     participantId: null,
-    QandA: [],
     questions: [],
     answers: [],
     currentQuestionIdx: 0,
@@ -75,8 +74,12 @@ export const selectAllQuestions = (state) => {
   return qe.allQuestions(state.questions);
 };
 
+export const selectCurrentTreatment = (state) => {
+  return qe.currentTreatment(state);
+};
+
 export const selectCurrentQuestion = (state) => {
-  return qe.selectCurrentQuestion(state.questions);
+  return qe.latestAnswer(state.questions);
 };
 
 export const fetchStatus = (state) => {
