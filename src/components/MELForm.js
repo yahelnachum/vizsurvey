@@ -93,7 +93,7 @@ export function MELForm() {
   if (status === StatusType.Complete) {
     return <Redirect to="/thankyou" />;
   } else {
-    dispatch(setQuestionShownTimestamp(Date.now));
+    dispatch(setQuestionShownTimestamp(Date.now()));
     return result;
   }
 }

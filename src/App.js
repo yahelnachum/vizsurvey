@@ -12,8 +12,10 @@ import {
   selectAllQuestions,
   startSurvey,
   writeAnswers,
+  setParticipant,
 } from "./features/questionSlice";
 import { ViewType } from "./features/ViewType";
+import { FileIOAdapter } from "./features/FileIOAdapter";
 import {
   fetchTreatmentId,
   fetchCurrentTreatment,
@@ -46,73 +48,58 @@ const Home = () => {
   const treatmentId = useSelector(fetchTreatmentId);
   return (
     <div id="home-text">
-      <p>
-        {treatmentId === null ? (
-          <div>
-            <p>
-              We shouldn not see this page since the participants will be
-              provided a link with the treatment id in the URL.
-            </p>
-            <p>Click a link below to launc one of the experiments.</p>
-            <p>
-              <a href="https://github.com/pcordone/vizsurvey">
-                Github README.md
-              </a>
-            </p>
-            <p>
-              <a href="https://pcordone.github.io">public website</a>
-            </p>
-            <p>
-              <a
-                id="word-no-titration"
-                href="vizsurvey/instructions?treatment_id=1"
-              >
-                Worded no titration.
-              </a>
-            </p>
-            <p>
-              <a
-                id="word-no-titration"
-                href="vizsurvey/instructions?treatment_id=2"
-              >
-                Barchart no titration.
-              </a>
-            </p>
-            <p>
-              <a
-                id="word-no-titration"
-                href="vizsurvey/instructions?treatment_id=3"
-              >
-                Worded titration.
-              </a>
-            </p>
-            <p>
-              <a
-                id="word-no-titration"
-                href="vizsurvey/instructions?treatment_id=4"
-              >
-                Barchart titration.
-              </a>
-            </p>
-          </div>
-        ) : (
-          <Redirect to={`/instructions?treatment_id=${treatmentId}`} />
-        )}
-      </p>
+      {treatmentId === null ? (
+        <div>
+          <p>
+            We shouldn not see this page since the participants will be provided
+            a link with the treatment id in the URL.
+          </p>
+          <p>Click a link below to launc one of the experiments.</p>
+          <p>
+            <a href="https://github.com/pcordone/vizsurvey">Github README.md</a>
+          </p>
+          <p>
+            <a href="https://pcordone.github.io">public website</a>
+          </p>
+          <p>
+            <a
+              id="word-no-titration"
+              href="vizsurvey/instructions?treatment_id=1"
+            >
+              Worded no titration.
+            </a>
+          </p>
+          <p>
+            <a
+              id="word-no-titration"
+              href="vizsurvey/instructions?treatment_id=2"
+            >
+              Barchart no titration.
+            </a>
+          </p>
+          <p>
+            <a
+              id="word-no-titration"
+              href="vizsurvey/instructions?treatment_id=3"
+            >
+              Worded titration.
+            </a>
+          </p>
+          <p>
+            <a
+              id="word-no-titration"
+              href="vizsurvey/instructions?treatment_id=4"
+            >
+              Barchart titration.
+            </a>
+          </p>
+        </div>
+      ) : (
+        <Redirect to={`/instructions?treatment_id=${treatmentId}`} />
+      )}
     </div>
   );
 };
-
-function convertToCSV(answers) {
-  const header = [
-    "treatment_id,position,amount_earlier,time_earlier,amount_later,time_later,choice,answer_time,participant_id",
-  ];
-  const rows = answers.map(
-    (a) =>
-      `${a.treatmentId}, ${a.position}, ${a.amountEarlier}, ${a.timeEarlier}, ${a.amountLater}, ${a.timeLater}, ${a.choice}, ${a.answerTime}, ${a.participantId}`
-  );
-  return header.concat(rows).join("\n");
-}
 
 const Instructions = () => {
   var handle = useFullScreenHandle();
@@ -127,29 +114,27 @@ const Instructions = () => {
 
   return (
     <div id="home-text">
-      <p>
-        {treatment.viewType === ViewType.barchart ? (
-          <div>
-            Click on the bar that represents the amount that you would like to
-            receive.
-          </div>
-        ) : treatment.viewType === ViewType.word ? (
-          <div>
-            Click on the radio button that contains the amount you would like to
-            receive.
-          </div>
-        ) : treatment.viewType === ViewType.calendar ? (
-          <div>
-            Click on the day that contains the amount that you would like to
-            receive.
-          </div>
-        ) : (
-          <div>
-            Cannot display <b>specific</b> instructions since a treatment has
-            not been selected. Please select a treatment
-          </div>
-        )}
-      </p>
+      {treatment.viewType === ViewType.barchart ? (
+        <div>
+          Click on the bar that represents the amount that you would like to
+          receive.
+        </div>
+      ) : treatment.viewType === ViewType.word ? (
+        <div>
+          Click on the radio button that contains the amount you would like to
+          receive.
+        </div>
+      ) : treatment.viewType === ViewType.calendar ? (
+        <div>
+          Click on the day that contains the amount that you would like to
+          receive.
+        </div>
+      ) : (
+        <div>
+          Cannot display <b>specific</b> instructions since a treatment has not
+          been selected. Please select a treatment
+        </div>
+      )}
       <FullScreen handle={handle}>
         <Link to="/survey">
           <Button size="lg" onClick={surveyButtonClicked}>
@@ -163,12 +148,14 @@ const Instructions = () => {
 
 const ThankYou = () => {
   const dispatch = useDispatch();
-  const allQuestions = useSelector(selectAllQuestions);
-  const csv = convertToCSV(allQuestions);
+  const uuid = uuidv4();
+  dispatch(setParticipant(uuid));
+  const answers = useSelector(selectAllQuestions);
+  const io = new FileIOAdapter();
+  const csv = io.convertToCSV(answers);
   dispatch(writeAnswers(csv));
   const handle = useFullScreenHandle();
 
-  const uuid = uuidv4();
   return (
     <FullScreen handle={handle}>
       <div>

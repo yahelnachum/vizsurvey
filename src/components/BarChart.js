@@ -17,6 +17,7 @@ import { DateTime } from "luxon";
 import { useD3 } from "../hooks/useD3";
 import { ChoiceType } from "../features/ChoiceType";
 import { StatusType } from "../features/StatusType";
+import { InteractionType } from "../features//InteractionType";
 import {
   selectCurrentQuestion,
   fetchStatus,
@@ -138,27 +139,31 @@ function BarChart(props) {
                     return "id" + d.time;
                   })
                   .on("click", (d) => {
-                    if (d.target.__data__.amount === q.amountEarlier) {
-                      dispatch(
-                        answer({
-                          choice: ChoiceType.earlier,
-                          choiceTimestamp: DateTime.now(),
-                        })
-                      );
-                    } else {
-                      dispatch(
-                        answer({
-                          choice: ChoiceType.later,
-                          choiceTimestamp: DateTime.now(),
-                        })
-                      );
+                    if (q.interaction === InteractionType.titration) {
+                      if (d.target.__data__.amount === q.amountEarlier) {
+                        dispatch(
+                          answer({
+                            choice: ChoiceType.earlier,
+                            choiceTimestamp: DateTime.now(),
+                          })
+                        );
+                      } else {
+                        dispatch(
+                          answer({
+                            choice: ChoiceType.later,
+                            choiceTimestamp: DateTime.now(),
+                          })
+                        );
+                      }
                     }
                   })
                   .attr("height", (d) => y(0) - y(d.amount));
                 var dragHandler = drag().on("drag", function (d) {
-                  select(this)
-                    .attr("y", d.y)
-                    .attr("height", y(0) - d.y);
+                  if (q.interaction === InteractionType.drag) {
+                    select(this)
+                      .attr("y", d.y)
+                      .attr("height", y(0) - d.y);
+                  }
                 });
                 dragHandler(chart.selectAll(".bar"));
               },
@@ -170,29 +175,38 @@ function BarChart(props) {
       </Row>
       <Row>
         <Col>
-          <Formik
-            initialValues={{ choice: ChoiceType.Unitialized }}
-            validate={() => {
-              let errors = {};
-              return errors;
-            }}
-            onSubmit={(values, { setSubmitting, resetForm }) => {
-              console.log("submitting");
-              setTimeout(() => {
-                dispatch(answer(ChoiceType.Earlier));
-                setSubmitting(false);
-                resetForm();
-              }, 400);
-            }}
-          >
-            {({ isSubmitting }) => (
-              <Form>
-                <Button type="submit" disabled={isSubmitting}>
-                  Submit
-                </Button>
-              </Form>
-            )}
-          </Formik>
+          {q.interaction === InteractionType.drag ? (
+            <Formik
+              initialValues={{ choice: ChoiceType.Unitialized }}
+              validate={() => {
+                let errors = {};
+                return errors;
+              }}
+              onSubmit={(values, { setSubmitting, resetForm }) => {
+                console.log("submitting");
+                setTimeout(() => {
+                  dispatch(
+                    answer({
+                      choice: ChoiceType.earlier,
+                      choiceTimestamp: DateTime.now(),
+                    })
+                  );
+                  setSubmitting(false);
+                  resetForm();
+                }, 400);
+              }}
+            >
+              {({ isSubmitting }) => (
+                <Form>
+                  <Button type="submit" disabled={isSubmitting}>
+                    Submit
+                  </Button>
+                </Form>
+              )}
+            </Formik>
+          ) : (
+            ""
+          )}
         </Col>
       </Row>
     </Container>
@@ -201,7 +215,7 @@ function BarChart(props) {
   if (status === StatusType.Complete) {
     return <Redirect to="/thankyou" />;
   } else {
-    dispatch(setQuestionShownTimestamp(Date.now));
+    dispatch(setQuestionShownTimestamp(Date.now()));
     return result;
   }
 }

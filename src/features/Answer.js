@@ -3,6 +3,7 @@ export class Answer {
     treatmentId: treatmentId,
     position: position,
     viewType: viewType,
+    interaction: interaction,
     amountEarlier: amountEarlier,
     timeEarlier: timeEarlier,
     dateEarlier: dateEarlier,
@@ -23,6 +24,7 @@ export class Answer {
     this.treatmentId = treatmentId;
     this.position = position;
     this.viewType = viewType;
+    this.interaction = interaction;
     this.amountEarlier = amountEarlier;
     this.timeEarlier = timeEarlier;
     this.dateEarlier = dateEarlier;
