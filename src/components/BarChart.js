@@ -44,13 +44,6 @@ function BarChart(props) {
   const totalHeight = height + parseInt(margin.top) + parseInt(margin.bottom);
   const totalWidth = width + parseInt(margin.left) + parseInt(margin.right);
 
-  const style = {
-    height: totalHeight,
-    width: totalWidth,
-    marginLeft: margin.left + "px",
-    marginRight: margin.right + "px",
-  };
-
   const xTickValues = Array.from(Array(q.maxTime + 1).keys());
   const data = xTickValues.map((d) => {
     if (d === q.timeEarlier) {
@@ -67,6 +60,8 @@ function BarChart(props) {
       <Row>
         <Col>
           <svg
+            width={`${totalWidth}`}
+            height={`${totalHeight}`}
             ref={useD3(
               (svg) => {
                 var chart = svg
@@ -169,7 +164,6 @@ function BarChart(props) {
               },
               [q]
             )}
-            style={style}
           ></svg>
         </Col>
       </Row>

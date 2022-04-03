@@ -20,7 +20,6 @@ import {
   fetchTreatmentId,
   fetchCurrentTreatment,
 } from "./features/questionSlice";
-import { Footer } from "./footer";
 
 const App = () => {
   return (
@@ -35,7 +34,6 @@ const App = () => {
             <Route path="/thankyou" component={ThankYou} />
             <Route path="/*" component={Home} />
           </Switch>
-          <Footer className="footer bg-dark" />
         </div>
       </BrowserRouter>
     </div>
@@ -66,29 +64,31 @@ const Home = () => {
               id="word-no-titration"
               href="vizsurvey/instructions?treatment_id=1"
             >
-              Worded no titration.
+              Worded with no titration and not draggable.
             </a>
           </p>
           <p>
             <a
-              id="word-no-titration"
+              id="barchart-no-titration"
               href="vizsurvey/instructions?treatment_id=2"
             >
-              Barchart no titration.
+              Barchart with no titration and not draggable.
+            </a>
+          </p>
+          <p>
+            <a id="barchart-drag" href="vizsurvey/instructions?treatment_id=3">
+              Barchart draggable.
+            </a>
+          </p>
+          <p>
+            <a id="word-titration" href="vizsurvey/instructions?treatment_id=4">
+              Word titration.
             </a>
           </p>
           <p>
             <a
-              id="word-no-titration"
-              href="vizsurvey/instructions?treatment_id=3"
-            >
-              Worded titration.
-            </a>
-          </p>
-          <p>
-            <a
-              id="word-no-titration"
-              href="vizsurvey/instructions?treatment_id=4"
+              id="barchart-titration"
+              href="vizsurvey/instructions?treatment_id=5"
             >
               Barchart titration.
             </a>
