@@ -1,7 +1,18 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { axisBottom, axisLeft, scaleLinear, range, format } from "d3";
+import {
+  axisBottom,
+  axisLeft,
+  scaleLinear,
+  range,
+  format,
+  drag,
+  select,
+} from "d3";
+import { Formik, Form } from "formik";
+import { Button } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { DateTime } from "luxon";
 import { useD3 } from "../hooks/useD3";
 import { ChoiceType } from "../features/ChoiceType";
@@ -51,95 +62,140 @@ function BarChart(props) {
   });
 
   const result = (
-    <svg
-      ref={useD3(
-        (svg) => {
-          var chart = svg
-            .selectAll(".plot-area")
-            .data([null])
-            .join("g")
-            .attr("class", "plot-area")
-            .attr("transform", `translate(${margin.left},${margin.top})`);
+    <Container fluid>
+      <Row>
+        <Col>
+          <svg
+            ref={useD3(
+              (svg) => {
+                var chart = svg
+                  .selectAll(".plot-area")
+                  .data([null])
+                  .join("g")
+                  .attr("class", "plot-area")
+                  .attr("transform", `translate(${margin.left},${margin.top})`);
 
-          const x = scaleLinear().domain([0, q.maxTime]).range([0, width]);
+                const x = scaleLinear()
+                  .domain([0, q.maxTime])
+                  .range([0, width]);
 
-          const yRange = [0, q.maxAmount];
-          const y = scaleLinear().domain(yRange).range([height, 0]);
+                const yRange = [0, q.maxAmount];
+                const y = scaleLinear().domain(yRange).range([height, 0]);
 
-          chart
-            .selectAll(".x-axis")
-            .data([null])
-            .join("g")
-            .attr("transform", `translate(0,${height})`)
-            .attr("class", "x-axis")
-            .call(
-              axisBottom(x).tickValues(xTickValues).tickFormat(format(",.0f"))
-            );
+                chart
+                  .selectAll(".x-axis")
+                  .data([null])
+                  .join("g")
+                  .attr("transform", `translate(0,${height})`)
+                  .attr("class", "x-axis")
+                  .call(
+                    axisBottom(x)
+                      .tickValues(xTickValues)
+                      .tickFormat(format(",.0f"))
+                  );
 
-          const yTickValues = range(yRange[0], yRange[1], yRange[1] / 5);
-          yTickValues.push(yRange[1]);
+                const yTickValues = range(yRange[0], yRange[1], yRange[1] / 5);
+                yTickValues.push(yRange[1]);
 
-          chart
-            .selectAll(".y-axis")
-            .data([null])
-            .join("g")
-            .attr("class", "y-axis")
-            //.attr("transform", `translate(${margin.left},${margin.bottom})`)
-            .call(
-              //axisLeft(y).tickValues(yTickValues).tickFormat(d3.format("$,.2f"))
-              axisLeft(y).tickValues(yTickValues).tickFormat(format("$,.0f"))
-            );
+                chart
+                  .selectAll(".y-axis")
+                  .data([null])
+                  .join("g")
+                  .attr("class", "y-axis")
+                  //.attr("transform", `translate(${margin.left},${margin.bottom})`)
+                  .call(
+                    //axisLeft(y).tickValues(yTickValues).tickFormat(d3.format("$,.2f"))
+                    axisLeft(y)
+                      .tickValues(yTickValues)
+                      .tickFormat(format("$,.0f"))
+                  );
 
-          // const yLabelG = svg
-          //   .select("#y-axis-label")
-          //   .data([1])
-          //   .join("g")
-          //   .attr("transform", "rotate(-90)");
+                // const yLabelG = svg
+                //   .select("#y-axis-label")
+                //   .data([1])
+                //   .join("g")
+                //   .attr("transform", "rotate(-90)");
 
-          // .data(nullData)
-          // .join("text")
-          // .attr("id", "y-axis-label")
-          // .attr("text-anchor", "middle")
-          // .attr("x", -innerHeight / 2)
-          // .attr("y", -margin.left)
+                // .data(nullData)
+                // .join("text")
+                // .attr("id", "y-axis-label")
+                // .attr("text-anchor", "middle")
+                // .attr("x", -innerHeight / 2)
+                // .attr("y", -margin.left)
 
-          // .text("Amount in USD");
+                // .text("Amount in USD");
 
-          chart
-            .selectAll(".bar")
-            .data(data)
-            .join("rect")
-            .attr("fill", "steelblue")
-            .attr("class", "bar")
-            .attr("x", (d) => x(d.time) - barWidth / 2)
-            .attr("width", barWidth)
-            .attr("y", (d) => y(d.amount))
-            .attr("id", (d) => {
-              return "id" + d.time;
-            })
-            .on("click", (d) => {
-              if (d.target.__data__.amount === q.amountEarlier) {
-                dispatch(
-                  answer({
-                    choice: ChoiceType.earlier,
-                    choiceTimestamp: DateTime.now(),
+                chart
+                  .selectAll(".bar")
+                  .data(data)
+                  .join("rect")
+                  .attr("fill", "steelblue")
+                  .attr("class", "bar")
+                  .attr("x", (d) => x(d.time) - barWidth / 2)
+                  .attr("width", barWidth)
+                  .attr("y", (d) => y(d.amount))
+                  .attr("id", (d) => {
+                    return "id" + d.time;
                   })
-                );
-              } else {
-                dispatch(
-                  answer({
-                    choice: ChoiceType.later,
-                    choiceTimestamp: DateTime.now(),
+                  .on("click", (d) => {
+                    if (d.target.__data__.amount === q.amountEarlier) {
+                      dispatch(
+                        answer({
+                          choice: ChoiceType.earlier,
+                          choiceTimestamp: DateTime.now(),
+                        })
+                      );
+                    } else {
+                      dispatch(
+                        answer({
+                          choice: ChoiceType.later,
+                          choiceTimestamp: DateTime.now(),
+                        })
+                      );
+                    }
                   })
-                );
-              }
-            })
-            .attr("height", (d) => y(0) - y(d.amount));
-        },
-        [q]
-      )}
-      style={style}
-    ></svg>
+                  .attr("height", (d) => y(0) - y(d.amount));
+                var dragHandler = drag().on("drag", function (d) {
+                  select(this)
+                    .attr("y", d.y)
+                    .attr("height", y(0) - d.y);
+                });
+                dragHandler(chart.selectAll(".bar"));
+              },
+              [q]
+            )}
+            style={style}
+          ></svg>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <Formik
+            initialValues={{ choice: ChoiceType.Unitialized }}
+            validate={() => {
+              let errors = {};
+              return errors;
+            }}
+            onSubmit={(values, { setSubmitting, resetForm }) => {
+              console.log("submitting");
+              setTimeout(() => {
+                dispatch(answer(ChoiceType.Earlier));
+                setSubmitting(false);
+                resetForm();
+              }, 400);
+            }}
+          >
+            {({ isSubmitting }) => (
+              <Form>
+                <Button type="submit" disabled={isSubmitting}>
+                  Submit
+                </Button>
+              </Form>
+            )}
+          </Formik>
+        </Col>
+      </Row>
+    </Container>
   );
 
   if (status === StatusType.Complete) {
