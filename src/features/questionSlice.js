@@ -4,13 +4,8 @@ import { QuestionEngine } from "./QuestionEngine";
 import { StatusType } from "./StatusType";
 
 // Define the initial state of the store for this slicer.
-const io = new FileIOAdapter();
 const qe = new QuestionEngine();
-
-export const fetchQuestions = createAsyncThunk(
-  "survey/getQuestions",
-  io.fetchQuestions
-);
+const io = new FileIOAdapter();
 
 export const writeAnswers = createAsyncThunk(
   "survey/writeAnswers",
@@ -32,41 +27,30 @@ export const questionSlice = createSlice({
   }, // the initial state of our global data (under name slice)
   reducers: {
     setParticipant(state, action) {
-      if (state.participantId === null && action.payload !== null) {
-        state.participantId = action.payload;
-      }
+      state.participantId = action.payload;
+      return state;
     },
-    setTreatment(state, action) {
-      if (state.treatmentId === null && action.payload !== null) {
-        state.treatmentId = action.payload;
-      }
+    setTreatmentId(state, action) {
+      state.treatmentId = action.payload;
+      return state;
+    },
+    fetchQuestions(state) {
+      state.questions = io.fetchQuestions(state.treatmentId);
+      state.status = StatusType.Fetched;
+      return state;
+    },
+    startSurvey(state) {
+      qe.startSurvey(state);
+      return state;
     },
     setQuestionShownTimestamp(state, action) {
       qe.setLatestAnswerShown(state, action);
+      return state;
     },
     // we define our actions on the slice of global store data here.
     answer(state, action) {
       qe.answerCurrentQuestion(state, action);
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchQuestions.pending, (state) => {
-        if (state.status === StatusType.Unitialized) {
-          state.status = StatusType.Fetching;
-        }
-      })
-      .addCase(fetchQuestions.fulfilled, (state, action) => {
-        state.questions = action.payload;
-        state.status = StatusType.Fetched;
-        qe.startSurvey(state);
-      })
-      .addCase(fetchQuestions.rejected, (state, action) => {
-        if (state.status === StatusType.Fetched) {
-          state.status = StatusType.Error;
-          state.error = action.error;
-        }
-      });
   },
 });
 
@@ -74,8 +58,9 @@ export const selectAllQuestions = (state) => {
   return qe.allQuestions(state.questions);
 };
 
-export const selectCurrentTreatment = (state) => {
-  return qe.currentTreatment(state);
+export const fetchCurrentTreatment = (state) => {
+  const result = qe.currentTreatment(state.questions);
+  return result;
 };
 
 export const selectCurrentQuestion = (state) => {
@@ -86,12 +71,18 @@ export const fetchStatus = (state) => {
   return state.questions.status;
 };
 
+export const fetchTreatmentId = (state) => {
+  return state.questions.treatmentId;
+};
+
 // Action creators are generated for each case reducer function
 export const {
+  fetchQuestions,
+  startSurvey,
   setQuestionShownTimestamp,
   answer,
   setParticipant,
-  setTreatment,
+  setTreatmentId,
 } = questionSlice.actions;
 
 export default questionSlice.reducer;

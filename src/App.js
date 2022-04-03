@@ -1,15 +1,23 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Link, Redirect } from "react-router-dom";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "react-bootstrap";
 import "./App.css";
 import Survey from "./components/Survey";
 import { QueryParam } from "./components/QueryParam";
-import { selectAllQuestions, writeAnswers } from "./features/questionSlice";
+import {
+  fetchQuestions,
+  selectAllQuestions,
+  startSurvey,
+  writeAnswers,
+} from "./features/questionSlice";
 import { ViewType } from "./features/ViewType";
-import { selectCurrentTreatment } from "./features/questionSlice";
+import {
+  fetchTreatmentId,
+  fetchCurrentTreatment,
+} from "./features/questionSlice";
 import { Footer } from "./footer";
 
 const App = () => {
@@ -20,6 +28,7 @@ const App = () => {
           <QueryParam />
           <Switch>
             <Route exact path="/" component={Home} />
+            <Route exact path={"/instructions"} component={Instructions} />
             <Route path="/survey" component={Survey} />
             <Route path="/thankyou" component={ThankYou} />
             <Route path="/*" component={Home} />
@@ -33,78 +42,63 @@ const App = () => {
 
 export default App;
 
-var handle = undefined;
 const Home = () => {
-  const QandA = useSelector(selectCurrentTreatment);
-  handle = useFullScreenHandle();
+  const treatmentId = useSelector(fetchTreatmentId);
   return (
     <div id="home-text">
       <p>
-        {QandA === undefined ? (
+        {treatmentId === null ? (
           <div>
-            Cannot display <b>common</b> instructions since a treatment has not
-            been selected. Please select a treatment
+            <p>
+              We shouldn not see this page since the participants will be
+              provided a link with the treatment id in the URL.
+            </p>
+            <p>Click a link below to launc one of the experiments.</p>
+            <p>
+              <a href="https://github.com/pcordone/vizsurvey">
+                Github README.md
+              </a>
+            </p>
+            <p>
+              <a href="https://pcordone.github.io">public website</a>
+            </p>
+            <p>
+              <a
+                id="word-no-titration"
+                href="vizsurvey/instructions?treatment_id=1"
+              >
+                Worded no titration.
+              </a>
+            </p>
+            <p>
+              <a
+                id="word-no-titration"
+                href="vizsurvey/instructions?treatment_id=2"
+              >
+                Barchart no titration.
+              </a>
+            </p>
+            <p>
+              <a
+                id="word-no-titration"
+                href="vizsurvey/instructions?treatment_id=3"
+              >
+                Worded titration.
+              </a>
+            </p>
+            <p>
+              <a
+                id="word-no-titration"
+                href="vizsurvey/instructions?treatment_id=4"
+              >
+                Barchart titration.
+              </a>
+            </p>
           </div>
         ) : (
-          <div>
-            You will be presented with two choices about receiving money, one
-            earlier and one later in time.
-          </div>
-        )}
-        {QandA === undefined ? (
-          <div>
-            Cannot display <b>specific</b> instructions since a treatment has
-            not been selected. Please select a treatment
-          </div>
-        ) : QandA.question.viewType === ViewType.barchart ? (
-          <div>
-            Click on the bar that represents the amount that you would like to
-            receive.
-          </div>
-        ) : QandA.question.viewType === ViewType.word ? (
-          <div>
-            Click on the radio button that contains the amount you would like to
-            receive.
-          </div>
-        ) : (
-          <div>
-            Click on the day that contains the amount that you would like to
-            receive.
-          </div>
+          <Redirect to={`/instructions?treatment_id=${treatmentId}`} />
         )}
       </p>
-      {QandA === undefined ? (
-        <div>
-          <p>
-            Cannot display <b>Start Survey button</b> since a treatment has not
-            been selected. Please select a treatment
-          </p>
-          <p>
-            <a
-              href="
-        https://github.com/pcordone/vizsurvey"
-            >
-              Github README.md
-            </a>
-          </p>
-          <p>
-            <a id="getQuestionSet" href="vizsurvey?treatment_id=2">
-              relative treatment_id=4
-            </a>
-          </p>
-          <p>
-            <a href="https://pcordone.github.io">public website</a>
-          </p>
-        </div>
-      ) : (
-        <FullScreen handle={handle}>
-          <Link to="/survey">
-            <Button size="lg" onClick={handle.enter}>
-              Start Survey
-            </Button>
-          </Link>
-        </FullScreen>
-      )}
     </div>
   );
 };
@@ -120,13 +114,59 @@ function convertToCSV(answers) {
   return header.concat(rows).join("\n");
 }
 
+const Instructions = () => {
+  var handle = useFullScreenHandle();
+  const dispatch = useDispatch();
+  dispatch(fetchQuestions());
+  const treatment = useSelector(fetchCurrentTreatment);
+
+  function surveyButtonClicked() {
+    dispatch(startSurvey());
+    handle.enter;
+  }
+
+  return (
+    <div id="home-text">
+      <p>
+        {treatment.viewType === ViewType.barchart ? (
+          <div>
+            Click on the bar that represents the amount that you would like to
+            receive.
+          </div>
+        ) : treatment.viewType === ViewType.word ? (
+          <div>
+            Click on the radio button that contains the amount you would like to
+            receive.
+          </div>
+        ) : treatment.viewType === ViewType.calendar ? (
+          <div>
+            Click on the day that contains the amount that you would like to
+            receive.
+          </div>
+        ) : (
+          <div>
+            Cannot display <b>specific</b> instructions since a treatment has
+            not been selected. Please select a treatment
+          </div>
+        )}
+      </p>
+      <FullScreen handle={handle}>
+        <Link to="/survey">
+          <Button size="lg" onClick={surveyButtonClicked}>
+            Start Survey
+          </Button>
+        </Link>
+      </FullScreen>
+    </div>
+  );
+};
+
 const ThankYou = () => {
   const dispatch = useDispatch();
   const allQuestions = useSelector(selectAllQuestions);
   const csv = convertToCSV(allQuestions);
-  console.log(csv);
   dispatch(writeAnswers(csv));
-  handle = useFullScreenHandle();
+  const handle = useFullScreenHandle();
 
   const uuid = uuidv4();
   return (

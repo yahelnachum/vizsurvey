@@ -217,7 +217,7 @@ describe("QuestionEngine tests", () => {
   });
 });
 
-class TestDataFactory {
+export class TestDataFactory {
   static createQuestionLaterTitrate() {
     return new Question({
       treatmentId: 1,

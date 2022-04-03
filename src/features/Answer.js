@@ -1,6 +1,7 @@
 export class Answer {
   constructor({
     treatmentId: treatmentId,
+    position: position,
     viewType: viewType,
     amountEarlier: amountEarlier,
     timeEarlier: timeEarlier,
@@ -17,8 +18,10 @@ export class Answer {
     choiceTimestamp: choiceTimestamp,
     highup: highup,
     lowdown: lowdown,
+    paarticipantCode: participantCode,
   }) {
     this.treatmentId = treatmentId;
+    this.position = position;
     this.viewType = viewType;
     this.amountEarlier = amountEarlier;
     this.timeEarlier = timeEarlier;
@@ -35,5 +38,6 @@ export class Answer {
     this.choiceTimestamp = choiceTimestamp;
     this.highup = highup;
     this.lowdown = lowdown;
+    this.participantCode = participantCode;
   }
 }

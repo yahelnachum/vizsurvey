@@ -2,6 +2,7 @@ import { FileIOAdapter } from "./FileIOAdapter";
 import { InteractionType } from "./InteractionType";
 import { VariableType } from "./VariableType";
 import { ViewType } from "./ViewType";
+import { TestDataFactory } from "./QuestionEngine.test";
 
 describe("FileIOAdapter tests", () => {
   test("Validate treatment CSV fields are loaded correctly.", async () => {
@@ -31,4 +32,11 @@ describe("FileIOAdapter tests", () => {
     expect(questions[0].height).toBeNaN();
     expect(questions[0].comment).toBe("Read 2001 example, absolute size");
   });
+
+  const io = new FileIOAdapter();
+  const answers = [TestDataFactory.createInitialAnswerTitrate()];
+  const result = io.convertToCSV(answers);
+  expect(result)
+    .toBe(`treatment_id,position,view_type,amount_earlier,time_earlier,date_earlier,amount_later,time_later,date_later,max_amount,max_time,choice,shown_timestamp,answer_timestamp,highup,lowdown,participant_code
+1, undefined, ViewType.barchart, 500, 1, undefined, 1000, 3, undefined, , 2000, 8, undefined, ,null, null, null, null, undefined`);
 });
