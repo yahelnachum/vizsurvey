@@ -17,11 +17,11 @@ export class FileIOAdapter {
 
   convertToCSV(answers) {
     const header = [
-      "treatment_id,position,view_type,amount_earlier,time_earlier,date_earlier,amount_later,time_later,date_later,max_amount,max_time,choice,shown_timestamp,answer_timestamp,highup,lowdown,participant_code",
+      "treatment_id,position,view_type,interaction,amount_earlier,time_earlier,date_earlier,amount_later,time_later,date_later,max_amount,max_time,vertical_pixels,horizontal_pixels,choice,shown_timestamp,choice_timestamp,highup,lowdown,participant_code",
     ];
     const rows = answers.map(
       (a) =>
-        `${a.treatmentId}, ${a.position}, ${a.viewType}, ${a.amountEarlier}, ${a.timeEarlier}, ${a.dateEarlier}, ${a.amountLater}, ${a.timeLater}, ${a.dateLater}, , ${a.maxAmount}, ${a.maxTime}, ${a.choice}, ,${a.shownTimestamp}, ${a.choiceTimestamp}, ${a.highup}, ${a.lowdown}, ${a.paarticipantCode}`
+        `${a.treatmentId}, ${a.position}, ${a.viewType}, ${a.interaction}, ${a.amountEarlier}, ${a.timeEarlier}, ${a.dateEarlier}, ${a.amountLater}, ${a.timeLater}, ${a.dateLater}, ${a.maxAmount}, ${a.maxTime}, ${a.verticalPixels}, ${a.horizontalPixels}, ${a.choice}, ${a.shownTimestamp}, ${a.choiceTimestamp}, ${a.highup}, ${a.lowdown}, ${a.participantCode}`
     );
     return header.concat(rows).join("\n");
   }

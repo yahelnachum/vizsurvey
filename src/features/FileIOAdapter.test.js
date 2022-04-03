@@ -2,7 +2,9 @@ import { FileIOAdapter } from "./FileIOAdapter";
 import { InteractionType } from "./InteractionType";
 import { VariableType } from "./VariableType";
 import { ViewType } from "./ViewType";
-import { TestDataFactory } from "./QuestionEngine.test";
+import { ChoiceType } from "./ChoiceType";
+import { Answer } from "./Answer";
+import { DateTime } from "luxon";
 
 describe("FileIOAdapter tests", () => {
   test("Validate treatment CSV fields are loaded correctly.", async () => {
@@ -33,10 +35,35 @@ describe("FileIOAdapter tests", () => {
     expect(questions[0].comment).toBe("Read 2001 example, absolute size");
   });
 
-  const io = new FileIOAdapter();
-  const answers = [TestDataFactory.createInitialAnswerTitrate()];
-  const result = io.convertToCSV(answers);
-  expect(result)
-    .toBe(`treatment_id,position,view_type,amount_earlier,time_earlier,date_earlier,amount_later,time_later,date_later,max_amount,max_time,choice,shown_timestamp,answer_timestamp,highup,lowdown,participant_code
-1, undefined, ViewType.barchart, 500, 1, undefined, 1000, 3, undefined, , 2000, 8, undefined, ,null, null, null, null, undefined`);
+  test("Validate treatment CSV fields are loaded correctly.", async () => {
+    const answer = new Answer({
+      treatmentId: 1,
+      position: 2,
+      viewType: ViewType.barchart,
+      interaction: InteractionType.drag,
+      amountEarlier: 3,
+      timeEarlier: 4,
+      dateEarlier: DateTime.utc(2001, 1, 1, 1, 1, 1, 1),
+      amountLater: 5,
+      timeLater: 6,
+      dateLater: DateTime.utc(2001, 1, 1, 2, 1, 1, 1),
+      maxAmount: 7,
+      maxTime: 8,
+      verticalPixels: 9,
+      horizontalPixels: 10,
+      choice: ChoiceType.earlier,
+      shownTimestamp: DateTime.utc(2001, 1, 1, 3, 1, 1, 1),
+      choiceTimestamp: DateTime.utc(2001, 1, 1, 4, 1, 1, 1),
+      highup: 11,
+      lowdown: 12,
+      participantCode: "participant code",
+    });
+    const answers = [answer];
+    const io = new FileIOAdapter();
+    const result = io.convertToCSV(answers);
+    console.log(result);
+    expect(result)
+      .toBe(`treatment_id,position,view_type,interaction,amount_earlier,time_earlier,date_earlier,amount_later,time_later,date_later,max_amount,max_time,vertical_pixels,horizontal_pixels,choice,shown_timestamp,choice_timestamp,highup,lowdown,participant_code
+1, 2, ViewType.barchart, InteractionType.drag, 3, 4, 2001-01-01T01:01:01.001Z, 5, 6, 2001-01-01T02:01:01.001Z, 7, 8, 9, 10, earlier, 2001-01-01T03:01:01.001Z, 2001-01-01T04:01:01.001Z, 11, 12, participant code`);
+  });
 });

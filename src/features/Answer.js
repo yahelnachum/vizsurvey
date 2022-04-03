@@ -19,7 +19,7 @@ export class Answer {
     choiceTimestamp: choiceTimestamp,
     highup: highup,
     lowdown: lowdown,
-    paarticipantCode: participantCode,
+    participantCode: participantCode,
   }) {
     this.treatmentId = treatmentId;
     this.position = position;
