@@ -151,7 +151,7 @@ function BarChart(props) {
                             choiceTimestamp: DateTime.now(),
                           })
                         );
-                      } else {
+                      } else if (d.target.__data__.amount === q.amountLater) {
                         dispatch(
                           answer({
                             choice: ChoiceType.later,
