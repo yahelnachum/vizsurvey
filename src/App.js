@@ -116,7 +116,7 @@ const Instructions = () => {
 
   function surveyButtonClicked() {
     dispatch(startSurvey());
-    handle.enter;
+    handle.enter();
   }
 
   return (
