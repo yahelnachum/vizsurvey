@@ -84,7 +84,7 @@ const Home = () => {
               id="barchart-drag"
               to="/vizsurvey/instructions?treatment_id=3"
             >
-              Barchart with no titration and not draggable.
+              Barchart draggable.
             </Link>
           </p>
           <p>
