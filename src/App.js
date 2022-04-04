@@ -153,9 +153,9 @@ const Instructions = () => {
   );
 };
 
+const uuid = uuidv4();
 const ThankYou = () => {
   const dispatch = useDispatch();
-  const uuid = uuidv4();
   dispatch(setParticipant(uuid));
   const answers = useSelector(selectAllQuestions);
   const io = new FileIOAdapter();
