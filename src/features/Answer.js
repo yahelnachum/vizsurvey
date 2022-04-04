@@ -1,16 +1,47 @@
 export class Answer {
-  constructor(choice, shownTimestamp, choiceTimestamp) {
+  constructor({
+    treatmentId: treatmentId,
+    position: position,
+    viewType: viewType,
+    interaction: interaction,
+    variableAmount: variableAmount,
+    amountEarlier: amountEarlier,
+    timeEarlier: timeEarlier,
+    dateEarlier: dateEarlier,
+    amountLater: amountLater,
+    timeLater: timeLater,
+    dateLater: dateLater,
+    maxAmount: maxAmount,
+    maxTime: maxTime,
+    verticalPixels: verticalPixels,
+    horizontalPixels: horizontalPixels,
+    choice: choice,
+    shownTimestamp: shownTimestamp,
+    choiceTimestamp: choiceTimestamp,
+    highup: highup,
+    lowdown: lowdown,
+    participantCode: participantCode,
+  }) {
+    this.treatmentId = treatmentId;
+    this.position = position;
+    this.viewType = viewType;
+    this.interaction = interaction;
+    this.variableAmount = variableAmount;
+    this.amountEarlier = amountEarlier;
+    this.timeEarlier = timeEarlier;
+    this.dateEarlier = dateEarlier;
+    this.amountLater = amountLater;
+    this.timeLater = timeLater;
+    this.dateLater = dateLater;
+    this.maxAmount = maxAmount;
+    this.maxTime = maxTime;
+    this.verticalPixels = verticalPixels;
+    this.horizontalPixels = horizontalPixels;
     this.choice = choice;
     this.shownTimestamp = shownTimestamp;
     this.choiceTimestamp = choiceTimestamp;
-  }
-
-  setAnswer(choiceTimestamp, choice) {
-    this.choiceTimestamp = choiceTimestamp;
-    this.choice = choice;
-  }
-
-  static create() {
-    return new Answer(null, null, null);
+    this.highup = highup;
+    this.lowdown = lowdown;
+    this.participantCode = participantCode;
   }
 }

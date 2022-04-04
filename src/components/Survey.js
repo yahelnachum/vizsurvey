@@ -7,20 +7,20 @@ import { ViewType } from "../features/ViewType";
 import { selectCurrentQuestion } from "../features/questionSlice";
 
 export function Survey() {
-  const QandA = useSelector(selectCurrentQuestion);
+  const question = useSelector(selectCurrentQuestion);
 
   return (
     <Container fluid>
       <Row>
         <Col>
-          {QandA.question.viewType === ViewType.barchart ? (
+          {question.viewType === ViewType.barchart ? (
             <BarChart
               top_margin="20"
               right_margin="30"
               bottom_margin="30"
               left_margin="80"
             />
-          ) : QandA.question.viewType === ViewType.word ? (
+          ) : question.viewType === ViewType.word ? (
             <MELForm />
           ) : (
             <Calendar

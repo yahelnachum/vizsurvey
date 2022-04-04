@@ -1,6 +1,9 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import { DateTime } from "luxon";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Button } from "react-bootstrap";
 import { ChoiceType } from "../features/ChoiceType";
 import { StatusType } from "../features/StatusType";
 import {
@@ -9,13 +12,10 @@ import {
   setQuestionShownTimestamp,
   answer,
 } from "../features/questionSlice";
-//import { Col, Container, Row, Media } from "react-bootstrap";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { Button } from "react-bootstrap";
 
 export function MELForm() {
   const dispatch = useDispatch();
-  const QandA = useSelector(selectCurrentQuestion);
+  const q = useSelector(selectCurrentQuestion);
   const status = useSelector(fetchStatus);
 
   // Absolute money value, delay framing (e.g., $5 today vs. $5 plus an additional $5 in 4 weeks)
@@ -32,28 +32,31 @@ export function MELForm() {
   // }
 
   function question1stPartText() {
-    return `$${QandA.question.amountEarlier} ${todayText(
-      QandA.question.timeEarlier
-    )}`;
+    return `$${q.amountEarlier} ${todayText(q.timeEarlier)}`;
   }
 
   function question2ndPartText() {
-    return `$${QandA.question.amountLater} in ${QandA.question.timeLater} weeks`;
+    return `$${q.amountLater} in ${q.timeLater} weeks`;
   }
 
   const result = (
     <Formik
-      initialValues={{ choice: ChoiceType.Unitialized }}
+      initialValues={{ choice: ChoiceType.unitialized }}
       validate={(values) => {
         let errors = {};
-        if (!values.choice || values.choice === ChoiceType.Unitialized) {
+        if (!values.choice || values.choice === ChoiceType.unitialized) {
           errors.choice = "Please choose a selection to continue.";
         }
         return errors;
       }}
       onSubmit={(values, { setSubmitting, resetForm }) => {
         setTimeout(() => {
-          dispatch(answer(values.choice));
+          dispatch(
+            answer({
+              choice: values.choice,
+              choiceTimestamp: DateTime.now(),
+            })
+          );
           setSubmitting(false);
           resetForm();
         }, 400);
@@ -67,12 +70,12 @@ export function MELForm() {
             className="radio-choice-label"
           >
             <label>
-              <Field type="radio" name="choice" value={ChoiceType.Earlier} />
+              <Field type="radio" name="choice" value={ChoiceType.earlier} />
               &nbsp;{question1stPartText()}
             </label>
             <br></br>
             <label>
-              <Field type="radio" name="choice" value={ChoiceType.Later} />
+              <Field type="radio" name="choice" value={ChoiceType.later} />
               &nbsp;{question2ndPartText()}
             </label>
             <span style={{ color: "red", fontWeight: "bold" }}>
@@ -88,9 +91,9 @@ export function MELForm() {
   );
 
   if (status === StatusType.Complete) {
-    return <Redirect to="/thankyou" />;
+    return <Redirect to="/vizsurvey/thankyou" />;
   } else {
-    dispatch(setQuestionShownTimestamp(Date.now));
+    dispatch(setQuestionShownTimestamp(Date.now()));
     return result;
   }
 }

@@ -1,8 +1,24 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import {
+  axisBottom,
+  axisLeft,
+  scaleLinear,
+  range,
+  format,
+  drag,
+  select,
+} from "d3";
+import { Formik, Form } from "formik";
+import { Button } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
+import { DateTime } from "luxon";
+import { useD3 } from "../hooks/useD3";
 import { ChoiceType } from "../features/ChoiceType";
 import { StatusType } from "../features/StatusType";
+import { InteractionType } from "../features/InteractionType";
+import { VariableType } from "../features/VariableType";
 import {
   selectCurrentQuestion,
   fetchStatus,
@@ -10,24 +26,15 @@ import {
   answer,
 } from "../features/questionSlice";
 
-import { useD3 } from "../hooks/useD3";
-import * as d3 from "d3";
-import { axisBottom, axisLeft, scaleLinear, range } from "d3";
-
-import { Formik, Form } from "formik";
-import { Button } from "react-bootstrap";
-
-import { Container, Row, Col } from "react-bootstrap";
-
 function BarChart(props) {
   const dispatch = useDispatch();
-  const QandA = useSelector(selectCurrentQuestion);
+  const q = useSelector(selectCurrentQuestion);
   const status = useSelector(fetchStatus);
 
   const barWidth = 15;
 
-  const height = QandA.question.verticalPixels;
-  const width = QandA.question.horizontalPixels;
+  const height = q.verticalPixels;
+  const width = q.horizontalPixels;
   const margin = {
     top: props.top_margin,
     right: props.right_margin,
@@ -38,24 +45,22 @@ function BarChart(props) {
   const totalHeight = height + parseInt(margin.top) + parseInt(margin.bottom);
   const totalWidth = width + parseInt(margin.left) + parseInt(margin.right);
 
-  const style = {
-    height: totalHeight,
-    width: totalWidth,
-    marginLeft: margin.left + "px",
-    marginRight: margin.right + "px",
-  };
-
-  // const innerHeight = height - margin.bottom - margin.top;
-  // const innerWidth = width - margin.left - margin.right;
-
-  const xTickValues = Array.from(Array(QandA.question.maxTime + 1).keys());
+  const xTickValues = Array.from(Array(q.maxTime + 1).keys());
   const data = xTickValues.map((d) => {
-    if (d === QandA.question.timeEarlier) {
-      return { time: d, amount: QandA.question.amountEarlier };
-    } else if (d === QandA.question.timeLater) {
-      return { time: d, amount: QandA.question.amountLater };
+    if (d === q.timeEarlier) {
+      return {
+        time: d,
+        amount: q.amountEarlier,
+        barType: VariableType.earlierAmount,
+      };
+    } else if (d === q.timeLater) {
+      return {
+        time: d,
+        amount: q.amountLater,
+        barType: VariableType.laterAmount,
+      };
     } else {
-      return { time: d, amount: 0 };
+      return { time: d, amount: 0, barType: VariableType.none };
     }
   });
 
@@ -64,6 +69,8 @@ function BarChart(props) {
       <Row>
         <Col>
           <svg
+            width={`${totalWidth}`}
+            height={`${totalHeight}`}
             ref={useD3(
               (svg) => {
                 var chart = svg
@@ -74,10 +81,10 @@ function BarChart(props) {
                   .attr("transform", `translate(${margin.left},${margin.top})`);
 
                 const x = scaleLinear()
-                  .domain([0, QandA.question.maxTime])
+                  .domain([0, q.maxTime])
                   .range([0, width]);
 
-                const yRange = [0, QandA.question.maxAmount];
+                const yRange = [0, q.maxAmount];
                 const y = scaleLinear().domain(yRange).range([height, 0]);
 
                 chart
@@ -89,7 +96,7 @@ function BarChart(props) {
                   .call(
                     axisBottom(x)
                       .tickValues(xTickValues)
-                      .tickFormat(d3.format(",.0f"))
+                      .tickFormat(format(",.0f"))
                   );
 
                 const yTickValues = range(yRange[0], yRange[1], yRange[1] / 5);
@@ -105,7 +112,7 @@ function BarChart(props) {
                     //axisLeft(y).tickValues(yTickValues).tickFormat(d3.format("$,.2f"))
                     axisLeft(y)
                       .tickValues(yTickValues)
-                      .tickFormat(d3.format("$,.0f"))
+                      .tickFormat(format("$,.0f"))
                   );
 
                 // const yLabelG = svg
@@ -124,78 +131,96 @@ function BarChart(props) {
                 // .text("Amount in USD");
 
                 chart
-                  // .selectAll(".plot-area")
-                  // .attr("fill", "steelblue")
-                  // .attr("class", "plot-area")
                   .selectAll(".bar")
                   .data(data)
                   .join("rect")
                   .attr("fill", "steelblue")
                   .attr("class", "bar")
                   .attr("x", (d) => x(d.time) - barWidth / 2)
-                  //.attr("width", x.bandwidth())
                   .attr("width", barWidth)
                   .attr("y", (d) => y(d.amount))
                   .attr("id", (d) => {
                     return "id" + d.time;
                   })
                   .on("click", (d) => {
-                    if (
-                      d.target.__data__.amount === QandA.question.amountEarlier
-                    ) {
-                      //dispatch(answer(ChoiceType.Earlier));
-                    } else {
-                      //dispatch(answer(ChoiceType.Later));
+                    if (q.interaction === InteractionType.titration) {
+                      if (d.target.__data__.amount === q.amountEarlier) {
+                        dispatch(
+                          answer({
+                            choice: ChoiceType.earlier,
+                            choiceTimestamp: DateTime.now(),
+                          })
+                        );
+                      } else if (d.target.__data__.amount === q.amountLater) {
+                        dispatch(
+                          answer({
+                            choice: ChoiceType.later,
+                            choiceTimestamp: DateTime.now(),
+                          })
+                        );
+                      }
                     }
                   })
                   .attr("height", (d) => y(0) - y(d.amount));
-                var dragHandler = d3.drag().on("drag", function (d) {
-                  d3.select(this)
-                    .attr("y", d.y)
-                    .attr("height", y(0) - d.y);
+                var dragHandler = drag().on("drag", function (d) {
+                  if (
+                    q.interaction === InteractionType.drag &&
+                    d.subject.barType === q.variableAmount
+                  ) {
+                    select(this)
+                      .attr("y", d.y)
+                      .attr("height", y(0) - d.y);
+                  }
                 });
                 dragHandler(chart.selectAll(".bar"));
               },
-              [data]
+              [q]
             )}
-            style={style}
           ></svg>
         </Col>
       </Row>
       <Row>
         <Col>
-          <Formik
-            initialValues={{ choice: ChoiceType.Unitialized }}
-            validate={() => {
-              let errors = {};
-              return errors;
-            }}
-            onSubmit={(values, { setSubmitting, resetForm }) => {
-              console.log("submitting");
-              setTimeout(() => {
-                dispatch(answer(ChoiceType.Earlier));
-                setSubmitting(false);
-                resetForm();
-              }, 400);
-            }}
-          >
-            {({ isSubmitting }) => (
-              <Form>
-                <Button type="submit" disabled={isSubmitting}>
-                  Submit
-                </Button>
-              </Form>
-            )}
-          </Formik>
+          {q.interaction === InteractionType.drag ? (
+            <Formik
+              initialValues={{ choice: ChoiceType.Unitialized }}
+              validate={() => {
+                let errors = {};
+                return errors;
+              }}
+              onSubmit={(values, { setSubmitting, resetForm }) => {
+                setTimeout(() => {
+                  dispatch(
+                    answer({
+                      choice: ChoiceType.earlier,
+                      choiceTimestamp: DateTime.now(),
+                    })
+                  );
+                  setSubmitting(false);
+                  resetForm();
+                }, 400);
+              }}
+            >
+              {({ isSubmitting }) => (
+                <Form>
+                  <Button type="submit" disabled={isSubmitting}>
+                    Submit
+                  </Button>
+                </Form>
+              )}
+            </Formik>
+          ) : (
+            ""
+          )}
         </Col>
       </Row>
     </Container>
   );
 
   if (status === StatusType.Complete) {
-    return <Redirect to="/thankyou" />;
+    return <Redirect to="/vizsurvey/thankyou" />;
   } else {
-    dispatch(setQuestionShownTimestamp(Date.now));
+    dispatch(setQuestionShownTimestamp(Date.now()));
     return result;
   }
 }

@@ -137,3 +137,7 @@ Redux - is a library for managing the global application state.
 - state is read only and can only change data in store by emitting actions
 - changes are made with pure functions - To update store a reducer is written as a pure function.
   Redux should be used in applications that have several features. With these features sharing chunks of the same information.
+
+### Media Querries
+
+https://developer.mozilla.org/en-US/docs/Web/CSS/Media_Queries/Using_media_queries

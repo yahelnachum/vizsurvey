@@ -1,13 +1,25 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { BrowserRouter, Route, Switch, Link } from "react-router-dom";
+import { BrowserRouter, Route, Switch, Link, Redirect } from "react-router-dom";
+import { FullScreen, useFullScreenHandle } from "react-full-screen";
+import { v4 as uuidv4 } from "uuid";
+import { Button } from "react-bootstrap";
 import "./App.css";
 import Survey from "./components/Survey";
 import { QueryParam } from "./components/QueryParam";
-import { selectAllQuestions, writeAnswers } from "./features/questionSlice";
-import { Footer } from "./footer";
-import { FullScreen, useFullScreenHandle } from "react-full-screen";
-import { v4 as uuidv4 } from "uuid";
+import {
+  fetchQuestions,
+  selectAllQuestions,
+  startSurvey,
+  writeAnswers,
+  setParticipant,
+} from "./features/questionSlice";
+import { ViewType } from "./features/ViewType";
+import { FileIOAdapter } from "./features/FileIOAdapter";
+import {
+  fetchTreatmentId,
+  fetchCurrentTreatment,
+} from "./features/questionSlice";
 
 const App = () => {
   return (
@@ -16,12 +28,16 @@ const App = () => {
         <div className="App">
           <QueryParam />
           <Switch>
-            <Route exact path="/" component={Home} />
-            <Route path="/survey" component={Survey} />
-            <Route path="/thankyou" component={ThankYou} />
-            <Route path="/*" component={Home} />
+            <Route exact path="/vizsurvey" component={Home} />
+            <Route
+              exact
+              path={"/vizsurvey/instructions"}
+              component={Instructions}
+            />
+            <Route path="/vizsurvey/survey" component={Survey} />
+            <Route path="/vizsurvey/thankyou" component={ThankYou} />
+            <Route path="/vizsurvey/*" component={Home} />
           </Switch>
-          <Footer className="footer bg-dark" />
         </div>
       </BrowserRouter>
     </div>
@@ -30,106 +46,123 @@ const App = () => {
 
 export default App;
 
-import { ViewType } from "./features/ViewType";
-import { selectCurrentQuestion } from "./features/questionSlice";
-import { Button } from "react-bootstrap";
-
-var handle = undefined;
 const Home = () => {
-  const QandA = useSelector(selectCurrentQuestion);
-  handle = useFullScreenHandle();
+  const treatmentId = useSelector(fetchTreatmentId);
   return (
     <div id="home-text">
-      <p>
-        {QandA === undefined ? (
-          <div>
-            Cannot display <b>common</b> instructions since a treatment has not
-            been selected. Please select a treatment
-          </div>
-        ) : (
-          <div>
-            You will be presented with two choices about receiving money, one
-            earlier and one later in time.
-          </div>
-        )}
-        {QandA === undefined ? (
-          <div>
-            Cannot display <b>specific</b> instructions since a treatment has
-            not been selected. Please select a treatment
-          </div>
-        ) : QandA.question.viewType === ViewType.barchart ? (
-          <div>
-            Click on the bar that represents the amount that you would like to
-            receive.
-          </div>
-        ) : QandA.question.viewType === ViewType.word ? (
-          <div>
-            Click on the radio button that contains the amount you would like to
-            receive.
-          </div>
-        ) : (
-          <div>
-            Click on the day that contains the amount that you would like to
-            receive.
-          </div>
-        )}
-      </p>
-      {QandA === undefined ? (
+      {treatmentId === null ? (
         <div>
           <p>
-            Cannot display <b>Start Survey button</b> since a treatment has not
-            been selected. Please select a treatment
+            We shouldn not see this page since the participants will be provided
+            a link with the treatment id in the URL.
+          </p>
+          <p>
+            <a href="https://github.com/pcordone/vizsurvey">Github README.md</a>
+          </p>
+          <p>
+            <a href="https://github.com/pcordone">public website</a>
+          </p>
+          <p>Click a link below to launc one of the experiments.</p>
+          <p>
+            <a
+              id="word-no-titration"
+              href="/vizsurvey/instructions?treatment_id=1"
+            >
+              Worded with no titration and not draggable.
+            </a>
           </p>
           <p>
             <a
-              href="
-        https://github.com/pcordone/vizsurvey"
+              id="barchart-no-titration"
+              href="/vizsurvey/instructions?treatment_id=2"
             >
-              Github README.md
+              Barchart with no titration and not draggable.
             </a>
           </p>
           <p>
-            <a id="getQuestionSet" href="vizsurvey?treatment_id=2">
-              relative treatment_id=2
+            <a id="barchart-drag" href="/vizsurvey/instructions?treatment_id=3">
+              Barchart draggable.
             </a>
           </p>
           <p>
-            <a href="https://pcordone.github.io">public website</a>
+            <a
+              id="word-titration"
+              href="/vizsurvey/instructions?treatment_id=4"
+            >
+              Word titration.
+            </a>
+          </p>
+          <p>
+            <a
+              id="barchart-titration"
+              href="/vizsurvey/instructions?treatment_id=5"
+            >
+              Barchart titration.
+            </a>
           </p>
         </div>
       ) : (
-        <FullScreen handle={handle}>
-          <Link to="/survey">
-            <Button size="lg" onClick={handle.enter}>
-              Start Survey
-            </Button>
-          </Link>
-        </FullScreen>
+        <Redirect to={`/vizsurvey/instructions?treatment_id=${treatmentId}`} />
       )}
     </div>
   );
 };
 
-function convertToCSV(answers) {
-  const header = [
-    "treatment_id,position,amount_earlier,time_earlier,amount_later,time_later,choice,answer_time,participant_id",
-  ];
-  const rows = answers.map(
-    (a) =>
-      `${a.treatmentId}, ${a.position}, ${a.amountEarlier}, ${a.timeEarlier}, ${a.amountLater}, ${a.timeLater}, ${a.choice}, ${a.answerTime}, ${a.participantId}`
+const Instructions = () => {
+  var handle = useFullScreenHandle();
+  const dispatch = useDispatch();
+  dispatch(fetchQuestions());
+  const treatment = useSelector(fetchCurrentTreatment);
+
+  function surveyButtonClicked() {
+    dispatch(startSurvey());
+    handle.enter;
+  }
+
+  return (
+    <div id="home-text">
+      {treatment.viewType === ViewType.barchart ? (
+        <div>
+          Click on the bar that represents the amount that you would like to
+          receive.
+        </div>
+      ) : treatment.viewType === ViewType.word ? (
+        <div>
+          Click on the radio button that contains the amount you would like to
+          receive.
+        </div>
+      ) : treatment.viewType === ViewType.calendar ? (
+        <div>
+          Click on the day that contains the amount that you would like to
+          receive.
+        </div>
+      ) : (
+        <div>
+          Cannot display <b>specific</b> instructions since a treatment has not
+          been selected. Please select a treatment
+        </div>
+      )}
+      <FullScreen handle={handle}>
+        <Link to="/vizsurvey/survey">
+          <Button size="lg" onClick={surveyButtonClicked}>
+            Start Survey
+          </Button>
+        </Link>
+      </FullScreen>
+    </div>
   );
-  return header.concat(rows).join("\n");
-}
+};
 
 const ThankYou = () => {
   const dispatch = useDispatch();
-  const allQuestions = useSelector(selectAllQuestions);
-  const csv = convertToCSV(allQuestions);
-  console.log(csv);
-  dispatch(writeAnswers(csv));
-  handle = useFullScreenHandle();
-
   const uuid = uuidv4();
+  dispatch(setParticipant(uuid));
+  const answers = useSelector(selectAllQuestions);
+  const io = new FileIOAdapter();
+  const csv = io.convertToCSV(answers);
+  dispatch(writeAnswers(csv));
+  const handle = useFullScreenHandle();
+
   return (
     <FullScreen handle={handle}>
       <div>
