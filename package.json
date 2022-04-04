@@ -1,6 +1,7 @@
 {
   "name": "vizsurvey",
   "version": "1.0.1",
+  "homepage": "https://pcordone.github.io/vizsurvey",
   "private": true,
   "main": "index.js",
   "dependencies": {

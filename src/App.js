@@ -52,50 +52,41 @@ const Home = () => {
             We shouldn not see this page since the participants will be provided
             a link with the treatment id in the URL.
           </p>
-          <p>Click a link below to launc one of the experiments.</p>
           <p>
             <a href="https://github.com/pcordone/vizsurvey">Github README.md</a>
           </p>
           <p>
-            <a href="https://pcordone.github.io">public website</a>
+            <a href="https://github.com/pcordone">public website</a>
           </p>
+          <p>Click a link below to launc one of the experiments.</p>
           <p>
-            <a
-              id="word-no-titration"
-              href="vizsurvey/instructions?treatment_id=1"
-            >
+            <a id="word-no-titration" href="instructions?treatment_id=1">
               Worded with no titration and not draggable.
             </a>
           </p>
           <p>
-            <a
-              id="barchart-no-titration"
-              href="vizsurvey/instructions?treatment_id=2"
-            >
+            <a id="barchart-no-titration" href="instructions?treatment_id=2">
               Barchart with no titration and not draggable.
             </a>
           </p>
           <p>
-            <a id="barchart-drag" href="vizsurvey/instructions?treatment_id=3">
+            <a id="barchart-drag" href="instructions?treatment_id=3">
               Barchart draggable.
             </a>
           </p>
           <p>
-            <a id="word-titration" href="vizsurvey/instructions?treatment_id=4">
+            <a id="word-titration" href="instructions?treatment_id=4">
               Word titration.
             </a>
           </p>
           <p>
-            <a
-              id="barchart-titration"
-              href="vizsurvey/instructions?treatment_id=5"
-            >
+            <a id="barchart-titration" href="instructions?treatment_id=5">
               Barchart titration.
             </a>
           </p>
         </div>
       ) : (
-        <Redirect to={`/instructions?treatment_id=${treatmentId}`} />
+        <Redirect to={`instructions?treatment_id=${treatmentId}`} />
       )}
     </div>
   );
