@@ -28,11 +28,15 @@ const App = () => {
         <div className="App">
           <QueryParam />
           <Switch>
-            <Route exact path="/" component={Home} />
-            <Route exact path={"/instructions"} component={Instructions} />
-            <Route path="/survey" component={Survey} />
-            <Route path="/thankyou" component={ThankYou} />
-            <Route path="/*" component={Home} />
+            <Route exact path="/vizsurvey" component={Home} />
+            <Route
+              exact
+              path={"/vizsurvey/instructions"}
+              component={Instructions}
+            />
+            <Route path="/vizsurvey/survey" component={Survey} />
+            <Route path="/vizsurvey/thankyou" component={ThankYou} />
+            <Route path="/vizsurvey/*" component={Home} />
           </Switch>
         </div>
       </BrowserRouter>
@@ -60,33 +64,45 @@ const Home = () => {
           </p>
           <p>Click a link below to launc one of the experiments.</p>
           <p>
-            <a id="word-no-titration" href="instructions?treatment_id=1">
+            <a
+              id="word-no-titration"
+              href="/vizsurvey/instructions?treatment_id=1"
+            >
               Worded with no titration and not draggable.
             </a>
           </p>
           <p>
-            <a id="barchart-no-titration" href="instructions?treatment_id=2">
+            <a
+              id="barchart-no-titration"
+              href="/vizsurvey/instructions?treatment_id=2"
+            >
               Barchart with no titration and not draggable.
             </a>
           </p>
           <p>
-            <a id="barchart-drag" href="instructions?treatment_id=3">
+            <a id="barchart-drag" href="/vizsurvey/instructions?treatment_id=3">
               Barchart draggable.
             </a>
           </p>
           <p>
-            <a id="word-titration" href="instructions?treatment_id=4">
+            <a
+              id="word-titration"
+              href="/vizsurvey/instructions?treatment_id=4"
+            >
               Word titration.
             </a>
           </p>
           <p>
-            <a id="barchart-titration" href="instructions?treatment_id=5">
+            <a
+              id="barchart-titration"
+              href="/vizsurvey/instructions?treatment_id=5"
+            >
               Barchart titration.
             </a>
           </p>
         </div>
       ) : (
-        <Redirect to={`instructions?treatment_id=${treatmentId}`} />
+        <Redirect to={`/vizsurvey/instructions?treatment_id=${treatmentId}`} />
       )}
     </div>
   );
@@ -127,7 +143,7 @@ const Instructions = () => {
         </div>
       )}
       <FullScreen handle={handle}>
-        <Link to="/survey">
+        <Link to="/vizsurvey/survey">
           <Button size="lg" onClick={surveyButtonClicked}>
             Start Survey
           </Button>

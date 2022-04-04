@@ -218,7 +218,7 @@ function BarChart(props) {
   );
 
   if (status === StatusType.Complete) {
-    return <Redirect to="/thankyou" />;
+    return <Redirect to="/vizsurvey/thankyou" />;
   } else {
     dispatch(setQuestionShownTimestamp(Date.now()));
     return result;

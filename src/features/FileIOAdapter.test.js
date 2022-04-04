@@ -85,7 +85,6 @@ describe("FileIOAdapter tests", () => {
     const answers = [answer1, answer2];
     const io = new FileIOAdapter();
     const result = io.convertToCSV(answers);
-    console.log(result);
     expect(result)
       .toBe(`treatment_id,position,view_type,interaction,variable_amount,amount_earlier,time_earlier,date_earlier,amount_later,time_later,date_later,max_amount,max_time,vertical_pixels,horizontal_pixels,choice,shown_timestamp,choice_timestamp,highup,lowdown,participant_code
 1, 2, ViewType.word, InteractionType.none, VariableType.earlierAmount, 3, 4, 2001-01-01T01:01:01.001Z, 5, 6, 2001-01-01T02:01:01.001Z, 7, 8, 9, 10, earlier, 2001-01-01T03:01:01.001Z, 2001-01-01T04:01:01.001Z, 11, 12, participant code
