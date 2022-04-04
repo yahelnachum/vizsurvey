@@ -17,7 +17,8 @@ import { DateTime } from "luxon";
 import { useD3 } from "../hooks/useD3";
 import { ChoiceType } from "../features/ChoiceType";
 import { StatusType } from "../features/StatusType";
-import { InteractionType } from "../features//InteractionType";
+import { InteractionType } from "../features/InteractionType";
+import { VariableType } from "../features/VariableType";
 import {
   selectCurrentQuestion,
   fetchStatus,
@@ -47,11 +48,19 @@ function BarChart(props) {
   const xTickValues = Array.from(Array(q.maxTime + 1).keys());
   const data = xTickValues.map((d) => {
     if (d === q.timeEarlier) {
-      return { time: d, amount: q.amountEarlier };
+      return {
+        time: d,
+        amount: q.amountEarlier,
+        barType: VariableType.earlierAmount,
+      };
     } else if (d === q.timeLater) {
-      return { time: d, amount: q.amountLater };
+      return {
+        time: d,
+        amount: q.amountLater,
+        barType: VariableType.laterAmount,
+      };
     } else {
-      return { time: d, amount: 0 };
+      return { time: d, amount: 0, barType: VariableType.none };
     }
   });
 
@@ -154,7 +163,10 @@ function BarChart(props) {
                   })
                   .attr("height", (d) => y(0) - y(d.amount));
                 var dragHandler = drag().on("drag", function (d) {
-                  if (q.interaction === InteractionType.drag) {
+                  if (
+                    q.interaction === InteractionType.drag &&
+                    d.subject.barType === q.variableAmount
+                  ) {
                     select(this)
                       .attr("y", d.y)
                       .attr("height", y(0) - d.y);
@@ -177,7 +189,6 @@ function BarChart(props) {
                 return errors;
               }}
               onSubmit={(values, { setSubmitting, resetForm }) => {
-                console.log("submitting");
                 setTimeout(() => {
                   dispatch(
                     answer({

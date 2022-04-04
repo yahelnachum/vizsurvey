@@ -41,6 +41,7 @@ describe("FileIOAdapter tests", () => {
       position: 2,
       viewType: ViewType.word,
       interaction: InteractionType.none,
+      variableAmount: VariableType.earlierAmount,
       amountEarlier: 3,
       timeEarlier: 4,
       dateEarlier: DateTime.utc(2001, 1, 1, 1, 1, 1, 1),
@@ -63,6 +64,7 @@ describe("FileIOAdapter tests", () => {
       position: 14,
       viewType: ViewType.barchart,
       interaction: InteractionType.drag,
+      variableAmount: VariableType.earlierAmount,
       amountEarlier: 15,
       timeEarlier: 16,
       dateEarlier: DateTime.utc(2001, 1, 2, 1, 1, 1, 1),
@@ -85,8 +87,8 @@ describe("FileIOAdapter tests", () => {
     const result = io.convertToCSV(answers);
     console.log(result);
     expect(result)
-      .toBe(`treatment_id,position,view_type,interaction,amount_earlier,time_earlier,date_earlier,amount_later,time_later,date_later,max_amount,max_time,vertical_pixels,horizontal_pixels,choice,shown_timestamp,choice_timestamp,highup,lowdown,participant_code
-1, 2, ViewType.word, InteractionType.none, 3, 4, 2001-01-01T01:01:01.001Z, 5, 6, 2001-01-01T02:01:01.001Z, 7, 8, 9, 10, earlier, 2001-01-01T03:01:01.001Z, 2001-01-01T04:01:01.001Z, 11, 12, participant code
-13, 14, ViewType.barchart, InteractionType.drag, 15, 16, 2001-01-02T01:01:01.001Z, 17, 18, 2001-01-02T02:01:01.001Z, 19, 20, 21, 22, later, 2001-01-02T03:01:01.001Z, 2001-01-02T04:01:01.001Z, 23, 24, participant code 2`);
+      .toBe(`treatment_id,position,view_type,interaction,variable_amount,amount_earlier,time_earlier,date_earlier,amount_later,time_later,date_later,max_amount,max_time,vertical_pixels,horizontal_pixels,choice,shown_timestamp,choice_timestamp,highup,lowdown,participant_code
+1, 2, ViewType.word, InteractionType.none, VariableType.earlierAmount, 3, 4, 2001-01-01T01:01:01.001Z, 5, 6, 2001-01-01T02:01:01.001Z, 7, 8, 9, 10, earlier, 2001-01-01T03:01:01.001Z, 2001-01-01T04:01:01.001Z, 11, 12, participant code
+13, 14, ViewType.barchart, InteractionType.drag, VariableType.earlierAmount, 15, 16, 2001-01-02T01:01:01.001Z, 17, 18, 2001-01-02T02:01:01.001Z, 19, 20, 21, 22, later, 2001-01-02T03:01:01.001Z, 2001-01-02T04:01:01.001Z, 23, 24, participant code 2`);
   });
 });

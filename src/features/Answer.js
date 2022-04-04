@@ -4,6 +4,7 @@ export class Answer {
     position: position,
     viewType: viewType,
     interaction: interaction,
+    variableAmount: variableAmount,
     amountEarlier: amountEarlier,
     timeEarlier: timeEarlier,
     dateEarlier: dateEarlier,
@@ -25,6 +26,7 @@ export class Answer {
     this.position = position;
     this.viewType = viewType;
     this.interaction = interaction;
+    this.variableAmount = variableAmount;
     this.amountEarlier = amountEarlier;
     this.timeEarlier = timeEarlier;
     this.dateEarlier = dateEarlier;

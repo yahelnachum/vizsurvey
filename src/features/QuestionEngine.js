@@ -40,6 +40,7 @@ export class QuestionEngine {
       position: treatment.position,
       viewType: treatment.viewType,
       interaction: treatment.interaction,
+      variableAmount: treatment.variableAmount,
       amountEarlier: amountEarlier,
       timeEarlier: treatment.timeEarlier,
       dateEarlier: treatment.dateEarlier,
