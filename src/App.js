@@ -64,41 +64,44 @@ const Home = () => {
           </p>
           <p>Click a link below to launc one of the experiments.</p>
           <p>
-            <a
+            <Link
               id="word-no-titration"
-              href="/vizsurvey/instructions?treatment_id=1"
+              to="/vizsurvey/instructions?treatment_id=1"
             >
               Worded with no titration and not draggable.
-            </a>
+            </Link>
           </p>
           <p>
-            <a
+            <Link
               id="barchart-no-titration"
-              href="/vizsurvey/instructions?treatment_id=2"
+              to="/vizsurvey/instructions?treatment_id=2"
             >
               Barchart with no titration and not draggable.
-            </a>
+            </Link>
           </p>
           <p>
-            <a id="barchart-drag" href="/vizsurvey/instructions?treatment_id=3">
-              Barchart draggable.
-            </a>
+            <Link
+              id="barchart-drag"
+              to="/vizsurvey/instructions?treatment_id=3"
+            >
+              Barchart with no titration and not draggable.
+            </Link>
           </p>
           <p>
-            <a
+            <Link
               id="word-titration"
-              href="/vizsurvey/instructions?treatment_id=4"
+              to="/vizsurvey/instructions?treatment_id=4"
             >
               Word titration.
-            </a>
+            </Link>
           </p>
           <p>
-            <a
+            <Link
               id="barchart-titration"
-              href="/vizsurvey/instructions?treatment_id=5"
+              to="/vizsurvey/instructions?treatment_id=5"
             >
               Barchart titration.
-            </a>
+            </Link>
           </p>
         </div>
       ) : (
