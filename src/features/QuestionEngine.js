@@ -36,7 +36,7 @@ export class QuestionEngine {
     lowdown
   ) {
     const answer = new Answer({
-      treatmentId: treatment.id,
+      treatmentId: treatment.treatmentId,
       position: treatment.position,
       viewType: treatment.viewType,
       interaction: treatment.interaction,

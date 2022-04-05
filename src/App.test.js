@@ -12,7 +12,7 @@ test("renders learn react link", () => {
   );
 
   const linkElement = screen.getByText(
-    "Click a link below to launc one of the experiments."
+    "Click a link below to launch one of the experiments."
   );
   expect(linkElement).toBeInTheDocument();
 });

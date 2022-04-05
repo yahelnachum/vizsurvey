@@ -53,8 +53,9 @@ const Home = () => {
       {treatmentId === null ? (
         <div>
           <p>
-            We shouldn not see this page since the participants will be provided
-            a link with the treatment id in the URL.
+            This page will not be available when deployed in production since
+            the participants will be provided a link with the treatment id in
+            the URL.
           </p>
           <p>
             <a href="https://github.com/pcordone/vizsurvey">Github README.md</a>
@@ -62,7 +63,12 @@ const Home = () => {
           <p>
             <a href="https://github.com/pcordone">public website</a>
           </p>
-          <p>Click a link below to launc one of the experiments.</p>
+          <p>
+            Click a link below to launch one of the experiments. The
+            experimental parameters are not setup yet and are configurable
+            through a file. Right now these links give a feel for what each type
+            of stimulus is like.
+          </p>
           <p>
             <Link
               id="word-no-titration"

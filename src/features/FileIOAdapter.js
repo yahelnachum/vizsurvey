@@ -2,7 +2,10 @@ import { csvParse } from "d3";
 // import { Octokit } from "octokit";
 // import { DateTime } from "luxon";
 import { TREATMENTS_CSV } from "./treatments";
-import { fromCSVRow } from "./Question";
+import { Question } from "./Question";
+import { ViewType } from "./ViewType";
+import { InteractionType } from "./InteractionType";
+import { VariableType } from "./VariableType";
 
 export class FileIOAdapter {
   constructor() {}
@@ -10,10 +13,41 @@ export class FileIOAdapter {
   fetchQuestions = (treatmentId) => {
     treatmentId = +treatmentId;
     const questions = csvParse(TREATMENTS_CSV, (e) => {
-      return fromCSVRow(e);
-    }).filter((d) => d.treatmentId === treatmentId);
+      return this.fromCSVRow(e);
+    })
+      .filter((d) => d.treatmentId === treatmentId)
+      .sort((a, b) =>
+        a.position < b.position ? -1 : a.position === b.position ? 0 : 1
+      );
     return questions;
   };
+
+  fromCSVRow(row) {
+    return new Question({
+      treatmentId: +row.treatment_id,
+      position: +row.position,
+      viewType: ViewType.enumValueOf(row.view_type),
+      interaction: InteractionType.enumValueOf(row.interaction),
+      variableAmount: VariableType.enumValueOf(row.variable_amount),
+      amountEarlier: +row.amount_earlier,
+      timeEarlier: row.time_earlier ? +row.time_earlier : undefined,
+      dateEarlier: row.date_earlier ? new Date(row.date_earlier) : undefined,
+      amountLater: +row.amount_later,
+      timeLater: row.time_later ? +row.time_later : undefined,
+      dateLater: row.date_later ? new Date(row.date_later) : undefined,
+      maxAmount: +row.max_amount,
+      maxTime: +row.max_time,
+      horizontalPixels: +row.horizontal_pixels,
+      verticalPixels: +row.vertical_pixels,
+      leftMarginWidthIn: +row.left_margin_width,
+      bottomMarginHeightIn: +row.bottom_margin_height,
+      graphWidthIn: +row.graph_width_in,
+      graphHeightIn: +row.graph_height_in,
+      width: +row.width,
+      height: +row.height,
+      comment: row.comment,
+    });
+  }
 
   convertToCSV(answers) {
     const header = [
