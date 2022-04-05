@@ -71,7 +71,7 @@ const Home = () => {
           </p>
           <p>
             <Link
-              id="word-no-titration"
+              id="word-no-interaction"
               to="/vizsurvey/instructions?treatment_id=1"
             >
               Worded with no titration and not draggable.
@@ -79,7 +79,7 @@ const Home = () => {
           </p>
           <p>
             <Link
-              id="barchart-no-titration"
+              id="barchart-no-interaction"
               to="/vizsurvey/instructions?treatment_id=2"
             >
               Barchart with no titration and not draggable.
@@ -87,8 +87,16 @@ const Home = () => {
           </p>
           <p>
             <Link
-              id="barchart-drag"
+              id="calendar-no-interaction"
               to="/vizsurvey/instructions?treatment_id=3"
+            >
+              Calendar with no titration and not draggable.
+            </Link>
+          </p>
+          <p>
+            <Link
+              id="barchart-drag"
+              to="/vizsurvey/instructions?treatment_id=4"
             >
               Barchart draggable.
             </Link>
@@ -96,7 +104,7 @@ const Home = () => {
           <p>
             <Link
               id="word-titration"
-              to="/vizsurvey/instructions?treatment_id=4"
+              to="/vizsurvey/instructions?treatment_id=5"
             >
               Word titration.
             </Link>
@@ -104,7 +112,7 @@ const Home = () => {
           <p>
             <Link
               id="barchart-titration"
-              to="/vizsurvey/instructions?treatment_id=5"
+              to="/vizsurvey/instructions?treatment_id=6"
             >
               Barchart titration.
             </Link>

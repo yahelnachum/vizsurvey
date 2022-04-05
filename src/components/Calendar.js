@@ -8,10 +8,10 @@ import { useD3 } from "../hooks/useD3";
 var calendarMatrix = require("calendar-matrix");
 
 function Calendar(props) {
-  const question = useSelector(selectCurrentQuestion);
+  const q = useSelector(selectCurrentQuestion);
 
-  const height = question.question.verticalPixels;
-  const width = question.question.horizontalPixels;
+  const height = q.verticalPixels;
+  const width = q.horizontalPixels;
   const margin = {
     top: props.top_margin,
     right: props.right_margin,
@@ -36,7 +36,7 @@ function Calendar(props) {
     <table
       id="calendar"
       ref={useD3((table) => {
-        const monthDays = calendarMatrix(question.question.dateEarlier);
+        const monthDays = calendarMatrix(q.dateEarlier);
         const monthNames = [
           "January",
           "February",
@@ -51,7 +51,7 @@ function Calendar(props) {
           "November",
           "December",
         ];
-        const month = question.question.dateEarlier.getMonth();
+        const month = q.dateEarlier.getMonth();
         const monthName = monthNames[month];
         table.html(
           `<thead>
@@ -85,8 +85,8 @@ function Calendar(props) {
 
         const rows = tbody.selectAll("tbody").data(monthDays).join("tr");
 
-        const earlierDay = question.question.dateEarlier.getDate();
-        const laterDay = question.question.dateLater.getDate();
+        const earlierDay = q.dateEarlier.getDate();
+        const laterDay = q.dateLater.getDate();
         rows
           .selectAll("td")
           .data((d) => d)
@@ -111,7 +111,7 @@ function Calendar(props) {
 
         earlierAmountSVG
           .select("text")
-          .data([question.question.amountEarlier])
+          .data([q.amountEarlier])
           .join("text")
           .attr("text-anchor", "middle")
           .attr("class", "earlier-amount")
@@ -127,7 +127,7 @@ function Calendar(props) {
 
         // earlierDayCell.html(earlierDayCell.node() + '<svg id=""></svg>')
         // rows.select(cellId).data([question.amountEarlier]).join("svg");
-      }, question)}
+      }, q)}
       style={style}
     ></table>
   );
