@@ -15,6 +15,7 @@ import {
   setParticipant,
 } from "./features/questionSlice";
 import { ViewType } from "./features/ViewType";
+import { InteractionType } from "./features/InteractionType";
 import { FileIOAdapter } from "./features/FileIOAdapter";
 import {
   fetchTreatmentId,
@@ -140,8 +141,19 @@ const Instructions = () => {
     <div id="home-text">
       {treatment.viewType === ViewType.barchart ? (
         <div>
-          Click on the bar that represents the amount that you would like to
-          receive.
+          {treatment.interaction === InteractionType.titration ? (
+            <span>
+              Click on the bar that represents the amount that you would like to
+              receive.
+            </span>
+          ) : (
+            <span>
+              Drag the bar to an amount that makes choosing the earlier option
+              equal to the later option. Note that these amounts do not have to
+              be literally equal dollar amounts (e.g. you would rather have $10
+              today than even $20 a year from now).
+            </span>
+          )}{" "}
         </div>
       ) : treatment.viewType === ViewType.word ? (
         <div>
