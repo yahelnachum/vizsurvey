@@ -30,8 +30,10 @@ function BarChart() {
   const q = useSelector(selectCurrentQuestion);
   const status = useSelector(fetchStatus);
 
-  const totalWidthUC = 1200; //q.horizontalPixels; // may want to get rid of this configuation and just make it 100
-  const totalHeightUC = 1200; //q.verticalPixels; // may want to get rid of this configuation and just make it 100
+  const minScreenRes = Math.min(window.screen.height, window.screen.width);
+
+  const totalWidthUC = minScreenRes; //q.horizontalPixels; // may want to get rid of this configuation and just make it 100
+  const totalHeightUC = minScreenRes; //q.verticalPixels; // may want to get rid of this configuation and just make it 100
   const leftMarginWidthIn = q.leftMarginWidthIn;
   const bottomMarginHeightIn = q.bottomMarginHeightIn;
   const barAreaWidthIn = q.graphWidthIn;
