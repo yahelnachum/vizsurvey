@@ -15,6 +15,10 @@ export class Answer {
     maxTime: maxTime,
     verticalPixels: verticalPixels,
     horizontalPixels: horizontalPixels,
+    leftMarginWidthIn: leftMarginWidthIn,
+    bottomMarginHeightIn: bottomMarginHeightIn,
+    graphWidthIn: graphWidthIn,
+    graphHeightIn: graphHeightIn,
     choice: choice,
     shownTimestamp: shownTimestamp,
     choiceTimestamp: choiceTimestamp,
@@ -37,6 +41,10 @@ export class Answer {
     this.maxTime = maxTime;
     this.verticalPixels = verticalPixels;
     this.horizontalPixels = horizontalPixels;
+    this.leftMarginWidthIn = leftMarginWidthIn;
+    this.bottomMarginHeightIn = bottomMarginHeightIn;
+    this.graphWidthIn = graphWidthIn;
+    this.graphHeightIn = graphHeightIn;
     this.choice = choice;
     this.shownTimestamp = shownTimestamp;
     this.choiceTimestamp = choiceTimestamp;

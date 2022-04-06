@@ -20,12 +20,7 @@ export function Survey() {
   return (
     <div style={divCenterContentStyle}>
       {question.viewType === ViewType.barchart ? (
-        <BarChart
-          top_margin="20"
-          right_margin="30"
-          bottom_margin="30"
-          left_margin="80"
-        />
+        <BarChart />
       ) : question.viewType === ViewType.word ? (
         <MELForm />
       ) : (
