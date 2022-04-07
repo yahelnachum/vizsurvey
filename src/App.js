@@ -126,6 +126,22 @@ const Home = () => {
   );
 };
 
+const divCenterContentStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  width: "500px",
+  marginRight: "-50%",
+  transform: "translate(-50%, -50%)",
+};
+
+const buttonCenterContentStyle = {
+  position: "absolute",
+  left: "50%",
+  marginRight: "-50%",
+  transform: "translate(-50%, 0%)",
+};
+
 const Instructions = () => {
   var handle = useFullScreenHandle();
   const dispatch = useDispatch();
@@ -138,10 +154,10 @@ const Instructions = () => {
   }
 
   return (
-    <div id="home-text">
+    <div id="home-text" style={divCenterContentStyle}>
       {treatment.viewType === ViewType.barchart ? (
         <div>
-          {treatment.interaction === InteractionType.titration ? (
+          {treatment.interaction !== InteractionType.drag ? (
             <span>
               Click on the bar that represents the amount that you would like to
               receive.
@@ -173,7 +189,11 @@ const Instructions = () => {
       )}
       <FullScreen handle={handle}>
         <Link to="/vizsurvey/survey">
-          <Button size="lg" onClick={surveyButtonClicked}>
+          <Button
+            size="lg"
+            onClick={surveyButtonClicked}
+            style={buttonCenterContentStyle}
+          >
             Start Survey
           </Button>
         </Link>
@@ -194,7 +214,7 @@ const ThankYou = () => {
 
   return (
     <FullScreen handle={handle}>
-      <div>
+      <div id="home-text" style={divCenterContentStyle}>
         <p>
           Your answers have been submitted. Thank you for taking this survey!
         </p>
@@ -210,6 +230,7 @@ const ThankYou = () => {
               handle.exit();
             }, 400);
           }}
+          style={buttonCenterContentStyle}
         >
           Exit Fullscreen
         </Button>
