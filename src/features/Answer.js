@@ -19,6 +19,8 @@ export class Answer {
     bottomMarginHeightIn: bottomMarginHeightIn,
     graphWidthIn: graphWidthIn,
     graphHeightIn: graphHeightIn,
+    widthIn: widthIn,
+    heightIn: heightIn,
     choice: choice,
     shownTimestamp: shownTimestamp,
     choiceTimestamp: choiceTimestamp,
@@ -45,6 +47,8 @@ export class Answer {
     this.bottomMarginHeightIn = bottomMarginHeightIn;
     this.graphWidthIn = graphWidthIn;
     this.graphHeightIn = graphHeightIn;
+    this.widthIn = widthIn;
+    this.heightIn = heightIn;
     this.choice = choice;
     this.shownTimestamp = shownTimestamp;
     this.choiceTimestamp = choiceTimestamp;

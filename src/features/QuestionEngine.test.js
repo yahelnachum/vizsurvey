@@ -239,8 +239,8 @@ export class TestDataFactory {
       bottomMarginHeightIn: 0.5,
       graphWidthIn: 6,
       graphHeightIn: 6,
-      width: 6.5,
-      height: 6.5,
+      widthIn: 6.5,
+      heightIn: 6.5,
       comment: "Titration earlier amount test case.",
     });
   }
@@ -288,8 +288,8 @@ export class TestDataFactory {
       bottomMarginHeightIn: 0.5,
       graphWidthIn: 6,
       graphHeightIn: 6,
-      width: 6.5,
-      height: 6.5,
+      widthIn: 6.5,
+      heightIn: 6.5,
       comment: "No titration test case.",
     });
   }

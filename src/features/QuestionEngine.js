@@ -55,6 +55,8 @@ export class QuestionEngine {
       bottomMarginHeightIn: treatment.bottomMarginHeightIn,
       graphWidthIn: treatment.graphWidthIn,
       graphHeightIn: treatment.graphHeightIn,
+      widthIn: treatment.widthIn,
+      heightIn: treatment.heightIn,
       choice: ChoiceType.unitialized,
       highup: highup,
       lowdown: lowdown,
