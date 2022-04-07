@@ -139,8 +139,12 @@ const Instructions = () => {
 
   return (
     <div id="home-text">
+      <span>
+        You will be presented with a choice between two amounts of money to
+        recieve, one earlier and one later in time.
+      </span>{" "}
       {treatment.viewType === ViewType.barchart ? (
-        <div>
+        <span>
           {treatment.interaction === InteractionType.titration ? (
             <span>
               Click on the bar that represents the amount that you would like to
@@ -154,22 +158,22 @@ const Instructions = () => {
               today than even $20 a year from now).
             </span>
           )}{" "}
-        </div>
+        </span>
       ) : treatment.viewType === ViewType.word ? (
-        <div>
+        <span>
           Click on the radio button that contains the amount you would like to
           receive.
-        </div>
+        </span>
       ) : treatment.viewType === ViewType.calendar ? (
-        <div>
+        <span>
           Click on the day that contains the amount that you would like to
           receive.
-        </div>
+        </span>
       ) : (
-        <div>
+        <span>
           Cannot display <b>specific</b> instructions since a treatment has not
           been selected. Please select a treatment
-        </div>
+        </span>
       )}
       <FullScreen handle={handle}>
         <Link to="/vizsurvey/survey">
