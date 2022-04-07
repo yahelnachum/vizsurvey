@@ -199,7 +199,9 @@ const ThankYou = () => {
           Your answers have been submitted. Thank you for taking this survey!
         </p>
         <p>
-          Your unique ID is: {uuid}&nbsp;
+          Your unique ID is:&nbsp;
+          <input type="text" value={uuid} style={{ width: "340px" }} readOnly />
+          &nbsp;
           <Button
             size="sm"
             onClick={() => {
