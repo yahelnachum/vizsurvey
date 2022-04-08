@@ -1,6 +1,6 @@
-.App {
+/* .App {
   text-align: center;
-}
+} */
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
@@ -25,23 +25,9 @@
   padding: 1rem;
 }
 
-table {
-  display: table;
-  border-collapse: separate;
-  box-sizing: border-box;
-  text-indent: initial;
-  border-spacing: 2px;
-  border-color: gray;
-}
 
-#calendar {
-  width: 600px;
-  height: 400px;
-  border-collapse: collapse;
-}
-
-#calendar thead tr td {
-  text-align: center;
+::backdrop {
+    background-color: white;
 }
 
 #calendar tbody td {
@@ -49,8 +35,12 @@ table {
   text-align: right;
   vertical-align: top;
   width: 14%;
+  padding-bottom: 14%;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
-::backdrop {
-    background-color: white;
+#calendar td.dayEmpty {
+  border: none;
 }

@@ -7,59 +7,67 @@ import * as d3 from "d3";
 import { useD3 } from "../hooks/useD3";
 var calendarMatrix = require("calendar-matrix");
 
-function Calendar(props) {
+function Calendar() {
   const q = useSelector(selectCurrentQuestion);
 
-  const height = q.verticalPixels;
-  const width = q.horizontalPixels;
-  const margin = {
-    top: props.top_margin,
-    right: props.right_margin,
-    bottom: props.bottom_margin,
-    left: props.left_margin,
-  };
+  const heightIn = q.heightIn;
+  const widthIn = q.widthIn;
 
-  const totalHeight = height + parseInt(margin.top) + parseInt(margin.bottom);
-  const totalWidth = width + parseInt(margin.left) + parseInt(margin.right);
+  const pixelRatioScale = window.devicePixelRatio >= 2 ? 132 / 96 : 1;
+
+  // const totalHeight = height + parseInt(margin.top) + parseInt(margin.bottom);
+  // const totalWidth = width + parseInt(margin.left) + parseInt(margin.right);
+
+  const tableSizeSquareScaledIn = Math.min(
+    heightIn * pixelRatioScale,
+    widthIn * pixelRatioScale
+  );
+
+  const monthDays = calendarMatrix(q.dateEarlier);
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const month = q.dateEarlier.getMonth();
+  const monthName = monthNames[month];
 
   const style = {
-    height: totalHeight,
-    width: totalWidth,
-    marginLeft: margin.left + "px",
-    marginRight: margin.right + "px",
+    // display: "table",
+    // borderCollapse: "separate",
+    // boxSizing: "border-box",
+    // textIndent: "initial",
+    // borderSpacing: "2px",
+    // borderColor: "gray",
+    height: tableSizeSquareScaledIn + "in",
+    width: tableSizeSquareScaledIn + "in",
+    borderCollapse: "collapse",
+    //    tableLayout: "fixed",
+    // marginLeft: margin.left + "px",
+    // marginRight: margin.right + "px",
   };
 
   //   const dateMonth = question.dateEarlier.getMonth();
   //   const dateYear = question.dateEarlier.getFullYear();
 
   return (
-    <table
-      id="calendar"
-      ref={useD3((table) => {
-        const monthDays = calendarMatrix(q.dateEarlier);
-        const monthNames = [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-          "August",
-          "September",
-          "October",
-          "November",
-          "December",
-        ];
-        const month = q.dateEarlier.getMonth();
-        const monthName = monthNames[month];
-        table.html(
-          `<thead>
-                <tr>
-                    <td span='7'>
-                        <h2 id='currentMonth'></h2>
-                    </td>
-                </tr>
+    <div>
+      <h2>{monthName}</h2>
+      <table
+        id="calendar"
+        style={style}
+        ref={useD3((table) => {
+          table.html(
+            `<thead>
                 <tr>
                     <td style='text-align: center;'>Sunday</td>
                     <td style='text-align: center;'>Monday</td>
@@ -71,65 +79,104 @@ function Calendar(props) {
                 </tr>
             </thead>
             <tbody id='calendarBody'></tbody>`
-        );
+          );
 
-        const calendar = d3.select("#calendar");
+          const calendar = d3.select("#calendar");
 
-        calendar
-          .select("#currentMonth")
-          .data([monthName])
-          .join("h2")
-          .text((d) => d);
+          const tbody = calendar.select("#calendarBody");
 
-        const tbody = calendar.select("#calendarBody");
+          const rows = tbody.selectAll("tbody").data(monthDays).join("tr");
 
-        const rows = tbody.selectAll("tbody").data(monthDays).join("tr");
+          const earlierDay = q.dateEarlier.getDate();
+          const laterDay = q.dateLater.getDate();
 
-        const earlierDay = q.dateEarlier.getDate();
-        const laterDay = q.dateLater.getDate();
-        rows
-          .selectAll("td")
-          .data((d) => d)
-          .join("td")
-          .attr("class", function (d) {
-            return d > 0 ? "calendarDay" : "calendarDayEmpty";
-          })
-          .attr("id", (d) => "calendarDay-" + d)
-          .html((d) => {
-            if (d === earlierDay || d === laterDay) {
-              return `<div>${d}</div><svg id='${
-                d === earlierDay ? "earlierAmount" : "laterAmount"
-              }'></svg>`;
-            } else if (d > 0) {
-              return d;
-            } else {
-              return "";
-            }
-          });
+          rows
+            .selectAll("td")
+            .data((d) => d)
+            .join("td")
+            .attr("id", (d) =>
+              d === earlierDay
+                ? "earlierAmount"
+                : d === laterDay
+                ? "laterAmount"
+                : ""
+            )
+            .attr("class", function (d) {
+              return d > 0 ? "day" : "dayEmpty";
+            })
+            .attr("width", (d, i, nodes) =>
+              Math.min(nodes[i].offsetWidth, nodes[i].offsetHeight)
+            )
+            .attr("height", (d, i, nodes) =>
+              Math.min(nodes[i].offsetWidth, nodes[i].offsetHeight)
+            )
+            .join("div")
+            .attr("style", "text-align: right")
+            .text((d) => (d > 0 ? d : ""));
+          //.text((d) => (d > 0 ? d : ""));
+          // .html((d) => {
+          //   if (d !== earlierDay && d != laterDay && d > 0) {
+          //     return d;
+          //   }
+          // });
+          //   //parentElement.clientWidth;
+          //   console.log(i);
+          //   console.log(d);
+          //   console.log(nodes[i].__data__);
+          //   console.log(nodes[i].clientWidth);
+          //   var result = `<div>${d}</div>`;
+          //   if (d === earlierDay || d === laterDay) {
+          //     result =
+          //       result +
+          //       `<svg>
+          //         <text id="${
+          //           d === earlierDay ? "earlierAmount" : "laterAmount"
+          //         }">$</text>
+          //       </svg>`;
+          //   }
 
-        const earlierAmountSVG = rows.select("#earlierAmount");
+          // if (d === earlierDay || d === laterDay) {
+          //   return `<div>${d}</div>
+          //   <svg id='${
+          //     d === earlierDay ? "earlierAmount" : "laterAmount"
+          //   } width=''></svg>`;
+          // } else if (d > 0) {
+          //   return d;
+          // } else {
+          //   return "";
+          // }
+          //});
 
-        earlierAmountSVG
-          .select("text")
-          .data([q.amountEarlier])
-          .join("text")
-          .attr("text-anchor", "middle")
-          .attr("class", "earlier-amount")
-          .text((d) => d);
+          // .text(function (d) {
+          //   return d > 0 ? d : "";
+          // });
+          // .html((d) => {
+          //   if (d === earlierDay || d === laterDay) {
+          //     return `<div>${d}</div><svg id='${
+          //       d === earlierDay ? "earlierAmount" : "laterAmount"
+          //     }'></svg>`;
+          //   } else if (d > 0) {
+          //     return d;
+          //   } else {
+          //     return "";
+          //   }
+          // });
 
-        //   .text(function (d) {
-        //     return d > 0 ? d : "";
-        //   });
+          rows.select("#earlierAmount").data([q.amountEarlier]).join("svg");
 
-        // const cellId = "#calendarDay-" + question.dateEarlier.getDay();
-        // const earlierDayCell = rows.select(cellId);
-        // const earlierDayHTML = `<td id="${cellId}`
+          //   .text(function (d) {
+          //     return d > 0 ? d : "";
+          //   });
 
-        // earlierDayCell.html(earlierDayCell.node() + '<svg id=""></svg>')
-        // rows.select(cellId).data([question.amountEarlier]).join("svg");
-      }, q)}
-      style={style}
-    ></table>
+          // const cellId = "#day-" + question.dateEarlier.getDay();
+          // const earlierDayCell = rows.select(cellId);
+          // const earlierDayHTML = `<td id="${cellId}`
+
+          // earlierDayCell.html(earlierDayCell.node() + '<svg id=""></svg>')
+          // rows.select(cellId).data([question.amountEarlier]).join("svg");
+        }, q)}
+      ></table>
+    </div>
   );
 }
 

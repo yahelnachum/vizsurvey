@@ -5,7 +5,7 @@ export const TREATMENTS_CSV = `treatment_id,position,view_type,interaction,varia
 2,1,barchart,none,none,300,2,,700,5,,1100,10,100,100,0.5,0.5,8,8,8.5,8.5,"Read 2001 example, absolute size"
 2,2,barchart,none,none,500,2,,800,7,,1100,15,100,100,0.5,0.5,8,8,8.5,8.5,"Read 2001 example, absolute size"
 2,3,barchart,none,none,300,2,,1000,7,,1100,15,100,100,0.5,0.5,4,4,4.5,4.5,"Read 2001 example, absolute size"
-3,1,calendar,none,none,500,,2/1/22,1000,,2/22/22,,,100,100,,,,,8.5,8.5,"Read 2001 example, absolute size"
+3,1,calendar,none,none,500,,2/1/22,1000,,2/22/22,,,100,100,,,,,8,8,"Read 2001 example, absolute size"
 4,1,barchart,drag,laterAmount,500,2,,1000,10,,1500,10,100,100,0.5,0.5,8,8,8.5,8.5,"Read 2001 example, absolute size"
 5,1,word,titration,laterAmount,500,2,,1000,3,,,10,,,,,,,,,"Read 2001 example, absolute size"
 6,1,barchart,titration,laterAmount,500,2,,1000,10,,1500,10,100,100,0.5,0.5,8,8,8.5,8.5,"Read 2001 example, absolute size"
