@@ -11,19 +11,19 @@
     />
     <link rel="apple-touch-icon" href="/vizsurvey/logo192.png" />
     <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
+          manifest.json provides metadata used when your web app is installed on a
+          user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+        -->
     <link rel="manifest" href="/vizsurvey/manifest.json" />
     <!--
-      Notice the use of /vizsurvey in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "/vizsurvey/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
+          Notice the use of /vizsurvey in the tags above.
+          It will be replaced with the URL of the `public` folder during the build.
+          Only files inside the `public` folder can be referenced from the HTML.
+    
+          Unlike "/favicon.ico" or "favicon.ico", "/vizsurvey/favicon.ico" will
+          work correctly both with client-side routing and a non-root public URL.
+          Learn how to configure a non-root public URL by running `npm run build`.
+        -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
@@ -51,8 +51,8 @@
     </style>
     <style>
       /* .App {
-  text-align: center;
-} */
+      text-align: center;
+    } */
 
       @media (prefers-reduced-motion: no-preference) {
         .App-logo {
@@ -89,7 +89,7 @@
         border: 1px solid black;
         text-align: right;
         vertical-align: top;
-        width: 14%;
+        position: relative;
         overflow: hidden;
         white-space: nowrap;
       }
@@ -97,71 +97,39 @@
       #calendar td.dayEmpty {
         border: none;
       }
-      /*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly9zcmMvQXBwLmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTs7R0FFRzs7QUFFSDtFQUNFO0lBQ0UsNENBQTRDO0VBQzlDO0FBQ0Y7O0FBRUE7RUFDRSxjQUFjO0FBQ2hCOztBQUVBO0VBQ0UsZ0JBQWdCO0FBQ2xCOztBQUVBO0VBQ0UsaUJBQWlCO0FBQ25COztBQUVBO0VBQ0UsZ0JBQWdCO0VBQ2hCLGFBQWE7QUFDZjs7O0FBR0E7SUFDSSx1QkFBdUI7QUFDM0I7OztBQUZBO0lBQ0ksdUJBQXVCO0FBQzNCOztBQUVBO0VBQ0UsdUJBQXVCO0VBQ3ZCLGlCQUFpQjtFQUNqQixtQkFBbUI7RUFDbkIsVUFBVTtFQUNWLGdCQUFnQjtFQUNoQixtQkFBbUI7QUFDckI7O0FBRUE7RUFDRSxZQUFZO0FBQ2QiLCJzb3VyY2VzQ29udGVudCI6WyIvKiAuQXBwIHtcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xufSAqL1xuXG5AbWVkaWEgKHByZWZlcnMtcmVkdWNlZC1tb3Rpb246IG5vLXByZWZlcmVuY2UpIHtcbiAgLkFwcC1sb2dvIHtcbiAgICBhbmltYXRpb246IEFwcC1sb2dvLXNwaW4gaW5maW5pdGUgMjBzIGxpbmVhcjtcbiAgfVxufVxuXG4uQXBwLWxpbmsge1xuICBjb2xvcjogIzYxZGFmYjtcbn1cblxuLnRpY2sge1xuICBmb250LXNpemU6IDEuNWVtO1xufVxuXG4ucmFkaW8tY2hvaWNlLWxhYmVsIHtcbiAgZm9udC1zaXplOiAxLjI1ZW07XG59XG5cbiNob21lLXRleHQge1xuICB0ZXh0LWFsaWduOiBsZWZ0O1xuICBwYWRkaW5nOiAxcmVtO1xufVxuXG5cbjo6YmFja2Ryb3Age1xuICAgIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xufVxuXG4jY2FsZW5kYXIgdGJvZHkgdGQge1xuICBib3JkZXI6IDFweCBzb2xpZCBibGFjaztcbiAgdGV4dC1hbGlnbjogcmlnaHQ7XG4gIHZlcnRpY2FsLWFsaWduOiB0b3A7XG4gIHdpZHRoOiAxNCU7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIHdoaXRlLXNwYWNlOiBub3dyYXA7XG59XG5cbiNjYWxlbmRhciB0ZC5kYXlFbXB0eSB7XG4gIGJvcmRlcjogbm9uZTtcbn0iXSwic291cmNlUm9vdCI6IiJ9 */
+      /*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly9zcmMvQXBwLmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTs7R0FFRzs7QUFFSDtFQUNFO0lBQ0UsNENBQTRDO0VBQzlDO0FBQ0Y7O0FBRUE7RUFDRSxjQUFjO0FBQ2hCOztBQUVBO0VBQ0UsZ0JBQWdCO0FBQ2xCOztBQUVBO0VBQ0UsaUJBQWlCO0FBQ25COztBQUVBO0VBQ0UsZ0JBQWdCO0VBQ2hCLGFBQWE7QUFDZjs7O0FBR0E7SUFDSSx1QkFBdUI7QUFDM0I7OztBQUZBO0lBQ0ksdUJBQXVCO0FBQzNCOztBQUVBO0VBQ0UsdUJBQXVCO0VBQ3ZCLGlCQUFpQjtFQUNqQixtQkFBbUI7RUFDbkIsa0JBQWtCO0VBQ2xCLGdCQUFnQjtFQUNoQixtQkFBbUI7QUFDckI7O0FBRUE7RUFDRSxZQUFZO0FBQ2QiLCJzb3VyY2VzQ29udGVudCI6WyIvKiAuQXBwIHtcbiAgdGV4dC1hbGlnbjogY2VudGVyO1xufSAqL1xuXG5AbWVkaWEgKHByZWZlcnMtcmVkdWNlZC1tb3Rpb246IG5vLXByZWZlcmVuY2UpIHtcbiAgLkFwcC1sb2dvIHtcbiAgICBhbmltYXRpb246IEFwcC1sb2dvLXNwaW4gaW5maW5pdGUgMjBzIGxpbmVhcjtcbiAgfVxufVxuXG4uQXBwLWxpbmsge1xuICBjb2xvcjogIzYxZGFmYjtcbn1cblxuLnRpY2sge1xuICBmb250LXNpemU6IDEuNWVtO1xufVxuXG4ucmFkaW8tY2hvaWNlLWxhYmVsIHtcbiAgZm9udC1zaXplOiAxLjI1ZW07XG59XG5cbiNob21lLXRleHQge1xuICB0ZXh0LWFsaWduOiBsZWZ0O1xuICBwYWRkaW5nOiAxcmVtO1xufVxuXG5cbjo6YmFja2Ryb3Age1xuICAgIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xufVxuXG4jY2FsZW5kYXIgdGJvZHkgdGQge1xuICBib3JkZXI6IDFweCBzb2xpZCBibGFjaztcbiAgdGV4dC1hbGlnbjogcmlnaHQ7XG4gIHZlcnRpY2FsLWFsaWduOiB0b3A7XG4gIHBvc2l0aW9uOiByZWxhdGl2ZTtcbiAgb3ZlcmZsb3c6IGhpZGRlbjtcbiAgd2hpdGUtc3BhY2U6IG5vd3JhcDtcbn1cblxuI2NhbGVuZGFyIHRkLmRheUVtcHR5IHtcbiAgYm9yZGVyOiBub25lO1xufSJdLCJzb3VyY2VSb290IjoiIn0= */
     </style>
     <script
       charset="utf-8"
-      src="/vizsurvey/main.76117aebed3638ed2e1d.hot-update.js"
+      src="/vizsurvey/main.861b5903e464be1ee6e1.hot-update.js"
     ></script>
     <script
       charset="utf-8"
-      src="/vizsurvey/main.8f201aa9b4a7e8a7e51e.hot-update.js"
+      src="/vizsurvey/main.1d6b2111415a037f3ad8.hot-update.js"
     ></script>
     <script
       charset="utf-8"
-      src="/vizsurvey/main.383f0be91fcd3058e350.hot-update.js"
+      src="/vizsurvey/main.799b11e86c679373c87d.hot-update.js"
     ></script>
     <script
       charset="utf-8"
-      src="/vizsurvey/main.0a1575562ab601b06c87.hot-update.js"
+      src="/vizsurvey/main.de020744e6f4338165f0.hot-update.js"
     ></script>
     <script
       charset="utf-8"
-      src="/vizsurvey/main.e9d983a3a9dbd9d81314.hot-update.js"
+      src="/vizsurvey/main.15095d0e0303d270cf3c.hot-update.js"
     ></script>
     <script
       charset="utf-8"
-      src="/vizsurvey/vendors~main.e97cb08e209c63dfc226.hot-update.js"
+      src="/vizsurvey/main.041b2150088e33d000e7.hot-update.js"
     ></script>
     <script
       charset="utf-8"
-      src="/vizsurvey/main.e97cb08e209c63dfc226.hot-update.js"
+      src="/vizsurvey/main.1d6334309ebc2fc22a92.hot-update.js"
     ></script>
     <script
       charset="utf-8"
-      src="/vizsurvey/vendors~main.e61255a36fe314b5bf2a.hot-update.js"
-    ></script>
-    <script
-      charset="utf-8"
-      src="/vizsurvey/main.e61255a36fe314b5bf2a.hot-update.js"
-    ></script>
-    <script
-      charset="utf-8"
-      src="/vizsurvey/main.f82049fa64dcc64d083b.hot-update.js"
-    ></script>
-    <script
-      charset="utf-8"
-      src="/vizsurvey/main.1cd80dc65ccc39d99949.hot-update.js"
-    ></script>
-    <script
-      charset="utf-8"
-      src="/vizsurvey/main.69d818d8623f536b0bd1.hot-update.js"
-    ></script>
-    <script
-      charset="utf-8"
-      src="/vizsurvey/main.27a790b42d8360fa73e7.hot-update.js"
-    ></script>
-    <script
-      charset="utf-8"
-      src="/vizsurvey/main.cc7f8cb7da705c6dbfbd.hot-update.js"
-    ></script>
-    <script
-      charset="utf-8"
-      src="/vizsurvey/main.834020205c8e0b1ac43b.hot-update.js"
-    ></script>
-    <script
-      charset="utf-8"
-      src="/vizsurvey/main.a8ff6fc181dc0d505e0c.hot-update.js"
+      src="/vizsurvey/main.c5cdc7bf02db7c55711b.hot-update.js"
     ></script>
   </head>
   <body>
@@ -182,12 +150,7 @@
               <h2>February</h2>
               <table
                 id="calendar"
-                style="
-                  height: 8in;
-                  width: 8in;
-                  border-collapse: collapse;
-                  table-layout: fixed;
-                "
+                style="border-collapse: collapse; table-layout: fixed"
               >
                 <thead>
                   <tr>
@@ -202,95 +165,248 @@
                 </thead>
                 <tbody id="calendarBody">
                   <tr>
-                    <td id="" class="dayEmpty" width="110" height="148"></td>
-                    <td id="" class="dayEmpty" width="109" height="148"></td>
                     <td
-                      id="earlierAmount"
+                      id="day--30"
+                      class="dayEmpty"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day--31"
+                      class="dayEmpty"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day-earlier-amount"
                       class="day"
-                      width="110"
-                      height="148"
-                      valign="middle"
-                      text-align="center"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
                     >
-                      <div style="text-align: right">1</div>
-                      <svg x="0" y="0" width="110" height="148">
+                      <div style="text-align: center">
+                        <div style="float: right">1</div>
+                        <div style="text-align: center">$500</div>
+                      </div>
+                      <svg
+                        id="earlier-bar"
+                        x="0 "
+                        y="0"
+                        width="109.71428571428571"
+                        height="85.71428571428571"
+                        style="text-align: center"
+                      >
                         <rect
                           fill="steelblue"
                           class="bar"
                           x="0"
-                          y="102.5"
-                          width="110"
-                          height="46.5"
-                        ></rect>
-                        <!-- <g transform="translate(55 55) scale(.078 -.078)">
-                          <path
-                            d="m2600 5595c0-237-3-305-12-305-7 0-63-5-125-10-140-12-299-49-398-91-11-4-49-20-85-35-304-124-635-421-789-706-33-63-80-169-88-202-35-143-41-258-23-421 37-323 180-591 420-785 77-62 83-66 116-87 28-18 244-126 279-140 27-10 103-36 115-38 19-5 100-27 120-35 59-20 254-55 418-75l52-7v-1031l-82 6c-76 5-198 30-223 45-5 4-12 7-15 8-71 14-269 163-285 215-4 11-10 19-14 19-12 0-75 133-95 200l-17 55-410-3-410-2 6-63c17-165 65-343 132-487 26-54 99-185 115-205 4-5 27-35 51-65 72-93 202-215 327-306 60-44 244-154 257-154 5 0 25-9 44-19 34-18 167-63 264-90 62-17 188-31 276-31h79v-650h750l2 332 3 333 85 6c121 9 341 58 430 96 8 3 18 7 22 7 3 1 10 4 14 8 4 5 13 8 20 8 16 0 162 70 249 119 39 22 77 44 85 48s20 12 27 17c7 6 36 27 64 46 70 47 221 181 267 237 20 24 47 57 60 71 36 42 132 200 162 267 104 232 133 496 79 720-11 44-21 89-24 100-7 28-110 235-132 264-193 254-402 410-708 524-138 51-348 95-495 102-58 3-129 8-158 11l-52 5 2 502 3 502 58-2c154-5 367-94 455-188 66-71 103-148 110-230l5-65h863l-4 38c-4 47-29 151-52 222-141 430-441 791-800 962-133 63-169 78-235 94-5 2-44 12-86 23s-123 25-180 31-112 13-121 16c-17 5-18 28-18 290v284h-750v-305zm0-1585v-450h-57c-52 1-84 6-159 23-30 7-158 59-164 66-3 3-18 13-35 21-54 28-151 128-186 192-32 59-34 69-34 158 0 69 6 111 20 154 56 167 269 281 528 285l87 1v-450zm975-1485c219-17 399-118 472-266 46-93 48-281 3-367-80-153-329-259-612-261l-88-1v448c0 247 3 452 7 456s37 4 73 2c36-3 101-8 145-11z"
-                          />
-                        </g> -->
-
-                        <!-- <circle
-                          class="revised center"
-                          cx="39"
-                          cy="33"
-                          r="12"
-                          stroke="black"
-                          stroke-width="3"
-                          fill="red"
-                        ></circle> -->
-                      </svg>
-                    </td>
-                    <td id="" class="day" width="109" height="148">2</td>
-                    <td id="" class="day" width="110" height="148">3</td>
-                    <td id="" class="day" width="110" height="148">4</td>
-                    <td id="" class="day" width="110" height="148">5</td>
-                  </tr>
-                  <tr>
-                    <td id="" class="day" width="109" height="148">6</td>
-                    <td id="" class="day" width="110" height="148">7</td>
-                    <td id="" class="day" width="110" height="148">8</td>
-                    <td id="" class="day" width="109" height="148">9</td>
-                    <td id="" class="day" width="110" height="148">10</td>
-                    <td id="" class="day" width="110" height="148">11</td>
-                    <td id="" class="day" width="110" height="148">12</td>
-                  </tr>
-                  <tr>
-                    <td id="" class="day" width="109" height="148">13</td>
-                    <td id="" class="day" width="110" height="148">14</td>
-                    <td id="" class="day" width="110" height="148">15</td>
-                    <td id="" class="day" width="109" height="148">16</td>
-                    <td id="" class="day" width="110" height="148">17</td>
-                    <td id="" class="day" width="110" height="148">18</td>
-                    <td id="" class="day" width="110" height="148">19</td>
-                  </tr>
-                  <tr>
-                    <td id="" class="day" width="109" height="148">20</td>
-                    <td id="" class="day" width="110" height="148">21</td>
-                    <td id="laterAmount" class="day" width="110" height="148">
-                      <div style="text-align: right">1</div>
-                      <svg x="0" y="0" width="110" height="148">
-                        <rect
-                          fill="steelblue"
-                          class="bar"
-                          x="0"
-                          y="55"
-                          width="110"
-                          height="93"
+                          y="46.75324675324675"
+                          height="38.96103896103896"
+                          width="109.71428571428571"
                         ></rect>
                       </svg>
                     </td>
-                    <td id="" class="day" width="109" height="148">23</td>
-                    <td id="" class="day" width="110" height="148">24</td>
-                    <td id="" class="day" width="110" height="148">25</td>
-                    <td id="" class="day" width="110" height="148">26</td>
+                    <td
+                      id="day-2"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day-3"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day-4"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day-5"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
                   </tr>
                   <tr>
-                    <td id="" class="day" width="109" height="149">27</td>
-                    <td id="" class="day" width="110" height="149">28</td>
-                    <td id="" class="dayEmpty" width="110" height="149"></td>
-                    <td id="" class="dayEmpty" width="110" height="149"></td>
-                    <td id="" class="dayEmpty" width="110" height="149"></td>
-                    <td id="" class="dayEmpty" width="109" height="149"></td>
-                    <td id="" class="dayEmpty" width="110" height="149"></td>
+                    <td
+                      id="day-6"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day-7"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day-8"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day-9"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day-10"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day-11"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day-12"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                  </tr>
+                  <tr>
+                    <td
+                      id="day-13"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day-14"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day-15"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day-16"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day-17"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day-18"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day-19"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                  </tr>
+                  <tr>
+                    <td
+                      id="day-20"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day-21"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day-later-amount"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    >
+                      <svg id="earlier-bar"></svg>
+                    </td>
+                    <td
+                      id="day-23"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day-24"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day-25"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day-26"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                  </tr>
+                  <tr>
+                    <td
+                      id="day-27"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day-28"
+                      class="day"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day--1"
+                      class="dayEmpty"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day--2"
+                      class="dayEmpty"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day--3"
+                      class="dayEmpty"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day--4"
+                      class="dayEmpty"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
+                    <td
+                      id="day--5"
+                      class="dayEmpty"
+                      width="109.71428571428571"
+                      height="109.71428571428571"
+                    ></td>
                   </tr>
                 </tbody>
               </table>

@@ -1,11 +1,8 @@
 import React from "react";
-
 import { useSelector } from "react-redux";
 import { selectCurrentQuestion } from "../features/questionSlice";
-
 import { select, format, scaleLinear } from "d3";
 import { useD3 } from "../hooks/useD3";
-//import { select } from "d3";
 var calendarMatrix = require("calendar-matrix");
 
 function Calendar() {
@@ -37,7 +34,7 @@ function Calendar() {
     q.widthIn / 7
   );
 
-  const tableSquareSizePx = tableSquareSizeIn * dpi;
+  const tableSquareSizePx = Math.round(tableSquareSizeIn * dpi);
 
   //const tableSizeSquareScaledIn = tableSquareSizeIn * 7 * pixelRatioScale;
 
@@ -75,23 +72,6 @@ function Calendar() {
 
           const yRange = [0, q.maxAmount];
 
-          // function drawEarlierLaterSVGBar(d) {
-          //   if (d === earlierDay || d === laterDay) {
-          //     select(this)
-          //       .data([d])
-          //       .join((enter) =>
-          //         enter
-          //           .append("svg")
-          //           .attr("id", (d) =>
-          //             d === earlierDay ? "earlierBar" : "laterBar"
-          //           )
-          //           .attr("width", "100%")
-          //           .attr("height", "100%")
-          //           .attr("x", 0)
-          //           .attr("y", 0)
-          //       );
-          //   }
-          // }
           rows
             .selectAll("td")
             .data((d) => d)
@@ -116,7 +96,8 @@ function Calendar() {
                     if (d === earlierDay) {
                       const divText = select(this)
                         .append("div")
-                        .attr("style", "text-align: center");
+                        .attr("style", "text-align: center")
+                        .attr("width", tableSquareSizePx);
                       divText
                         .append("div")
                         .attr("style", "float: right")
@@ -128,6 +109,7 @@ function Calendar() {
                       barHeight =
                         tableSquareSizePx -
                         select(this).select("div").node().offsetHeight;
+                      //barHeight = tableSquareSizePx;
                       const y = scaleLinear()
                         .domain(yRange)
                         .range([barHeight, 0]);
@@ -138,7 +120,7 @@ function Calendar() {
                         .attr("y", "0")
                         .attr("width", () => tableSquareSizePx)
                         .attr("height", () => barHeight)
-                        .attr("style", "text-align: center")
+                        .attr("style", "text-align: left")
                         .append("rect")
                         .attr("fill", "steelblue")
                         .attr("class", "bar")
@@ -153,15 +135,6 @@ function Calendar() {
                           return y0 - yamt;
                         })
                         .attr("width", tableSquareSizePx);
-
-                      // <rect
-                      //     fill="steelblue"
-                      //     class="bar"
-                      //     x="0"
-                      //     y="55"
-                      //     width="110"
-                      //     height="93"
-                      //   ></rect>
                     } else if (d === laterDay) {
                       select(this).append("svg").attr("id", "earlier-bar");
                     }
