@@ -150,8 +150,9 @@ function BarChart() {
               .attr("fill", "steelblue")
               .attr("class", "bar")
               .attr("x", (d) => x(d.time) - barWidth / 2)
-              .attr("width", barWidth)
               .attr("y", (d) => y(d.amount))
+              .attr("width", barWidth)
+              .attr("height", (d) => y(0) - y(d.amount))
               .attr("id", (d) => {
                 return "id" + d.time;
               })
@@ -176,8 +177,7 @@ function BarChart() {
                     );
                   }
                 }
-              })
-              .attr("height", (d) => y(0) - y(d.amount));
+              });
             var dragHandler = drag().on("drag", function (d) {
               if (
                 q.interaction === InteractionType.drag &&
