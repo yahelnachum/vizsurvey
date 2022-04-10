@@ -126,6 +126,22 @@ const Home = () => {
   );
 };
 
+const divCenterContentStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  width: "500px",
+  marginRight: "-50%",
+  transform: "translate(-50%, -50%)",
+};
+
+const buttonCenterContentStyle = {
+  position: "absolute",
+  left: "50%",
+  marginRight: "-50%",
+  transform: "translate(-50%, 0%)",
+};
+
 const Instructions = () => {
   var handle = useFullScreenHandle();
   const dispatch = useDispatch();
@@ -138,42 +154,56 @@ const Instructions = () => {
   }
 
   return (
-    <div id="home-text">
+    <div id="home-text" style={divCenterContentStyle}>
+      <span>
+        You will be presented with a choice between two amounts of money to
+        recieve, one earlier and one later in time.
+      </span>{" "}
       {treatment.viewType === ViewType.barchart ? (
-        <div>
+        <span>
           {treatment.interaction === InteractionType.titration ? (
             <span>
               Click on the bar that represents the amount that you would like to
-              receive.
+              receive. For each click, the amounts will be updated. Continue to
+              click to choose an earlier and later amount.
             </span>
-          ) : (
+          ) : treatment.interaction === InteractionType.drag ? (
             <span>
               Drag the bar to an amount that makes choosing the earlier option
               equal to the later option. Note that these amounts do not have to
               be literally equal dollar amounts (e.g. you would rather have $10
               today than even $20 a year from now).
             </span>
-          )}{" "}
-        </div>
+          ) : (
+            <span>
+              Click on the bar graph that represents the amount that you would
+              like to choose.
+            </span>
+          )}
+        </span>
       ) : treatment.viewType === ViewType.word ? (
-        <div>
+        <span>
           Click on the radio button that contains the amount you would like to
           receive.
-        </div>
+        </span>
       ) : treatment.viewType === ViewType.calendar ? (
-        <div>
+        <span>
           Click on the day that contains the amount that you would like to
           receive.
-        </div>
+        </span>
       ) : (
-        <div>
+        <span>
           Cannot display <b>specific</b> instructions since a treatment has not
           been selected. Please select a treatment
-        </div>
+        </span>
       )}
       <FullScreen handle={handle}>
         <Link to="/vizsurvey/survey">
-          <Button size="lg" onClick={surveyButtonClicked}>
+          <Button
+            size="lg"
+            onClick={surveyButtonClicked}
+            style={buttonCenterContentStyle}
+          >
             Start Survey
           </Button>
         </Link>
@@ -194,13 +224,24 @@ const ThankYou = () => {
 
   return (
     <FullScreen handle={handle}>
-      <div>
+      <div id="home-text" style={divCenterContentStyle}>
         <p>
           Your answers have been submitted. Thank you for taking this survey!
         </p>
         <p>
-          Your unique ID is: {uuid}. Please go back to Amazon Turk and present
-          this unique ID in the form.
+          Your unique ID is:&nbsp;
+          <input type="text" value={uuid} style={{ width: "340px" }} readOnly />
+          &nbsp;
+          <Button
+            size="sm"
+            onClick={() => {
+              navigator.clipboard.writeText(uuid);
+            }}
+          >
+            Copy
+          </Button>
+          . Please go back to Amazon Turk and present this unique ID in the
+          form.
         </p>
         <Button
           size="lg"
@@ -210,6 +251,7 @@ const ThankYou = () => {
               handle.exit();
             }, 400);
           }}
+          style={buttonCenterContentStyle}
         >
           Exit Fullscreen
         </Button>
