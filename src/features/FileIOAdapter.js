@@ -39,23 +39,23 @@ export class FileIOAdapter {
       maxTime: +row.max_time,
       horizontalPixels: +row.horizontal_pixels,
       verticalPixels: +row.vertical_pixels,
-      leftMarginWidthIn: +row.left_margin_width,
-      bottomMarginHeightIn: +row.bottom_margin_height,
+      leftMarginWidthIn: +row.left_margin_width_in,
+      bottomMarginHeightIn: +row.bottom_margin_height_in,
       graphWidthIn: +row.graph_width_in,
       graphHeightIn: +row.graph_height_in,
-      width: +row.width,
-      height: +row.height,
+      widthIn: +row.width_in,
+      heightIn: +row.height_in,
       comment: row.comment,
     });
   }
 
   convertToCSV(answers) {
     const header = [
-      "treatment_id,position,view_type,interaction,variable_amount,amount_earlier,time_earlier,date_earlier,amount_later,time_later,date_later,max_amount,max_time,vertical_pixels,horizontal_pixels,choice,shown_timestamp,choice_timestamp,highup,lowdown,participant_code",
+      "treatment_id,position,view_type,interaction,variable_amount,amount_earlier,time_earlier,date_earlier,amount_later,time_later,date_later,max_amount,max_time,vertical_pixels,horizontal_pixels,left_margin_width_in,bottom_margin_height_in,graph_width_in,graph_height_in,width_in,height_in,choice,shown_timestamp,choice_timestamp,highup,lowdown,participant_code",
     ];
     const rows = answers.map(
       (a) =>
-        `${a.treatmentId}, ${a.position}, ${a.viewType}, ${a.interaction}, ${a.variableAmount}, ${a.amountEarlier}, ${a.timeEarlier}, ${a.dateEarlier}, ${a.amountLater}, ${a.timeLater}, ${a.dateLater}, ${a.maxAmount}, ${a.maxTime}, ${a.verticalPixels}, ${a.horizontalPixels}, ${a.choice}, ${a.shownTimestamp}, ${a.choiceTimestamp}, ${a.highup}, ${a.lowdown}, ${a.participantCode}`
+        `${a.treatmentId},${a.position},${a.viewType},${a.interaction},${a.variableAmount},${a.amountEarlier},${a.timeEarlier},${a.dateEarlier},${a.amountLater},${a.timeLater},${a.dateLater},${a.maxAmount},${a.maxTime},${a.verticalPixels},${a.horizontalPixels},${a.leftMarginWidthIn},${a.bottomMarginHeightIn},${a.graphWidthIn},${a.graphHeightIn},${a.widthIn},${a.heightIn},${a.choice},${a.shownTimestamp},${a.choiceTimestamp},${a.highup},${a.lowdown},${a.participantCode}`
     );
     return header.concat(rows).join("\n");
   }

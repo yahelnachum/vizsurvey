@@ -25,24 +25,41 @@ import {
   answer,
 } from "../features/questionSlice";
 
-function BarChart(props) {
+function BarChart() {
   const dispatch = useDispatch();
   const q = useSelector(selectCurrentQuestion);
   const status = useSelector(fetchStatus);
 
-  const barWidth = 15;
+  const minScreenRes = Math.min(window.screen.height, window.screen.width);
 
-  const height = q.verticalPixels;
-  const width = q.horizontalPixels;
-  const margin = {
-    top: props.top_margin,
-    right: props.right_margin,
-    bottom: props.bottom_margin,
-    left: props.left_margin,
-  };
+  const totalWidthUC = minScreenRes; //q.horizontalPixels; // may want to get rid of this configuation and just make it 100
+  const totalHeightUC = minScreenRes; //q.verticalPixels; // may want to get rid of this configuation and just make it 100
+  const leftMarginWidthIn = q.leftMarginWidthIn;
+  const bottomMarginHeightIn = q.bottomMarginHeightIn;
+  const barAreaWidthIn = q.graphWidthIn;
+  const barAreaHeightIn = q.graphHeightIn;
 
-  const totalHeight = height + parseInt(margin.top) + parseInt(margin.bottom);
-  const totalWidth = width + parseInt(margin.left) + parseInt(margin.right);
+  const totalSVGWidthIn = leftMarginWidthIn + barAreaWidthIn;
+  const totalSVGHeightIn = bottomMarginHeightIn + barAreaHeightIn;
+
+  const scaleHorizUCPerIn = totalWidthUC / totalSVGWidthIn;
+  const scaleVertUCPerIn = totalHeightUC / totalSVGHeightIn;
+
+  const leftOffSetUC = scaleHorizUCPerIn * leftMarginWidthIn;
+  const bottomOffSetUC = scaleVertUCPerIn * bottomMarginHeightIn;
+  const barAreaWidthUC = totalWidthUC - leftOffSetUC;
+  const barAreaHeightUC = totalHeightUC - bottomOffSetUC;
+
+  const barWidth = 0.1 * scaleHorizUCPerIn; // bars are 0.1 inch wide
+
+  // SVG thinks the resolution is 96 ppi when macbook is 132 ppi so we need to adjust by device pixel ratio
+  const pixelRatioScale = window.devicePixelRatio >= 2 ? 132 / 96 : 1;
+
+  console.log(`${totalWidthUC},${totalHeightUC},${pixelRatioScale}`);
+  console.log(
+    `${leftMarginWidthIn},${bottomMarginHeightIn},${barAreaWidthIn},${barAreaHeightIn}`
+  );
+  console.log(`${totalSVGWidthIn},${totalSVGHeightIn}`);
 
   const xTickValues = Array.from(Array(q.maxTime + 1).keys());
   const data = xTickValues.map((d) => {
@@ -66,27 +83,32 @@ function BarChart(props) {
   const result = (
     <div>
       <svg
-        width={`${totalWidth}`}
-        height={`${totalHeight}`}
+        width={`${totalSVGWidthIn * pixelRatioScale}in`}
+        height={`${totalSVGHeightIn * pixelRatioScale}in`}
+        viewBox={`0 0 ${totalWidthUC} ${totalHeightUC}`}
         ref={useD3(
           (svg) => {
             var chart = svg
               .selectAll(".plot-area")
               .data([null])
               .join("g")
-              .attr("class", "plot-area")
-              .attr("transform", `translate(${margin.left},${margin.top})`);
+              .attr("class", "plot-area");
 
-            const x = scaleLinear().domain([0, q.maxTime]).range([0, width]);
+            const x = scaleLinear()
+              .domain([0, q.maxTime])
+              .range([0, barAreaWidthUC]);
 
             const yRange = [0, q.maxAmount];
-            const y = scaleLinear().domain(yRange).range([height, 0]);
+            const y = scaleLinear().domain(yRange).range([barAreaHeightUC, 0]);
 
             chart
               .selectAll(".x-axis")
               .data([null])
               .join("g")
-              .attr("transform", `translate(0,${height})`)
+              .attr(
+                "transform",
+                `translate(${leftOffSetUC},${barAreaHeightUC})`
+              )
               .attr("class", "x-axis")
               .call(
                 axisBottom(x).tickValues(xTickValues).tickFormat(format(",.0f"))
@@ -100,7 +122,7 @@ function BarChart(props) {
               .data([null])
               .join("g")
               .attr("class", "y-axis")
-              //.attr("transform", `translate(${margin.left},${margin.bottom})`)
+              .attr("transform", `translate(${leftOffSetUC},0)`)
               .call(
                 //axisLeft(y).tickValues(yTickValues).tickFormat(d3.format("$,.2f"))
                 axisLeft(y).tickValues(yTickValues).tickFormat(format("$,.0f"))

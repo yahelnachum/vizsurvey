@@ -19,8 +19,8 @@ export class Question {
     bottomMarginHeightIn,
     graphWidthIn,
     graphHeightIn,
-    width,
-    height,
+    widthIn,
+    heightIn,
     comment,
   }) {
     this.treatmentId = treatmentId;
@@ -42,8 +42,8 @@ export class Question {
     this.bottomMarginHeightIn = bottomMarginHeightIn;
     this.graphWidthIn = graphWidthIn;
     this.graphHeightIn = graphHeightIn;
-    this.width = width;
-    this.height = height;
+    this.widthIn = widthIn;
+    this.heightIn = heightIn;
     this.comment = comment;
     this.highup = null;
     this.lowdown = null;
