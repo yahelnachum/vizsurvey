@@ -17,7 +17,7 @@ export const questionSlice = createSlice({
   initialState: {
     treatmentId: null,
     participantId: null,
-    questions: [],
+    treatments: [],
     answers: [],
     currentQuestionIdx: 0,
     highup: undefined,
@@ -35,7 +35,7 @@ export const questionSlice = createSlice({
       return state;
     },
     fetchQuestions(state) {
-      state.questions = io.fetchQuestions(state.treatmentId);
+      state.treatments = io.fetchQuestions(state.treatmentId);
       state.status = StatusType.Fetched;
       return state;
     },

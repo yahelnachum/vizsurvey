@@ -11,7 +11,7 @@ export class QuestionEngine {
   constructor() {}
 
   currentTreatment(state) {
-    return state.questions[state.currentQuestionIdx];
+    return state.treatments[state.currentQuestionIdx];
   }
 
   currentTreatmentAndLatestAnswer(state) {
@@ -91,7 +91,7 @@ export class QuestionEngine {
   }
 
   isLastTreatment(state) {
-    return state.currentQuestionIdx === state.questions.length - 1;
+    return state.currentQuestionIdx === state.treatments.length - 1;
   }
 
   incNextQuestion(state) {

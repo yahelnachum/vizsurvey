@@ -11,7 +11,7 @@ import { Answer } from "./Answer";
 describe("QuestionEngine tests", () => {
   test("startSurvey should create a single answer entry for titration question.", () => {
     const state = {
-      questions: [TestDataFactory.createQuestionLaterTitrate()],
+      treatments: [TestDataFactory.createQuestionLaterTitrate()],
       answers: [],
       currentQuestionIdx: 0,
     };
@@ -30,7 +30,7 @@ describe("QuestionEngine tests", () => {
 
   test("startSurvey should create a single answer entry for non titraiton question.", () => {
     const state = {
-      questions: [TestDataFactory.createQuestionNoTitrate()],
+      treatments: [TestDataFactory.createQuestionNoTitrate()],
       answers: [],
       currentQuestionIdx: 0,
     };
@@ -45,7 +45,7 @@ describe("QuestionEngine tests", () => {
   test("Test calculation methods using example for the values from Read 2001 paper.", () => {
     const state = {
       treatmentId: 1,
-      questions: [TestDataFactory.createQuestionLaterTitrate()],
+      treatments: [TestDataFactory.createQuestionLaterTitrate()],
       answers: [TestDataFactory.createInitialAnswerTitrate()],
       currentQuestionIdx: 0,
       highup: 500,
@@ -105,7 +105,7 @@ describe("QuestionEngine tests", () => {
     const state = {
       treatmentId: 1,
       participantId: 1,
-      questions: [TestDataFactory.createQuestionLaterTitrate()],
+      treatments: [TestDataFactory.createQuestionLaterTitrate()],
       answers: [],
       currentQuestionIdx: 0,
       highup: 500,
