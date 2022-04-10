@@ -199,8 +199,19 @@ const ThankYou = () => {
           Your answers have been submitted. Thank you for taking this survey!
         </p>
         <p>
-          Your unique ID is: {uuid}. Please go back to Amazon Turk and present
-          this unique ID in the form.
+          Your unique ID is:&nbsp;
+          <input type="text" value={uuid} style={{ width: "340px" }} readOnly />
+          &nbsp;
+          <Button
+            size="sm"
+            onClick={() => {
+              navigator.clipboard.writeText(uuid);
+            }}
+          >
+            Copy
+          </Button>
+          . Please go back to Amazon Turk and present this unique ID in the
+          form.
         </p>
         <Button
           size="lg"
