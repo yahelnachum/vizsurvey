@@ -147,15 +147,15 @@ function BarChart() {
               .selectAll(".bar")
               .data(data)
               .join("rect")
+              .attr("id", (d) => {
+                return "id" + d.time;
+              })
               .attr("fill", "steelblue")
               .attr("class", "bar")
               .attr("x", (d) => x(d.time) - barWidth / 2)
               .attr("y", (d) => y(d.amount))
               .attr("width", barWidth)
               .attr("height", (d) => y(0) - y(d.amount))
-              .attr("id", (d) => {
-                return "id" + d.time;
-              })
               .on("click", (d) => {
                 if (
                   q.interaction === InteractionType.titration ||

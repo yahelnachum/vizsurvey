@@ -29,16 +29,3 @@
 ::backdrop {
     background-color: white;
 }
-
-#calendar tbody td {
-  border: 1px solid black;
-  text-align: right;
-  vertical-align: top;
-  position: relative;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-#calendar td.dayEmpty {
-  border: none;
-}
