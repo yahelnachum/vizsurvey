@@ -155,37 +155,47 @@ const Instructions = () => {
 
   return (
     <div id="home-text" style={divCenterContentStyle}>
+      <span>
+        You will be presented with a choice between two amounts of money to
+        recieve, one earlier and one later in time.
+      </span>{" "}
       {treatment.viewType === ViewType.barchart ? (
-        <div>
-          {treatment.interaction !== InteractionType.drag ? (
+        <span>
+          {treatment.interaction === InteractionType.titration ? (
             <span>
               Click on the bar that represents the amount that you would like to
-              receive.
+              receive. For each click, the amounts will be updated. Continue to
+              click to choose an earlier and later amount.
             </span>
-          ) : (
+          ) : treatment.interaction === InteractionType.drag ? (
             <span>
               Drag the bar to an amount that makes choosing the earlier option
               equal to the later option. Note that these amounts do not have to
               be literally equal dollar amounts (e.g. you would rather have $10
               today than even $20 a year from now).
             </span>
-          )}{" "}
-        </div>
+          ) : (
+            <span>
+              Click on the bar graph that represents the amount that you would
+              like to choose.
+            </span>
+          )}
+        </span>
       ) : treatment.viewType === ViewType.word ? (
-        <div>
+        <span>
           Click on the radio button that contains the amount you would like to
           receive.
-        </div>
+        </span>
       ) : treatment.viewType === ViewType.calendar ? (
-        <div>
+        <span>
           Click on the day that contains the amount that you would like to
           receive.
-        </div>
+        </span>
       ) : (
-        <div>
+        <span>
           Cannot display <b>specific</b> instructions since a treatment has not
           been selected. Please select a treatment
-        </div>
+        </span>
       )}
       <FullScreen handle={handle}>
         <Link to="/vizsurvey/survey">
