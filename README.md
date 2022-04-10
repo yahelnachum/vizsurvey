@@ -124,6 +124,11 @@ https://www.pluralsight.com/guides/using-d3.js-inside-a-react-app
 Flexbox post
 https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 
+#### D3 articles
+
+https://bost.ocks.org/mike/selection/
+https://bost.ocks.org/mike/nest/
+
 ### Code I am crediting
 
 object2Csv - https://gist.github.com/select/0e2aa49b98ea81db7c615e6560497c41
