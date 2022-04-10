@@ -103,6 +103,7 @@ function Calendar() {
                   : "border: none;"
               )
               .each(function (d) {
+                if (d < 0) return;
                 const divText = select(this)
                   .append("div")
                   .attr("style", "text-align: center")
