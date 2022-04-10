@@ -27,7 +27,6 @@ function Calendar() {
   const monthName = monthNames[month];
 
   const dpi = window.devicePixelRatio >= 2 ? 132 : 96;
-  //const pixelRatioScale = window.devicePixelRatio >= 2 ? 132 / 96 : 1;
 
   const tableSquareSizeIn = Math.min(
     q.heightIn / monthDays.length,
@@ -35,8 +34,6 @@ function Calendar() {
   );
 
   const tableSquareSizePx = Math.round(tableSquareSizeIn * dpi);
-
-  //const tableSizeSquareScaledIn = tableSquareSizeIn * 7 * pixelRatioScale;
 
   //   const dateMonth = question.dateEarlier.getMonth();
   //   const dateYear = question.dateEarlier.getFullYear();
@@ -75,95 +72,85 @@ function Calendar() {
           rows
             .selectAll("td")
             .data((d) => d)
-            .join(
-              (enter) => {
-                enter
-                  .append("td")
-                  .attr("id", (d) =>
-                    d === earlierDay
-                      ? "day-earlier-amount"
-                      : d === laterDay
-                      ? "day-later-amount"
-                      : "day-" + d
-                  )
-                  .attr("class", function (d) {
-                    return d > 0 ? "day" : "dayEmpty";
-                  })
-                  .attr("width", () => tableSquareSizePx)
-                  .attr("height", () => tableSquareSizePx)
-                  .each(function (d) {
+            .join((enter) => {
+              enter
+                .append("td")
+                .attr("id", (d) =>
+                  d === earlierDay
+                    ? "day-earlier-amount"
+                    : d === laterDay
+                    ? "day-later-amount"
+                    : "day-" + d
+                )
+                .attr("class", function (d) {
+                  return d > 0 ? "day" : "dayEmpty";
+                })
+                .attr("width", () => tableSquareSizePx)
+                .attr("height", () => tableSquareSizePx)
+                .each(function (d) {
+                  const divText = select(this)
+                    .append("div")
+                    .attr("style", "text-align: center")
+                    .attr("width", tableSquareSizePx);
+                  divText
+                    .append("div")
+                    .attr("style", "float: right")
+                    .text((d) => (d > 0 ? d : ""));
+                  if (d === earlierDay || d === laterDay) {
                     var barHeight = null;
-                    if (d === earlierDay) {
-                      const divText = select(this)
-                        .append("div")
-                        .attr("style", "text-align: center")
-                        .attr("width", tableSquareSizePx);
-                      divText
-                        .append("div")
-                        .attr("style", "float: right")
-                        .text((d) => (d > 0 ? d : ""));
-                      divText
-                        .append("div")
-                        .attr("style", "text-align: center")
-                        .text(() => format("$,.0f")(q.amountEarlier));
-                      barHeight =
-                        tableSquareSizePx -
-                        select(this).select("div").node().offsetHeight;
-                      //barHeight = tableSquareSizePx;
-                      const y = scaleLinear()
-                        .domain(yRange)
-                        .range([barHeight, 0]);
-                      select(this)
-                        .append("svg")
-                        .attr("id", "earlier-bar")
-                        .attr("x", "0 ")
-                        .attr("y", "0")
-                        .attr("width", () => tableSquareSizePx)
-                        .attr("height", () => barHeight)
-                        .attr("style", "text-align: left")
-                        .append("rect")
-                        .attr("fill", "steelblue")
-                        .attr("class", "bar")
-                        .attr("x", "0")
-                        .attr("y", () => y(q.amountEarlier))
-                        .attr("width", () => {
-                          tableSquareSizePx;
-                        })
-                        .attr("height", () => {
-                          const y0 = y(0);
-                          const yamt = y(q.amountEarlier);
-                          return y0 - yamt;
-                        })
-                        .attr("width", tableSquareSizePx);
-                    } else if (d === laterDay) {
-                      select(this).append("svg").attr("id", "earlier-bar");
-                    }
-                  });
-              }
-
-              // .select("td")
-              // .join((enter) => {
-              //   console.log(enter);
-              //   enter
-              //     .append("div")
-              //     .attr("style", "text-align: right")
-              //     .text((d) => (d > 0 ? d : ""));
-            );
-
-          // .select("div")
-          // .data((d) => d)
-          // .join("div")
-          // .attr("style", "text-align: right")
-          // .text((d) => (d > 0 ? d : ""));
-
-          //.selectAll("[id^=earlier],[id^=later]")
-          // tbody
-          //   .select("#day-earlier-amount")
-          //   .data([q.amountEarlier])
-          //   .join((enter) => {
-          //     console.log(enter);
-          //     enter.append("svg").attr("id", "earlier-bar");
-          //   });
+                    divText
+                      .append("div")
+                      .attr("style", "text-align: center; font-weight: bold;")
+                      .text(() =>
+                        format("$,.0f")(
+                          d === earlierDay ? q.amountEarlier : q.amountLater
+                        )
+                      );
+                    barHeight =
+                      tableSquareSizePx -
+                      select(this).select("div").node().offsetHeight;
+                    const y = scaleLinear()
+                      .domain(yRange)
+                      .range([barHeight, 0]);
+                    const svg = select(this)
+                      .append("svg")
+                      .attr("id", (d) => {
+                        d === earlierDay ? "earlier-bar" : "later-bar";
+                      })
+                      .attr("x", "0 ")
+                      .attr("y", "0")
+                      .attr("width", () => tableSquareSizePx)
+                      .attr("height", () => barHeight)
+                      .attr("style", "text-align: left");
+                    svg
+                      .append("line")
+                      .attr("x1", "0")
+                      .attr("y1", y(q.maxAmount))
+                      .attr("x2", tableSquareSizePx)
+                      .attr("y2", y(q.maxAmount))
+                      .attr("style", "stroke:black;stroke-width:1");
+                    svg
+                      .append("rect")
+                      .attr("fill", "steelblue")
+                      .attr("class", "bar")
+                      .attr("x", "0")
+                      .attr("y", () =>
+                        y(d === earlierDay ? q.amountEarlier : q.amountLater)
+                      )
+                      .attr("width", () => {
+                        tableSquareSizePx;
+                      })
+                      .attr("height", () => {
+                        const y0 = y(0);
+                        const yamt = y(
+                          d === earlierDay ? q.amountEarlier : q.amountLater
+                        );
+                        return y0 - yamt;
+                      })
+                      .attr("width", tableSquareSizePx);
+                  }
+                });
+            });
         }, q)}
       ></table>
     </div>
