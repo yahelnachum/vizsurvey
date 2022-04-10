@@ -9,6 +9,9 @@ import Survey from "./components/Survey";
 import { QueryParam } from "./components/QueryParam";
 import {
   fetchQuestions,
+  loadAllTreatments,
+  fetchAllTreatmentsStatus,
+  fetchAllTreatments,
   selectAllQuestions,
   startSurvey,
   writeAnswers,
@@ -21,6 +24,7 @@ import {
   fetchTreatmentId,
   fetchCurrentTreatment,
 } from "./features/questionSlice";
+import { StatusType } from "./features/StatusType";
 
 const App = () => {
   return (
@@ -49,76 +53,132 @@ export default App;
 
 const Home = () => {
   const treatmentId = useSelector(fetchTreatmentId);
+  const dispatch = useDispatch();
+  dispatch(loadAllTreatments());
+  const status = useSelector(fetchAllTreatmentsStatus);
+  const allTreatments = useSelector(fetchAllTreatments);
+
+  function testLinks() {
+    return (
+      <div>
+        <p>
+          This page will not be available when deployed in production since the
+          participants will be provided a link with the treatment id in the URL.
+        </p>
+        {status === StatusType.Unitialized ? (
+          <p>Please wait while all treatments are loaded...</p>
+        ) : (
+          <p>
+            <a href="https://github.com/pcordone/vizsurvey">Github README.md</a>
+            <br></br>
+            <a href="https://github.com/pcordone">public website</a>
+            <br></br>
+            <p>
+              Click a link below to launch one of the experiments. The
+              experimental parameters are not setup yet and are configurable
+              through a file. Right now these links give a feel for what each
+              type of stimulus is like.
+            </p>
+            <p>
+              <Link id="1" to="/vizsurvey/instructions?treatment_id=1">
+                {
+                  allTreatments.filter(
+                    (d) => d.treatmentId === 1 && d.position === 1
+                  )[0].comment
+                }
+              </Link>
+            </p>
+            <p>
+              <Link id="2" to="/vizsurvey/instructions?treatment_id=2">
+                {
+                  allTreatments.filter(
+                    (d) => d.treatmentId === 2 && d.position === 1
+                  )[0].comment
+                }
+              </Link>
+            </p>
+            <p>
+              <Link id="3" to="/vizsurvey/instructions?treatment_id=3">
+                {
+                  allTreatments.filter(
+                    (d) => d.treatmentId === 3 && d.position === 1
+                  )[0].comment
+                }
+              </Link>
+            </p>
+            <p>
+              <Link id="4" to="/vizsurvey/instructions?treatment_id=4">
+                {
+                  allTreatments.filter(
+                    (d) => d.treatmentId === 4 && d.position === 1
+                  )[0].comment
+                }
+              </Link>
+            </p>
+            <p>
+              <Link id="5" to="/vizsurvey/instructions?treatment_id=5">
+                {
+                  allTreatments.filter(
+                    (d) => d.treatmentId === 5 && d.position === 1
+                  )[0].comment
+                }
+              </Link>
+            </p>
+            <p>
+              <Link id="6" to="/vizsurvey/instructions?treatment_id=6">
+                {
+                  allTreatments.filter(
+                    (d) => d.treatmentId === 6 && d.position === 1
+                  )[0].comment
+                }
+              </Link>
+            </p>
+            <p>
+              <Link id="7" to="/vizsurvey/instructions?treatment_id=7">
+                {
+                  allTreatments.filter(
+                    (d) => d.treatmentId === 7 && d.position === 1
+                  )[0].comment
+                }
+              </Link>
+            </p>
+            <p>
+              <Link id="8" to="/vizsurvey/instructions?treatment_id=8">
+                {
+                  allTreatments.filter(
+                    (d) => d.treatmentId === 8 && d.position === 1
+                  )[0].comment
+                }
+              </Link>
+            </p>
+            <p>
+              <Link id="9" to="/vizsurvey/instructions?treatment_id=9">
+                {
+                  allTreatments.filter(
+                    (d) => d.treatmentId === 9 && d.position === 1
+                  )[0].comment
+                }
+              </Link>
+            </p>
+            <p>
+              <Link id="10" to="/vizsurvey/instructions?treatment_id=10">
+                {
+                  allTreatments.filter(
+                    (d) => d.treatmentId === 10 && d.position === 1
+                  )[0].comment
+                }
+              </Link>
+            </p>
+          </p>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div id="home-text">
       {treatmentId === null ? (
-        <div>
-          <p>
-            This page will not be available when deployed in production since
-            the participants will be provided a link with the treatment id in
-            the URL.
-          </p>
-          <p>
-            <a href="https://github.com/pcordone/vizsurvey">Github README.md</a>
-          </p>
-          <p>
-            <a href="https://github.com/pcordone">public website</a>
-          </p>
-          <p>
-            Click a link below to launch one of the experiments. The
-            experimental parameters are not setup yet and are configurable
-            through a file. Right now these links give a feel for what each type
-            of stimulus is like.
-          </p>
-          <p>
-            <Link
-              id="word-no-interaction"
-              to="/vizsurvey/instructions?treatment_id=1"
-            >
-              Worded with no titration and not draggable.
-            </Link>
-          </p>
-          <p>
-            <Link
-              id="barchart-no-interaction"
-              to="/vizsurvey/instructions?treatment_id=2"
-            >
-              Barchart with no titration and not draggable.
-            </Link>
-          </p>
-          <p>
-            <Link
-              id="calendar-no-interaction"
-              to="/vizsurvey/instructions?treatment_id=3"
-            >
-              Calendar with no titration and not draggable.
-            </Link>
-          </p>
-          <p>
-            <Link
-              id="barchart-drag"
-              to="/vizsurvey/instructions?treatment_id=4"
-            >
-              Barchart draggable.
-            </Link>
-          </p>
-          <p>
-            <Link
-              id="word-titration"
-              to="/vizsurvey/instructions?treatment_id=5"
-            >
-              Word titration.
-            </Link>
-          </p>
-          <p>
-            <Link
-              id="barchart-titration"
-              to="/vizsurvey/instructions?treatment_id=6"
-            >
-              Barchart titration.
-            </Link>
-          </p>
-        </div>
+        testLinks()
       ) : (
         <Redirect to={`/vizsurvey/instructions?treatment_id=${treatmentId}`} />
       )}
@@ -183,9 +243,13 @@ const Instructions = () => {
                   return `Can not display <b>specific</b> instructions since the interaction 
                         type was not specified in the experiment setup/`;
               }
-            case ViewType.calendar:
+            case ViewType.calendarGraph:
               return `Click on the day that contains the amount that you would like to
                     receive.`;
+            case ViewType.calendarWord:
+              return `Provide calendar word instructions`;
+            case ViewType.calendarIcon:
+              return `Provide calendar icon grap instructions`;
             default:
               return `Cannot display <b>specific</b> instructions since a treatment has not
                     been selected. Please select a treatment`;

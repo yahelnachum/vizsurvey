@@ -24,12 +24,7 @@ export function Survey() {
       ) : question.viewType === ViewType.word ? (
         <MELForm />
       ) : (
-        <Calendar
-          top_margin="20"
-          right_margin="20"
-          bottom_margin="30"
-          left_margin="30"
-        />
+        <Calendar />
       )}
     </div>
   );

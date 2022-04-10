@@ -15,6 +15,7 @@ export const writeAnswers = createAsyncThunk(
 export const questionSlice = createSlice({
   name: "questions", // I believe the global state is partitioned by the name value thus the terminology "slice"
   initialState: {
+    allTreatments: null,
     treatmentId: null,
     participantId: null,
     treatments: [],
@@ -23,6 +24,7 @@ export const questionSlice = createSlice({
     highup: undefined,
     lowdown: undefined,
     status: StatusType.Unitialized,
+    fetchAllTreatmentsStatus: StatusType.Unitialized,
     error: null,
   }, // the initial state of our global data (under name slice)
   reducers: {
@@ -38,6 +40,10 @@ export const questionSlice = createSlice({
       state.treatments = io.fetchQuestions(state.treatmentId);
       state.status = StatusType.Fetched;
       return state;
+    },
+    loadAllTreatments(state) {
+      state.allTreatments = io.loadAllTreatments();
+      state.fetchAllTreatmentsStatus = StatusType.Fetched;
     },
     startSurvey(state) {
       qe.startSurvey(state);
@@ -63,12 +69,20 @@ export const fetchCurrentTreatment = (state) => {
   return result;
 };
 
+export const fetchAllTreatments = (state) => {
+  return state.questions.allTreatments;
+};
+
 export const selectCurrentQuestion = (state) => {
   return qe.latestAnswer(state.questions);
 };
 
 export const fetchStatus = (state) => {
   return state.questions.status;
+};
+
+export const fetchAllTreatmentsStatus = (state) => {
+  return state.questions.fetchAllTreatmentsStatus;
 };
 
 export const fetchTreatmentId = (state) => {
@@ -78,6 +92,7 @@ export const fetchTreatmentId = (state) => {
 // Action creators are generated for each case reducer function
 export const {
   fetchQuestions,
+  loadAllTreatments,
   startSurvey,
   setQuestionShownTimestamp,
   answer,

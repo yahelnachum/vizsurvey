@@ -10,6 +10,15 @@ import { VariableType } from "./VariableType";
 export class FileIOAdapter {
   constructor() {}
 
+  loadAllTreatments = () => {
+    const treatments = csvParse(TREATMENTS_CSV, (e) => {
+      return this.fromCSVRow(e);
+    }).sort((a, b) =>
+      a.position < b.position ? -1 : a.position === b.position ? 0 : 1
+    );
+    return treatments;
+  };
+
   fetchQuestions = (treatmentId) => {
     treatmentId = +treatmentId;
     const questions = csvParse(TREATMENTS_CSV, (e) => {

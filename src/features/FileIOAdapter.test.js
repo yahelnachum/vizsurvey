@@ -30,9 +30,11 @@ describe("FileIOAdapter tests", () => {
     expect(questions[0].bottomMarginHeightIn).toBe(0);
     expect(questions[0].graphWidthIn).toBe(0);
     expect(questions[0].graphHeightIn).toBe(0);
-    expect(questions[0].widthIn).toBe(0);
-    expect(questions[0].heightIn).toBe(0);
-    expect(questions[0].comment).toBe("Read 2001 example, absolute size");
+    expect(questions[0].widthIn).toBe(4);
+    expect(questions[0].heightIn).toBe(4);
+    expect(questions[0].comment).toBe(
+      "Worded MEL question with no interaction and Read 2001 example values."
+    );
   });
 
   test("Validate treatment CSV fields are loaded correctly.", async () => {
