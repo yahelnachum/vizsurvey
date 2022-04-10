@@ -18,18 +18,14 @@ export function MELForm() {
   const q = useSelector(selectCurrentQuestion);
   const status = useSelector(fetchStatus);
 
-  // Absolute money value, delay framing (e.g., $5 today vs. $5 plus an additional $5 in 4 weeks)
-  // Relative money value, delay framing (e.g., $5 today vs. $5 plus an additional 100% in 4 weeks)
-  // Standard MEL format (e.g., $5 today vs. $10 in 4 weeks)
-  // Relative money value, speedup framing (e.g., $10 in 4 weeks vs. $10 minus 50% today)
-  // Absolute money value, speedup framing (e.g., $10 in 4 weeks vs. $10 minus $5 today)
+  const dpi = window.devicePixelRatio >= 2 ? 132 : 96;
 
   const todayText = (sooner_time) =>
     sooner_time === 0 ? "today" : `in ${sooner_time} weeks`;
 
-  // function questionText() {
-  //   return `${question1stPartText()} vs. ${question2ndPartText()}`;
-  // }
+  function questionText() {
+    return `Make a choice to received ${question1stPartText()} or ${question2ndPartText()}`;
+  }
 
   function question1stPartText() {
     return `$${q.amountEarlier} ${todayText(q.timeEarlier)}`;
@@ -40,54 +36,61 @@ export function MELForm() {
   }
 
   const result = (
-    <Formik
-      initialValues={{ choice: ChoiceType.unitialized }}
-      validate={(values) => {
-        let errors = {};
-        if (!values.choice || values.choice === ChoiceType.unitialized) {
-          errors.choice = "Please choose a selection to continue.";
-        }
-        return errors;
-      }}
-      onSubmit={(values, { setSubmitting, resetForm }) => {
-        setTimeout(() => {
-          dispatch(
-            answer({
-              choice: values.choice,
-              choiceTimestamp: DateTime.now(),
-            })
-          );
-          setSubmitting(false);
-          resetForm();
-        }, 400);
-      }}
+    <div
+      width={`${Math.round(q.widthIn * dpi)}px`}
+      height={`${Math.round(q.heightIn * dpi)}px`}
+      overflow="hidden"
     >
-      {({ isSubmitting }) => (
-        <Form>
-          <div
-            role="group"
-            aria-labelledby="my-radio-group"
-            className="radio-choice-label"
-          >
-            <label>
-              <Field type="radio" name="choice" value={ChoiceType.earlier} />
-              &nbsp;{question1stPartText()}
-            </label>
-            <br></br>
-            <label>
-              <Field type="radio" name="choice" value={ChoiceType.later} />
-              &nbsp;{question2ndPartText()}
-            </label>
-            <span style={{ color: "red", fontWeight: "bold" }}>
-              <ErrorMessage name="choice" component="div" />
-            </span>
-          </div>
-          <Button type="submit" disabled={isSubmitting}>
-            Submit
-          </Button>
-        </Form>
-      )}
-    </Formik>
+      <Formik
+        initialValues={{ choice: ChoiceType.unitialized }}
+        validate={(values) => {
+          let errors = {};
+          if (!values.choice || values.choice === ChoiceType.unitialized) {
+            errors.choice = "Please choose a selection to continue.";
+          }
+          return errors;
+        }}
+        onSubmit={(values, { setSubmitting, resetForm }) => {
+          setTimeout(() => {
+            dispatch(
+              answer({
+                choice: values.choice,
+                choiceTimestamp: DateTime.now(),
+              })
+            );
+            setSubmitting(false);
+            resetForm();
+          }, 400);
+        }}
+      >
+        {({ isSubmitting }) => (
+          <Form>
+            <div
+              role="group"
+              aria-labelledby="my-radio-group"
+              className="radio-choice-label"
+            >
+              <p>{questionText()} </p>
+              <label>
+                <Field type="radio" name="choice" value={ChoiceType.earlier} />
+                &nbsp;{question1stPartText()}
+              </label>
+              <br></br>
+              <label>
+                <Field type="radio" name="choice" value={ChoiceType.later} />
+                &nbsp;{question2ndPartText()}
+              </label>
+              <span style={{ color: "red", fontWeight: "bold" }}>
+                <ErrorMessage name="choice" component="div" />
+              </span>
+            </div>
+            <Button type="submit" disabled={isSubmitting}>
+              Submit
+            </Button>
+          </Form>
+        )}
+      </Formik>
+    </div>
   );
 
   if (status === StatusType.Complete) {
