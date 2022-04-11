@@ -197,6 +197,14 @@ const divCenterContentStyle = {
   transform: "translate(-50%, -50%)",
 };
 
+const divCenterContentStyle1 = {
+  position: "absolute",
+  left: "50%",
+  width: "500px",
+  marginRight: "-50%",
+  transform: "translate(-50%, 0%)",
+};
+
 const buttonCenterContentStyle = {
   position: "absolute",
   left: "50%",
@@ -277,7 +285,7 @@ import { ChoiceType } from "./features/ChoiceType";
 const PostSurvey = () => {
   //const dispatch = useDispatch();
   return (
-    <div id="home-text" style={divCenterContentStyle}>
+    <div id="home-text" style={divCenterContentStyle1}>
       <Formik
         initialValues={{
           choice: ChoiceType.unitialized,
@@ -308,10 +316,6 @@ const PostSurvey = () => {
       >
         {({ isSubmitting }) => (
           <Form>
-            <br />
-            <br />
-            <br />
-            <br />
             <div
               role="group"
               aria-labelledby="my-radio-group"
