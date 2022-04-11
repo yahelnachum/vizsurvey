@@ -302,6 +302,10 @@ const PostSurvey = () => {
       >
         {({ isSubmitting }) => (
           <Form>
+            <br />
+            <br />
+            <br />
+            <br />
             <div
               role="group"
               aria-labelledby="my-radio-group"
@@ -316,7 +320,7 @@ const PostSurvey = () => {
                 <Field type="radio" name="choice" value="15" />
                 &nbsp;Higher for the 15 year mortgage
               </label>
-              <br></br>
+              <br />
               <label>
                 <Field type="radio" name="choice" value="30" />
                 &nbsp;Higher for the 30 year mortgage
@@ -333,9 +337,60 @@ const PostSurvey = () => {
                 <ErrorMessage name="choice" component="div" />
               </span>
             </div>
+            <br />
+            <div></div>
+            <br />
+            <div
+              role="group1"
+              aria-labelledby="my-radio-group1"
+              className="radio-choice-label"
+            >
+              <p>
+                2. Suppose you owe £50,000 on a mortgage at an Annual Percentage
+                Rate of 6%. If you didn’t make any payments on this mortgage how
+                much would you owe in total after one year?
+              </p>
+              <label>
+                <Field type="radio" name="choice1" value="less" />
+                &nbsp;Less than £50,000
+              </label>
+              <br></br>
+              <label>
+                <Field type="radio" name="choice1" value="50" />
+                &nbsp;£50,000 – £54,999
+              </label>
+              <br></br>
+              <label>
+                <Field type="radio" name="choice1" value="55" />
+                &nbsp;£55,000 – £59,999
+              </label>
+              <br></br>
+              <label>
+                <Field type="radio" name="choice1" value="60" />
+                &nbsp;£60,000 – £64,999
+              </label>
+              <br></br>
+              <label>
+                <Field type="radio" name="choice1" value="more" />
+                &nbsp;More than £65,000
+              </label>
+              <br></br>
+              <label>
+                <Field type="radio" name="choice1" value="unsure" />
+                &nbsp;Do not know
+              </label>
+              <span style={{ color: "red", fontWeight: "bold" }}>
+                <ErrorMessage name="choice1" component="div" />
+              </span>
+            </div>
+            <br />
+            <br />
+            <div></div>
             <Button type="submit" disabled={isSubmitting}>
               Submit
             </Button>
+            <br />
+            <br />
           </Form>
         )}
       </Formik>
