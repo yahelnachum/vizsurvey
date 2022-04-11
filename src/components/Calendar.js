@@ -137,7 +137,6 @@ function Calendar() {
                   .append("div")
                   .attr("style", "float: right")
                   .text((d) => (d > 0 ? d : ""));
-                if (q.viewType === ViewType.calendarWord) return;
                 if (d === earlierDay || d === laterDay) {
                   divText
                     .append("div")
@@ -147,6 +146,7 @@ function Calendar() {
                         d === earlierDay ? q.amountEarlier : q.amountLater
                       )
                     );
+                  if (q.viewType === ViewType.calendarWord) return;
                   const barHeight =
                     tableSquareSizePx -
                     select(this).select("div").node().offsetHeight;

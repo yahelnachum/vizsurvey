@@ -5,6 +5,6 @@ export class ViewType extends Enumify {
   static barchart = new ViewType();
   static calendarGraph = new ViewType();
   static calendarWord = new ViewType();
-  static calendarGraph = new ViewType();
+  static calendarIcon = new ViewType();
   static _ = this.closeEnum();
 }
