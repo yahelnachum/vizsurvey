@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { BrowserRouter, Route, Switch, Link, Redirect } from "react-router-dom";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { v4 as uuidv4 } from "uuid";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Button } from "react-bootstrap";
 import "./App.css";
 import Survey from "./components/Survey";
@@ -40,6 +41,7 @@ const App = () => {
               component={Instructions}
             />
             <Route path="/vizsurvey/survey" component={Survey} />
+            <Route path="/vizsurvey/post-survey" component={PostSurvey} />
             <Route path="/vizsurvey/thankyou" component={ThankYou} />
             <Route path="/vizsurvey/*" component={Home} />
           </Switch>
@@ -267,6 +269,76 @@ const Instructions = () => {
           </Button>
         </Link>
       </FullScreen>
+    </div>
+  );
+};
+
+import { ChoiceType } from "./features/ChoiceType";
+const PostSurvey = () => {
+  //const dispatch = useDispatch();
+  return (
+    <div id="home-text" style={divCenterContentStyle}>
+      <Formik
+        initialValues={{ choice: ChoiceType.unitialized }}
+        validate={(values) => {
+          let errors = {};
+          if (!values.choice || values.choice === ChoiceType.unitialized) {
+            errors.choice = "Please choose a selection to continue.";
+          }
+          return errors;
+        }}
+        onSubmit={(values, { setSubmitting, resetForm }) => {
+          setTimeout(() => {
+            /*dispatch(
+              answer({
+                choice: values.choice,
+                choiceTimestamp: DateTime.now(),
+              })
+            );*/
+            setSubmitting(false);
+            resetForm();
+          }, 400);
+        }}
+      >
+        {({ isSubmitting }) => (
+          <Form>
+            <div
+              role="group"
+              aria-labelledby="my-radio-group"
+              className="radio-choice-label"
+            >
+              <p>
+                1. Suppose a 15 year mortgage and a 30 year mortgage have the
+                same Annual Percentage Rate and the same amount borrowed. The
+                total amount repaid will be:
+              </p>
+              <label>
+                <Field type="radio" name="choice" value="15" />
+                &nbsp;Higher for the 15 year mortgage
+              </label>
+              <br></br>
+              <label>
+                <Field type="radio" name="choice" value="30" />
+                &nbsp;Higher for the 30 year mortgage
+              </label>
+              <label>
+                <Field type="radio" name="choice" value="same" />
+                &nbsp;The total amount repaid will be the same
+              </label>
+              <label>
+                <Field type="radio" name="choice" value="unsure" />
+                &nbsp;Do not know
+              </label>
+              <span style={{ color: "red", fontWeight: "bold" }}>
+                <ErrorMessage name="choice" component="div" />
+              </span>
+            </div>
+            <Button type="submit" disabled={isSubmitting}>
+              Submit
+            </Button>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 };
