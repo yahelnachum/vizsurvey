@@ -13,6 +13,7 @@ import { useD3 } from "../hooks/useD3";
 import { ChoiceType } from "../features/ChoiceType";
 import { StatusType } from "../features/StatusType";
 import { InteractionType } from "../features/InteractionType";
+import { ViewType } from "../features/ViewType";
 
 var calendarMatrix = require("calendar-matrix");
 
@@ -104,6 +105,28 @@ function Calendar() {
                   ? "border: 1px solid black; text-align: right; vertical-align: top; position: relative; overflow: hidden; white-space: nowrap;"
                   : "border: none;"
               )
+              .on("click", (d) => {
+                if (
+                  q.interaction === InteractionType.titration ||
+                  q.interaction === InteractionType.none
+                ) {
+                  if (d.target.__data__ === earlierDay) {
+                    dispatch(
+                      answer({
+                        choice: ChoiceType.earlier,
+                        choiceTimestamp: DateTime.now(),
+                      })
+                    );
+                  } else if (d.target.__data__ === laterDay) {
+                    dispatch(
+                      answer({
+                        choice: ChoiceType.later,
+                        choiceTimestamp: DateTime.now(),
+                      })
+                    );
+                  }
+                }
+              })
               .each(function (d) {
                 if (d < 0) return;
                 const divText = select(this)
@@ -114,8 +137,8 @@ function Calendar() {
                   .append("div")
                   .attr("style", "float: right")
                   .text((d) => (d > 0 ? d : ""));
+                if (q.viewType === ViewType.calendarWord) return;
                 if (d === earlierDay || d === laterDay) {
-                  var barHeight = null;
                   divText
                     .append("div")
                     .attr("style", "text-align: center; font-weight: bold;")
@@ -124,7 +147,7 @@ function Calendar() {
                         d === earlierDay ? q.amountEarlier : q.amountLater
                       )
                     );
-                  barHeight =
+                  const barHeight =
                     tableSquareSizePx -
                     select(this).select("div").node().offsetHeight;
                   const y = scaleLinear().domain(yRange).range([barHeight, 0]);
@@ -163,29 +186,7 @@ function Calendar() {
                       );
                       return y0 - yamt;
                     })
-                    .attr("width", tableSquareSizePx)
-                    .on("click", (d) => {
-                      if (
-                        q.interaction === InteractionType.titration ||
-                        q.interaction === InteractionType.none
-                      ) {
-                        if (d.target.__data__ === earlierDay) {
-                          dispatch(
-                            answer({
-                              choice: ChoiceType.earlier,
-                              choiceTimestamp: DateTime.now(),
-                            })
-                          );
-                        } else if (d.target.__data__ === laterDay) {
-                          dispatch(
-                            answer({
-                              choice: ChoiceType.later,
-                              choiceTimestamp: DateTime.now(),
-                            })
-                          );
-                        }
-                      }
-                    });
+                    .attr("width", tableSquareSizePx);
                 }
               });
           },
