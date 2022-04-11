@@ -279,11 +279,17 @@ const PostSurvey = () => {
   return (
     <div id="home-text" style={divCenterContentStyle}>
       <Formik
-        initialValues={{ choice: ChoiceType.unitialized }}
+        initialValues={{
+          choice: ChoiceType.unitialized,
+          choice1: ChoiceType.unitialized,
+        }}
         validate={(values) => {
           let errors = {};
           if (!values.choice || values.choice === ChoiceType.unitialized) {
             errors.choice = "Please choose a selection to continue.";
+          }
+          if (!values.choice1 || values.choice1 === ChoiceType.unitialized) {
+            errors.choice1 = "Please choose a selection to continue.";
           }
           return errors;
         }}
