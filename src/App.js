@@ -338,7 +338,7 @@ const PostSurvey = () => {
               </span>
             </div>
             <br />
-            <div></div>
+            <div className="post-survey-separator"></div>
             <br />
             <div
               role="group1"
@@ -384,8 +384,8 @@ const PostSurvey = () => {
               </span>
             </div>
             <br />
+            <div className="post-survey-separator"></div>
             <br />
-            <div></div>
             <Button type="submit" disabled={isSubmitting}>
               Submit
             </Button>
