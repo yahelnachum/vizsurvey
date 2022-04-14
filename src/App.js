@@ -310,7 +310,8 @@ const PostSurvey = () => {
     <div id="home-text" style={divCenterContentStyle1}>
       <Formik
         initialValues={questions.reduce((result, currentObj, index) => {
-          result[["choice", index].join("")] = ChoiceType.unitialized;
+          const key = ["choice", index].join("");
+          result[key] = ChoiceType.unitialized;
           return result;
         }, {})}
         validate={(values) => {
