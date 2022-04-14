@@ -294,6 +294,17 @@ const PostSurvey = () => {
         "The total amount repaid will be the same",
       ],
     },
+    {
+      question:
+        "2. Suppose you owe £50,000 on a mortgage at an Annual Percentage Rate of 6%. If you didn’t make any payments on this mortgage how much would you owe in total after one year?",
+      options: [
+        "Less than £50,000",
+        "£50,000 – £54,999",
+        "£55,000 – £59,999",
+        "£60,000 – £64,999",
+        "More than £65,000",
+      ],
+    },
   ];
   return (
     <div id="home-text" style={divCenterContentStyle1}>
@@ -304,8 +315,8 @@ const PostSurvey = () => {
         }}
         validate={(values) => {
           let errors = {};
-          if (!values.choice || values.choice === ChoiceType.unitialized) {
-            errors.choice = "Please choose a selection to continue.";
+          if (!values.choice0 || values.choice0 === ChoiceType.unitialized) {
+            errors.choice0 = "Please choose a selection to continue.";
           }
           if (!values.choice1 || values.choice1 === ChoiceType.unitialized) {
             errors.choice1 = "Please choose a selection to continue.";
@@ -328,77 +339,46 @@ const PostSurvey = () => {
         {({ isSubmitting }) => (
           <Form>
             {questions.map(({ question, options }, index) => (
-              <div
-                role="group1"
-                aria-labelledby="my-radio-group1"
-                className="radio-choice-label"
-                key={index}
-              >
-                <p>{question}</p>
-                {options.map((option, index) => (
-                  <div key={index}>
-                    <label>
-                      <Field type="radio" name="choice" value="less" />
-                      &nbsp;{option}
-                    </label>
-                    <br />
-                  </div>
-                ))}
-                <label>
-                  <Field type="radio" name="choice" value="unsure" />
-                  &nbsp;Do not know
-                </label>
+              <div key={index}>
+                <div
+                  role={["group", index].join("")}
+                  aria-labelledby={["my-radio-group", index].join("")}
+                  className="radio-choice-label"
+                >
+                  <p>{question}</p>
+                  {options.map((option, index1) => (
+                    <div key={index1}>
+                      <label>
+                        <Field
+                          type="radio"
+                          name={["choice", index].join("")}
+                          value={["value", index1].join("")}
+                        />
+                        &nbsp;{option}
+                      </label>
+                      <br />
+                    </div>
+                  ))}
+                  <label>
+                    <Field
+                      type="radio"
+                      name={["choice", index].join("")}
+                      value="unsure"
+                    />
+                    &nbsp;Do not know
+                  </label>
+                  <span style={{ color: "red", fontWeight: "bold" }}>
+                    <ErrorMessage
+                      name={["choice", index].join("")}
+                      component="div"
+                    />
+                  </span>
+                </div>
+                <br />
+                <div className="post-survey-separator"></div>
+                <br />
               </div>
             ))}
-            <br />
-            <div className="post-survey-separator"></div>
-            <br />
-            <div
-              role="group1"
-              aria-labelledby="my-radio-group1"
-              className="radio-choice-label"
-            >
-              <p>
-                2. Suppose you owe £50,000 on a mortgage at an Annual Percentage
-                Rate of 6%. If you didn’t make any payments on this mortgage how
-                much would you owe in total after one year?
-              </p>
-              <label>
-                <Field type="radio" name="choice1" value="less" />
-                &nbsp;Less than £50,000
-              </label>
-              <br></br>
-              <label>
-                <Field type="radio" name="choice1" value="50" />
-                &nbsp;£50,000 – £54,999
-              </label>
-              <br></br>
-              <label>
-                <Field type="radio" name="choice1" value="55" />
-                &nbsp;£55,000 – £59,999
-              </label>
-              <br></br>
-              <label>
-                <Field type="radio" name="choice1" value="60" />
-                &nbsp;£60,000 – £64,999
-              </label>
-              <br></br>
-              <label>
-                <Field type="radio" name="choice1" value="more" />
-                &nbsp;More than £65,000
-              </label>
-              <br></br>
-              <label>
-                <Field type="radio" name="choice1" value="unsure" />
-                &nbsp;Do not know
-              </label>
-              <span style={{ color: "red", fontWeight: "bold" }}>
-                <ErrorMessage name="choice1" component="div" />
-              </span>
-            </div>
-            <br />
-            <div className="post-survey-separator"></div>
-            <br />
             <Button type="submit" disabled={isSubmitting}>
               Submit
             </Button>
