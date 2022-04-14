@@ -309,10 +309,10 @@ const PostSurvey = () => {
   return (
     <div id="home-text" style={divCenterContentStyle1}>
       <Formik
-        initialValues={{
-          choice0: ChoiceType.unitialized,
-          choice1: ChoiceType.unitialized,
-        }}
+        initialValues={questions.reduce((result, currentObj, index) => {
+          result[["choice", index].join("")] = ChoiceType.unitialized;
+          return result;
+        }, {})}
         validate={(values) => {
           let errors = {};
           if (!values.choice0 || values.choice0 === ChoiceType.unitialized) {
