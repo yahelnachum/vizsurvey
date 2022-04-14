@@ -310,7 +310,7 @@ const PostSurvey = () => {
     <div id="home-text" style={divCenterContentStyle1}>
       <Formik
         initialValues={{
-          choice: ChoiceType.unitialized,
+          choice0: ChoiceType.unitialized,
           choice1: ChoiceType.unitialized,
         }}
         validate={(values) => {
