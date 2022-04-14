@@ -243,7 +243,7 @@ const Instructions = () => {
                   return `Can not display <b>specific</b> instructions since the interaction 
                         type was not specified in the experiment setup/`;
               }
-            case ViewType.calendarGraph:
+            case ViewType.calendarBar:
               return `Click on the day that contains the amount that you would like to
                     receive.`;
             case ViewType.calendarWord:

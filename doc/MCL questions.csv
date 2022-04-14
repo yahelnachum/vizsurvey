@@ -14,4 +14,4 @@
 7,1,barchart,titration,laterAmount,500,2,,1000,10,,1500,10,100,100,0.5,0.5,8,8,8.5,8.5,Barchat MEL question with titration interaction.
 8,1,calendarBar,titration,laterAmount,500,,2/1/22,1000,,2/22/22,1100,,100,100,,,,,8,8,Calendar MEL question with barchart and titration interaction.
 9,1,calendarWord,titration,laterAmount,500,,2/1/22,1000,,2/22/22,1100,,100,100,,,,,8,8,Calendar MEL question with word and titration interaction.
-10,1,calendarDrag,titration,laterAmount,500,,2/1/22,1000,,2/22/22,1100,,100,100,,,,,8,8,Calendar MEL question with barchart and drag interaction.
+10,1,calendarBar,drag,laterAmount,500,,2/1/22,1000,,2/22/22,1100,,100,100,,,,,8,8,Calendar MEL question with barchart and drag interaction.

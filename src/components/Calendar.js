@@ -1,7 +1,9 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { select, format, scaleLinear } from "d3";
+import { select, format, scaleLinear, drag } from "d3";
+import { Formik, Form } from "formik";
+import { Button } from "react-bootstrap";
 import { DateTime } from "luxon";
 import {
   selectCurrentQuestion,
@@ -14,6 +16,7 @@ import { ChoiceType } from "../features/ChoiceType";
 import { StatusType } from "../features/StatusType";
 import { InteractionType } from "../features/InteractionType";
 import { ViewType } from "../features/ViewType";
+import { VariableType } from "../features/VariableType";
 
 var calendarMatrix = require("calendar-matrix");
 
@@ -83,7 +86,7 @@ function Calendar() {
             const laterDay = q.dateLater.getDate();
 
             const yRange = [0, q.maxAmount];
-
+            var y = null;
             rows
               .selectAll("td")
               .data((d) => d)
@@ -150,7 +153,7 @@ function Calendar() {
                   const barHeight =
                     tableSquareSizePx -
                     select(this).select("div").node().offsetHeight;
-                  const y = scaleLinear().domain(yRange).range([barHeight, 0]);
+                  y = scaleLinear().domain(yRange).range([barHeight, 0]);
                   const svg = select(this)
                     .append("svg")
                     .attr("id", (d) => {
@@ -189,10 +192,57 @@ function Calendar() {
                     .attr("width", tableSquareSizePx);
                 }
               });
+            if (q.interaction === InteractionType.drag) {
+              var dragHandler = drag().on("drag", function (d) {
+                // TODO I need to finish coding the if below to know when they are dragging the correct bar.
+                if (
+                  (d.subject === earlierDay &&
+                    q.variableAmount === VariableType.earlierAmount) ||
+                  (d.subject === laterDay &&
+                    q.variableAmount === VariableType.laterAmount)
+                ) {
+                  select(this)
+                    .attr("y", d.y)
+                    .attr("height", y(0) - d.y);
+                }
+              });
+              dragHandler(calendar.selectAll(".bar"));
+            }
           },
           [q]
         )}
       ></table>
+      {q.interaction === InteractionType.drag ? (
+        <Formik
+          initialValues={{ choice: ChoiceType.Unitialized }}
+          validate={() => {
+            let errors = {};
+            return errors;
+          }}
+          onSubmit={(values, { setSubmitting, resetForm }) => {
+            setTimeout(() => {
+              dispatch(
+                answer({
+                  choice: ChoiceType.earlier,
+                  choiceTimestamp: DateTime.now(),
+                })
+              );
+              setSubmitting(false);
+              resetForm();
+            }, 400);
+          }}
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              <Button type="submit" disabled={isSubmitting}>
+                Submit
+              </Button>
+            </Form>
+          )}
+        </Formik>
+      ) : (
+        ""
+      )}
     </div>
   );
 

@@ -128,6 +128,8 @@ https://css-tricks.com/snippets/css/a-guide-to-flexbox/
 
 https://bost.ocks.org/mike/selection/
 https://bost.ocks.org/mike/nest/
+https://www.animateddata.com/articles/d3/selections/
+https://www.d3indepth.com/datajoins/
 
 ### Code I am crediting
 
