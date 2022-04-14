@@ -284,6 +284,17 @@ const Instructions = () => {
 import { ChoiceType } from "./features/ChoiceType";
 const PostSurvey = () => {
   //const dispatch = useDispatch();
+  const questions = [
+    {
+      question:
+        "1. Suppose a 15 year mortgage and a 30 year mortgage have the same Annual Percentage Rate and the same amount borrowed. The total amount repaid will be:",
+      options: [
+        "Higher for the 15 year mortgage",
+        "Higher for the 30 year mortgage",
+        "The total amount repaid will be the same",
+      ],
+    },
+  ];
   return (
     <div id="home-text" style={divCenterContentStyle1}>
       <Formik
@@ -316,37 +327,29 @@ const PostSurvey = () => {
       >
         {({ isSubmitting }) => (
           <Form>
-            <div
-              role="group"
-              aria-labelledby="my-radio-group"
-              className="radio-choice-label"
-            >
-              <p>
-                1. Suppose a 15 year mortgage and a 30 year mortgage have the
-                same Annual Percentage Rate and the same amount borrowed. The
-                total amount repaid will be:
-              </p>
-              <label>
-                <Field type="radio" name="choice" value="15" />
-                &nbsp;Higher for the 15 year mortgage
-              </label>
-              <br />
-              <label>
-                <Field type="radio" name="choice" value="30" />
-                &nbsp;Higher for the 30 year mortgage
-              </label>
-              <label>
-                <Field type="radio" name="choice" value="same" />
-                &nbsp;The total amount repaid will be the same
-              </label>
-              <label>
-                <Field type="radio" name="choice" value="unsure" />
-                &nbsp;Do not know
-              </label>
-              <span style={{ color: "red", fontWeight: "bold" }}>
-                <ErrorMessage name="choice" component="div" />
-              </span>
-            </div>
+            {questions.map(({ question, options }, index) => (
+              <div
+                role="group1"
+                aria-labelledby="my-radio-group1"
+                className="radio-choice-label"
+                key={index}
+              >
+                <p>{question}</p>
+                {options.map((option, index) => (
+                  <div key={index}>
+                    <label>
+                      <Field type="radio" name="choice" value="less" />
+                      &nbsp;{option}
+                    </label>
+                    <br />
+                  </div>
+                ))}
+                <label>
+                  <Field type="radio" name="choice" value="unsure" />
+                  &nbsp;Do not know
+                </label>
+              </div>
+            ))}
             <br />
             <div className="post-survey-separator"></div>
             <br />
