@@ -310,8 +310,7 @@ const PostSurvey = () => {
     <div id="home-text" style={divCenterContentStyle1}>
       <Formik
         initialValues={questions.reduce((result, currentObj, index) => {
-          const key = ["choice", index].join("");
-          result[key] = ChoiceType.unitialized;
+          result["choice" + index] = ChoiceType.unitialized;
           return result;
         }, {})}
         validate={(values) => {
@@ -342,8 +341,8 @@ const PostSurvey = () => {
             {questions.map(({ question, options }, index) => (
               <div key={index}>
                 <div
-                  role={["group", index].join("")}
-                  aria-labelledby={["my-radio-group", index].join("")}
+                  role={"group" + index}
+                  aria-labelledby={"my-radio-group" + index}
                   className="radio-choice-label"
                 >
                   <p>{question}</p>
@@ -352,8 +351,8 @@ const PostSurvey = () => {
                       <label>
                         <Field
                           type="radio"
-                          name={["choice", index].join("")}
-                          value={["value", index1].join("")}
+                          name={"choice" + index}
+                          value={"value" + index1}
                         />
                         &nbsp;{option}
                       </label>
@@ -363,16 +362,13 @@ const PostSurvey = () => {
                   <label>
                     <Field
                       type="radio"
-                      name={["choice", index].join("")}
+                      name={"choice" + index}
                       value="unsure"
                     />
                     &nbsp;Do not know
                   </label>
                   <span style={{ color: "red", fontWeight: "bold" }}>
-                    <ErrorMessage
-                      name={["choice", index].join("")}
-                      component="div"
-                    />
+                    <ErrorMessage name={"choice" + index} component="div" />
                   </span>
                 </div>
                 <br />
