@@ -314,15 +314,12 @@ const PostSurvey = () => {
           return result;
         }, {})}
         validate={(values) => {
-          return questions.reduce((result, currentObj, index) => {
-            if (
-              !values["choice" + index] ||
-              values["choice" + index] === ChoiceType.unitialized
-            ) {
-              result["choice" + index] =
-                "Please choose a selection to continue.";
+          return questions.reduce((errors, currentObj, index) => {
+            const key = "choice" + index;
+            if (!values[key] || values[key] === ChoiceType.unitialized) {
+              errors[key] = "Please choose a selection to continue.";
             }
-            return result;
+            return errors;
           }, {});
         }}
         onSubmit={(values, { setSubmitting, resetForm }) => {
