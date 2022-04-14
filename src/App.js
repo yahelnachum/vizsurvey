@@ -314,14 +314,16 @@ const PostSurvey = () => {
           return result;
         }, {})}
         validate={(values) => {
-          let errors = {};
-          if (!values.choice0 || values.choice0 === ChoiceType.unitialized) {
-            errors.choice0 = "Please choose a selection to continue.";
-          }
-          if (!values.choice1 || values.choice1 === ChoiceType.unitialized) {
-            errors.choice1 = "Please choose a selection to continue.";
-          }
-          return errors;
+          return questions.reduce((result, currentObj, index) => {
+            if (
+              !values["choice" + index] ||
+              values["choice" + index] === ChoiceType.unitialized
+            ) {
+              result["choice" + index] =
+                "Please choose a selection to continue.";
+            }
+            return result;
+          }, {});
         }}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           setTimeout(() => {
