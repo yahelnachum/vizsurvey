@@ -148,3 +148,16 @@ Redux - is a library for managing the global application state.
 ### Media Querries
 
 https://developer.mozilla.org/en-US/docs/Web/CSS/Media_Queries/Using_media_queries
+
+### SVG
+
+https://crashcourse.housegordon.org/D3JS-Absolute-Units.html
+https://crashcourse.housegordon.org/examples/svg_units.html
+https://jenkov.com/tutorials/svg/svg-transformation.html
+https://www.sarasoueidan.com/blog/svg-transformations/
+https://codepen.io/basiacoulter/pen/xGweXz
+
+### Calendar example
+
+https://benclinkinbeard.com/d3tips/building-a-calendar-with-d3/?utm_content=bufferc1664&utm_medium=social&utm_source=twitter.com&utm_campaign=buffer
+https://codepen.io/bclinkinbeard/pen/MEZxMe

@@ -5,6 +5,7 @@ import { select, format, scaleLinear, drag } from "d3";
 import { Formik, Form } from "formik";
 import { Button } from "react-bootstrap";
 import { DateTime } from "luxon";
+import { monthNames } from "./CalendarHelper";
 import {
   selectCurrentQuestion,
   fetchStatus,
@@ -25,23 +26,9 @@ function Calendar() {
   const q = useSelector(selectCurrentQuestion);
   const status = useSelector(fetchStatus);
 
-  const monthDays = calendarMatrix(q.dateEarlier);
-  const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  const month = q.dateEarlier.getMonth();
-  const monthName = monthNames[month];
+  const monthDays = calendarMatrix(q.dateEarlier.toJSDate());
+  const month = q.dateEarlier.month;
+  const monthName = monthNames[month - 1];
 
   const dpi = window.devicePixelRatio >= 2 ? 132 : 96;
 
@@ -51,9 +38,6 @@ function Calendar() {
   );
 
   const tableSquareSizePx = Math.round(tableSquareSizeIn * dpi);
-
-  //   const dateMonth = question.dateEarlier.getMonth();
-  //   const dateYear = question.dateEarlier.getFullYear();
 
   const result = (
     <div>
@@ -66,13 +50,13 @@ function Calendar() {
             table.html(
               `<thead>
                 <tr>
-                    <td style='text-align: center;'>Sunday</td>
-                    <td style='text-align: center;'>Monday</td>
-                    <td style='text-align: center;'>Tuesday</td>
-                    <td style='text-align: center;'>Wednesday</td>
-                    <td style='text-align: center;'>Thursday</td>
-                    <td style='text-align: center;'>Friday</td>
-                    <td style='text-align: center;'>Saturday</td>
+                    <td style='text-align: center;'>S</td>
+                    <td style='text-align: center;'>M</td>
+                    <td style='text-align: center;'>T</td>
+                    <td style='text-align: center;'>W</td>
+                    <td style='text-align: center;'>T</td>
+                    <td style='text-align: center;'>F</td>
+                    <td style='text-align: center;'>S</td>
                 </tr>
             </thead>
             <tbody id='calendarBody'></tbody>`
@@ -82,8 +66,8 @@ function Calendar() {
             const tbody = calendar.select("#calendarBody");
             const rows = tbody.selectAll("tbody").data(monthDays).join("tr");
 
-            const earlierDay = q.dateEarlier.getDate();
-            const laterDay = q.dateLater.getDate();
+            const earlierDay = q.dateEarlier.day;
+            const laterDay = q.dateLater.day;
 
             const yRange = [0, q.maxAmount];
             var y = null;

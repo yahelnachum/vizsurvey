@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-vars */
 import MELForm from "./MELForm";
 import BarChart from "./BarChart";
 import Calendar from "./Calendar";
+import CalendarYear from "./CalendarYear";
 import { useSelector } from "react-redux";
 import { ViewType } from "../features/ViewType";
 import { selectCurrentQuestion } from "../features/questionSlice";
@@ -17,15 +19,27 @@ export function Survey() {
     transform: "translate(-50%, -50%)",
   };
 
+  const monthsApart = question.dateLater
+    .diff(question.dateEarlier, "months")
+    .toObject().months;
+
   return (
     <div style={divCenterContentStyle}>
-      {question.viewType === ViewType.barchart ? (
-        <BarChart />
-      ) : question.viewType === ViewType.word ? (
-        <MELForm />
-      ) : (
-        <Calendar />
-      )}
+      {(() => {
+        switch (question.viewType) {
+          case ViewType.barchart:
+            return <BarChart />;
+          case ViewType.word:
+            return <MELForm />;
+          case ViewType.calendarBar:
+          case ViewType.calendarIcon:
+          case ViewType.calendarWord:
+            if (monthsApart <= 1) {
+              return <Calendar />;
+            }
+            return <CalendarYear />;
+        }
+      })()}
     </div>
   );
 }

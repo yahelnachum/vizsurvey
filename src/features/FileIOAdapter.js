@@ -1,6 +1,6 @@
 import { csvParse } from "d3";
 // import { Octokit } from "octokit";
-// import { DateTime } from "luxon";
+import { DateTime } from "luxon";
 import { TREATMENTS_CSV } from "./treatments";
 import { Question } from "./Question";
 import { ViewType } from "./ViewType";
@@ -33,27 +33,41 @@ export class FileIOAdapter {
 
   fromCSVRow(row) {
     return new Question({
-      treatmentId: +row.treatment_id,
-      position: +row.position,
-      viewType: ViewType.enumValueOf(row.view_type),
-      interaction: InteractionType.enumValueOf(row.interaction),
-      variableAmount: VariableType.enumValueOf(row.variable_amount),
-      amountEarlier: +row.amount_earlier,
+      treatmentId: row.treatment_id ? +row.treatment_id : undefined,
+      position: row.position ? +row.position : undefined,
+      viewType: row.view_type ? ViewType.enumValueOf(row.view_type) : undefined,
+      interaction: row.interaction
+        ? InteractionType.enumValueOf(row.interaction)
+        : undefined,
+      variableAmount: row.variable_amount
+        ? VariableType.enumValueOf(row.variable_amount)
+        : undefined,
+      amountEarlier: row.amount_earlier ? +row.amount_earlier : undefined,
       timeEarlier: row.time_earlier ? +row.time_earlier : undefined,
-      dateEarlier: row.date_earlier ? new Date(row.date_earlier) : undefined,
-      amountLater: +row.amount_later,
+      dateEarlier: row.date_earlier
+        ? DateTime.fromFormat(row.date_earlier, "M/d/yyyy")
+        : undefined,
+      amountLater: row.amount_later ? +row.amount_later : undefined,
       timeLater: row.time_later ? +row.time_later : undefined,
-      dateLater: row.date_later ? new Date(row.date_later) : undefined,
-      maxAmount: +row.max_amount,
-      maxTime: +row.max_time,
-      horizontalPixels: +row.horizontal_pixels,
-      verticalPixels: +row.vertical_pixels,
-      leftMarginWidthIn: +row.left_margin_width_in,
-      bottomMarginHeightIn: +row.bottom_margin_height_in,
-      graphWidthIn: +row.graph_width_in,
-      graphHeightIn: +row.graph_height_in,
-      widthIn: +row.width_in,
-      heightIn: +row.height_in,
+      dateLater: row.date_later
+        ? DateTime.fromFormat(row.date_later, "M/d/yyyy")
+        : undefined,
+      maxAmount: row.max_amount ? +row.max_amount : undefined,
+      maxTime: row.max_time ? +row.max_time : undefined,
+      horizontalPixels: row.horizontal_pixels
+        ? +row.horizontal_pixels
+        : undefined,
+      verticalPixels: row.vertical_pixels ? +row.vertical_pixels : undefined,
+      leftMarginWidthIn: row.left_margin_width_in
+        ? +row.left_margin_width_in
+        : undefined,
+      bottomMarginHeightIn: row.bottom_margin_height_in
+        ? +row.bottom_margin_height_in
+        : undefined,
+      graphWidthIn: row.graph_width_in ? +row.graph_width_in : undefined,
+      graphHeightIn: row.graph_height_in ? +row.graph_height_in : undefined,
+      widthIn: row.width_in ? +row.width_in : undefined,
+      heightIn: row.height_in ? +row.height_in : undefined,
       comment: row.comment,
     });
   }
