@@ -25,13 +25,14 @@ export function PostSurvey() {
   return (
     <div id="home-text" style={divCenterContentStyle1}>
       <Formik
-        initialValues={questions.reduce((result, currentObj, index) => {
-          result["choice" + index] = ChoiceType.unitialized;
+        initialValues={questions.reduce((result, currentObj) => {
+          result["choice" + currentObj.question.textShort] =
+            ChoiceType.unitialized;
           return result;
         }, {})}
         validate={(values) => {
-          return questions.reduce((errors, currentObj, index) => {
-            const key = "choice" + index;
+          return questions.reduce((errors, currentObj) => {
+            const key = "choice" + currentObj.question.textShort;
             if (!values[key] || values[key] === ChoiceType.unitialized) {
               errors[key] = "Please choose a selection to continue.";
             }
@@ -40,6 +41,7 @@ export function PostSurvey() {
         }}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           setTimeout(() => {
+            console.log(values);
             /*dispatch(
               answer({
                 choice: values.choice,
@@ -61,16 +63,16 @@ export function PostSurvey() {
                   aria-labelledby={"my-radio-group" + index}
                   className="radio-choice-label"
                 >
-                  <p>{question}</p>
+                  <p>{question.textFull}</p>
                   {options.map((option, index1) => (
                     <div key={index1}>
                       <label>
                         <Field
                           type="radio"
-                          name={"choice" + index}
-                          value={"value" + index1}
+                          name={"choice" + question.textShort}
+                          value={"value" + option.textShort}
                         />
-                        &nbsp;{option}
+                        &nbsp;{option.textFull}
                       </label>
                       <br />
                     </div>
@@ -78,13 +80,16 @@ export function PostSurvey() {
                   <label>
                     <Field
                       type="radio"
-                      name={"choice" + index}
+                      name={"choice" + question.textShort}
                       value="unsure"
                     />
                     &nbsp;Do not know
                   </label>
                   <span style={{ color: "red", fontWeight: "bold" }}>
-                    <ErrorMessage name={"choice" + index} component="div" />
+                    <ErrorMessage
+                      name={"choice" + question.textShort}
+                      component="div"
+                    />
                   </span>
                 </div>
                 <br />
