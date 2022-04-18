@@ -2,6 +2,7 @@ import { Button } from "react-bootstrap";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { ChoiceType } from "../features/ChoiceType";
 import { POST_SURVEY_QUESTIONS } from "../features/postsurveyquestions";
+import { useHistory } from "react-router-dom";
 
 const divCenterContentStyle1 = {
   position: "absolute",
@@ -13,6 +14,13 @@ const divCenterContentStyle1 = {
 
 export function PostSurvey() {
   //const dispatch = useDispatch();
+
+  const history = useHistory();
+  const routeChange = () => {
+    let path = `/vizsurvey/thankyou`;
+    history.push(path);
+  };
+
   const questions = POST_SURVEY_QUESTIONS;
   return (
     <div id="home-text" style={divCenterContentStyle1}>
@@ -40,6 +48,7 @@ export function PostSurvey() {
             );*/
             setSubmitting(false);
             resetForm();
+            routeChange();
           }, 400);
         }}
       >
