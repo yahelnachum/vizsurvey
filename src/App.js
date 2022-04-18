@@ -3,10 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { BrowserRouter, Route, Switch, Link, Redirect } from "react-router-dom";
 import { FullScreen, useFullScreenHandle } from "react-full-screen";
 import { v4 as uuidv4 } from "uuid";
-import { Formik, Form, Field, ErrorMessage } from "formik";
 import { Button } from "react-bootstrap";
 import "./App.css";
 import Survey from "./components/Survey";
+import PostSurvey from "./components/PostSurvey";
 import { QueryParam } from "./components/QueryParam";
 import {
   fetchQuestions,
@@ -197,14 +197,6 @@ const divCenterContentStyle = {
   transform: "translate(-50%, -50%)",
 };
 
-const divCenterContentStyle1 = {
-  position: "absolute",
-  left: "50%",
-  width: "500px",
-  marginRight: "-50%",
-  transform: "translate(-50%, 0%)",
-};
-
 const buttonCenterContentStyle = {
   position: "absolute",
   left: "50%",
@@ -277,112 +269,6 @@ const Instructions = () => {
           </Button>
         </Link>
       </FullScreen>
-    </div>
-  );
-};
-
-import { ChoiceType } from "./features/ChoiceType";
-const PostSurvey = () => {
-  //const dispatch = useDispatch();
-  const questions = [
-    {
-      question:
-        "1. Suppose a 15 year mortgage and a 30 year mortgage have the same Annual Percentage Rate and the same amount borrowed. The total amount repaid will be:",
-      options: [
-        "Higher for the 15 year mortgage",
-        "Higher for the 30 year mortgage",
-        "The total amount repaid will be the same",
-      ],
-    },
-    {
-      question:
-        "2. Suppose you owe £50,000 on a mortgage at an Annual Percentage Rate of 6%. If you didn’t make any payments on this mortgage how much would you owe in total after one year?",
-      options: [
-        "Less than £50,000",
-        "£50,000 – £54,999",
-        "£55,000 – £59,999",
-        "£60,000 – £64,999",
-        "More than £65,000",
-      ],
-    },
-  ];
-  return (
-    <div id="home-text" style={divCenterContentStyle1}>
-      <Formik
-        initialValues={questions.reduce((result, currentObj, index) => {
-          result["choice" + index] = ChoiceType.unitialized;
-          return result;
-        }, {})}
-        validate={(values) => {
-          return questions.reduce((errors, currentObj, index) => {
-            const key = "choice" + index;
-            if (!values[key] || values[key] === ChoiceType.unitialized) {
-              errors[key] = "Please choose a selection to continue.";
-            }
-            return errors;
-          }, {});
-        }}
-        onSubmit={(values, { setSubmitting, resetForm }) => {
-          setTimeout(() => {
-            /*dispatch(
-              answer({
-                choice: values.choice,
-                choiceTimestamp: DateTime.now(),
-              })
-            );*/
-            setSubmitting(false);
-            resetForm();
-          }, 400);
-        }}
-      >
-        {({ isSubmitting }) => (
-          <Form>
-            {questions.map(({ question, options }, index) => (
-              <div key={index}>
-                <div
-                  role={"group" + index}
-                  aria-labelledby={"my-radio-group" + index}
-                  className="radio-choice-label"
-                >
-                  <p>{question}</p>
-                  {options.map((option, index1) => (
-                    <div key={index1}>
-                      <label>
-                        <Field
-                          type="radio"
-                          name={"choice" + index}
-                          value={"value" + index1}
-                        />
-                        &nbsp;{option}
-                      </label>
-                      <br />
-                    </div>
-                  ))}
-                  <label>
-                    <Field
-                      type="radio"
-                      name={"choice" + index}
-                      value="unsure"
-                    />
-                    &nbsp;Do not know
-                  </label>
-                  <span style={{ color: "red", fontWeight: "bold" }}>
-                    <ErrorMessage name={"choice" + index} component="div" />
-                  </span>
-                </div>
-                <br />
-                <div className="post-survey-separator"></div>
-                <br />
-              </div>
-            ))}
-            <Button type="submit" disabled={isSubmitting}>
-              Submit
-            </Button>
-            <br />
-            <br />
-          </Form>
-        )}
-      </Formik>
     </div>
   );
 };
