@@ -2,7 +2,7 @@ export const POST_SURVEY_QUESTIONS = [
   {
     question: {
       textFull:
-        "1. Suppose a 15 year mortgage and a 30 year mortgage have the same Annual Percentage Rate and the same amount borrowed. The total amount repaid will be:",
+        "Suppose a 15 year mortgage and a 30 year mortgage have the same Annual Percentage Rate and the same amount borrowed. The total amount repaid will be:",
       textShort: "15vs30",
     },
     options: [
@@ -23,7 +23,7 @@ export const POST_SURVEY_QUESTIONS = [
   {
     question: {
       textFull:
-        "2. Suppose you owe £50,000 on a mortgage at an Annual Percentage Rate of 6%. If you didn’t make any payments on this mortgage how much would you owe in total after one year?",
+        "Suppose you owe £50,000 on a mortgage at an Annual Percentage Rate of 6%. If you didn’t make any payments on this mortgage how much would you owe in total after one year?",
       textShort: "50k6c",
     },
     options: [

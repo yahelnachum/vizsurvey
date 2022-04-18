@@ -63,7 +63,7 @@ export function PostSurvey() {
                   aria-labelledby={"my-radio-group" + index}
                   className="radio-choice-label"
                 >
-                  <p>{question.textFull}</p>
+                  <p>{index + 1 + ". " + question.textFull}</p>
                   {options.map((option, index1) => (
                     <div key={index1}>
                       <label>
