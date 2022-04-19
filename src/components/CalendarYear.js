@@ -56,15 +56,16 @@ function Calendar() {
               .join("thead")
               .attr("id", "year-head");
             yearHead
-              .selectAll("tr")
+              .selectAll("#year-head-row")
               .data([null])
               .join("tr")
+              .attr("id", "year-head-row")
               .style("text-align", "center")
               .selectAll("#year-cell")
               .data([laterDate.year])
               .join("td")
               .attr("id", "year-cell")
-              .attr("style", "bold")
+              .attr("style", "font-size: large")
               .attr("colspan", 7)
               .text((d) => d);
             const yearBody = yearTable
@@ -73,12 +74,14 @@ function Calendar() {
               .join("tbody")
               .attr("id", "year-calendar-body");
             yearBody
-              .selectAll("tr")
+              .selectAll(".months-rows")
               .data(monthsMatrix)
               .join("tr")
-              .selectAll("td")
+              .attr("class", "months-rows")
+              .selectAll(".months-cells")
               .data((d) => d)
               .join("td")
+              .attr("class", "months-cells")
               .attr("width", () => monthTdSquareSizePx)
               .attr("height", () => monthTdSquareSizePx)
               .each(function (monthName, i, nodes) {
@@ -86,6 +89,11 @@ function Calendar() {
                   laterDate.year,
                   laterDate.month
                 );
+                const lastDayOfMonth = Math.max(...[].concat(...monthDays));
+                const firstDaysOfWeek = monthDays.reduce((acc, cv) => {
+                  return acc.concat(cv[0]);
+                }, []);
+
                 const dayTdSquareSizePx = Math.min(
                   monthTdSquareSizePx / monthDays.length,
                   monthTdSquareSizePx / 7
@@ -93,6 +101,7 @@ function Calendar() {
 
                 const createMonthTable = (parentTd) => {
                   const monthTableId = `#month-calendar-table-${monthName}`;
+                  const monthHeadId = `#month-calendar-head-${monthName}`;
                   const monthBodyId = `#month-calendar-body-${monthName}`;
 
                   const monthTable = parentTd
@@ -101,10 +110,10 @@ function Calendar() {
                     .join("table")
                     .attr("id", monthTableId);
                   const monthHead = monthTable
-                    .selectAll("#month-head")
+                    .selectAll(monthHeadId)
                     .data([null])
                     .join("thead")
-                    .attr("id", "month-head");
+                    .attr("id", monthHeadId);
                   monthHead
                     .selectAll(".month-name-row")
                     .data([null])
@@ -134,23 +143,33 @@ function Calendar() {
                     .data([null])
                     .join("tbody")
                     .attr("id", monthBodyId)
-                    .selectAll("tr")
+                    .selectAll(".month-body-rows")
                     .data(monthDays)
                     .join("tr")
-                    .selectAll("td")
-                    .data((d) => d)
+                    .attr("class", "month-body-rows")
+                    .selectAll(".month-body-cells")
+                    .data(
+                      (d) => d,
+                      (d) => d
+                    )
                     .join("td")
-                    .attr("class", function (d) {
-                      return d > 0 ? "day" : "day-empty";
-                    })
+                    .attr("class", "month-body-cells")
                     .attr("width", () => dayTdSquareSizePx)
                     .attr("height", () => dayTdSquareSizePx)
                     .attr("style", (d) =>
                       d > 0
-                        ? "border: 1px solid black; text-align: right; vertical-align: top; position: relative; overflow: hidden; white-space: nowrap;"
+                        ? "font-size:x-small; background-color: lightgrey; border: 2px solid white; border-radius: 5px; text-align: right; vertical-align: top; position: relative; overflow: hidden; white-space: nowrap;"
                         : "border: none;"
                     )
-                    .text((d) => (d > 0 ? d : ""));
+                    .text((d) => {
+                      if (d <= 0) return "";
+                      if (
+                        d === 1 ||
+                        d === lastDayOfMonth ||
+                        firstDaysOfWeek.includes(d)
+                      )
+                        return d;
+                    });
                   //
                   // .on("click", (d) => {
                   //   if (

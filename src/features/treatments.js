@@ -15,5 +15,5 @@ export const TREATMENTS_CSV = `treatment_id,position,view_type,interaction,varia
 8,1,calendarBar,titration,laterAmount,500,,2/1/2022,1000,,2/22/2022,1100,,100,100,,,,,8,8,Calendar MEL question with barchart and titration interaction month view.
 9,1,calendarWord,titration,laterAmount,500,,2/1/2022,1000,,2/22/2022,1100,,100,100,,,,,8,8,Calendar MEL question with word and titration interaction month view.
 10,1,calendarBar,drag,laterAmount,500,,2/1/2022,1000,,2/22/2022,1100,,100,100,,,,,8,8,Calendar MEL question with barchart and drag interaction month view.
-11,1,calendarWord,titration,laterAmount,500,,2/1/2022,1000,,10/1/2022,1100,,100,100,,,,,8,8,Calendar MEL question with barchart and drag interaction year calendar view.
+11,1,calendarWord,titration,laterAmount,500,,2/1/2022,1000,,10/1/2022,1100,,100,100,,,,,10,8,Calendar MEL question with barchart and drag interaction year calendar view.
 `;
