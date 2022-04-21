@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Button } from "react-bootstrap";
 import "./App.css";
 import Survey from "./components/Survey";
+import PostSurvey from "./components/PostSurvey";
 import { QueryParam } from "./components/QueryParam";
 import {
   fetchQuestions,
@@ -40,6 +41,7 @@ const App = () => {
               component={Instructions}
             />
             <Route path="/vizsurvey/survey" component={Survey} />
+            <Route path="/vizsurvey/post-survey" component={PostSurvey} />
             <Route path="/vizsurvey/thankyou" component={ThankYou} />
             <Route path="/vizsurvey/*" component={Home} />
           </Switch>

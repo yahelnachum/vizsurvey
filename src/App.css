@@ -20,6 +20,12 @@
   font-size: 1.25em;
 }
 
+.post-survey-separator {
+  width: 450px;
+  height: 5px;
+  background-color: rgba(0,0,0,0.1);
+}
+
 #home-text {
   text-align: left;
   padding: 1rem;
