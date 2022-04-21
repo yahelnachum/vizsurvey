@@ -94,7 +94,7 @@ export function MELForm() {
   );
 
   if (status === StatusType.Complete) {
-    return <Redirect to="/vizsurvey/thankyou" />;
+    return <Redirect to="/vizsurvey/post-survey" />;
   } else {
     dispatch(setQuestionShownTimestamp(Date.now()));
     return result;
