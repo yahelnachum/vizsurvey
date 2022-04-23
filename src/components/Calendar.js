@@ -171,13 +171,6 @@ function Calendar() {
                 });
             });
 
-            // works
-            // d3.select("#earlier-day")
-            //   .selectAll("svg")
-            //   .data([q.earlierAmount])
-            //   .enter()
-            //   .append("svg");
-
             if (q.viewType === ViewType.calendarWord) {
               d3.select("#earlier-day")
                 .selectAll("div")
@@ -200,75 +193,53 @@ function Calendar() {
                 .attr("class", "amount-div")
                 .attr("style", "text-align: center; font-weight: bold;")
                 .text(format("$,.0f")((d) => d));
-
-              // d3.select("#earlier-day")
-              //   .data([q.amountEarlier])
-              //   .join("div")
-              //   .attr("class", "amount-div")
-              //   .attr("style", "text-align: center; font-weight: bold;")
-              //   .text(format("$,.0f")(q.amountEarlier));
             } else {
+              const drawBar = (idPrefix, day, amount) => {
+                d3.select(`#${idPrefix}-day`)
+                  .selectAll("svg")
+                  .data([day], (d) => `svg-${month}-${year}`)
+                  .join(
+                    (enter) => {
+                      const svg = enter
+                        .append("svg")
+                        .attr("id", () => `${idPrefix}-svg`)
+                        .attr("x", "0")
+                        .attr("y", "0")
+                        .attr("width", () => tableSquareSizePx)
+                        .attr("height", () => tableSquareSizePx)
+                        .attr("style", "text-align: center");
+                      svg
+                        .append("text")
+                        .attr("x", () => tableSquareSizePx / 2)
+                        .attr("y", () => y(amount))
+                        .attr("style", "font-size:large;")
+                        .attr("text-anchor", "middle")
+                        .text(() => format("$,.0f")(amount));
+                      svg
+                        .append("rect")
+                        .attr("fill", "steelblue")
+                        .attr("x", "0")
+                        .attr("y", (d) => y(amount))
+                        .attr("width", tableSquareSizePx)
+                        .attr("height", () => {
+                          const y0 = y(0);
+                          const yamt = y(amount);
+                          return y0 - yamt;
+                        });
+                      return enter;
+                    },
+                    (update) => update,
+                    (exit) => exit.remove()
+                  );
+              };
+
               const yRange = [0, q.maxAmount];
               const y = scaleLinear()
                 .domain(yRange)
                 .range([tableSquareSizePx, 0]);
 
-              d3.select("#earlier-day")
-                .selectAll("svg")
-                .data(
-                  [q.earlierAmount],
-                  (d) => `svg-${month}-${earlierDay}-${year}-${d}`
-                )
-                .join("svg")
-                .attr("id", "earlier-svg")
-                .attr("x", "0")
-                .attr("y", "0")
-                .attr("width", () => tableSquareSizePx)
-                .attr("height", () => tableSquareSizePx)
-                .attr("style", "text-align: center");
-
-              d3.select("#earlier-svg")
-                .selectAll("text")
-                .data(
-                  [q.earlierAmount],
-                  (d) => `text-${month}-${earlierDay}-${year}-${d}`
-                )
-                .join("text")
-                .attr("x", () => tableSquareSizePx / 2)
-                .attr("y", (d) => y(q.amountEarlier))
-                .attr("style", "font-size:large;")
-                .attr("text-anchor", "middle")
-                .text(format("$,.0f")(q.amountEarlier));
-
-              d3.select("#earlier-svg")
-                .selectAll("rect")
-                .data(
-                  [q.earlierAmount],
-                  (d) => `rect-${month}-${earlierDay}-${year}-${d}`
-                )
-                .join("rect")
-                .attr("fill", "steelblue")
-                .attr("x", "0")
-                .attr("y", (d) => y(q.amountEarlier))
-                .attr("width", tableSquareSizePx)
-                .attr("height", (d) => {
-                  const y0 = y(0);
-                  const yamt = y(q.amountEarlier);
-                  return y0 - yamt;
-                });
-
-              d3.select("#later-day")
-                .selectAll("svg")
-                .data(
-                  [q.laterAmount],
-                  (d) => `svg-${month}-${laterDay}-${year}-${d}`
-                )
-                .join("svg")
-                .attr("x", "0")
-                .attr("y", "0")
-                .attr("width", () => tableSquareSizePx)
-                .attr("height", () => tableSquareSizePx)
-                .attr("style", "text-align: center");
+              drawBar("earlier", earlierDay, q.amountEarlier);
+              drawBar("later", laterDay, q.amountLater);
 
               // (enter) => {
               //   console.log("hello");
