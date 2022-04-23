@@ -61,6 +61,7 @@ function Calendar() {
             //   { day: earlierDay, amount: q.amountEarlier },
             //   { day: laterDay, amount: q.amountLater },
             // ];
+            const earlierLaterDays = [earlierDay, laterDay];
 
             const thead = table
               .selectAll("#month-head")
@@ -99,15 +100,17 @@ function Calendar() {
               .join("tbody")
               .attr("id", "calendar-body");
 
+            var earlyDayTd = null;
+            var lateDayTd = null;
             const td = tbody
               .selectAll(".day-rows")
-              .data(monthDays)
+              .data(monthDays, (d) => `tr-${month}-${d[0]}-${year}`)
               .join("tr")
               .attr("class", "day-rows")
               .selectAll(".day-cells")
               .data(
                 (d) => d,
-                (d) => d
+                (d) => `td-${month}-${d}-${year}`
               )
               .join("td")
               .attr("class", "day-cells")
@@ -147,144 +150,295 @@ function Calendar() {
                     );
                   }
                 }
-              })
-              .each(function (monthDay, i, nodes) {
-                if (monthDay < 0) return;
-                const td = d3.select(this);
-                td.selectAll(".day-div")
-                  .data([monthDay], (d) => {
-                    const key = `${month}-${d}-${year}`;
-                    return key;
-                  })
-                  .join("div")
-                  .attr("style", "float: right")
-                  .attr("class", "day-div")
-                  .text((d) => {
-                    if (d <= 0) return "";
-                    // if (
-                    //   d === 1 ||
-                    //   d === lastDayOfMonth ||
-                    //   firstDaysOfWeek.includes(d)
-                    // )
-                    return d;
-                  });
-                const amountText = format("$,.0f")(
-                  monthDay === earlierDay ? q.amountEarlier : q.amountLater
-                );
-                if (q.viewType === ViewType.calendarWord) {
-                  td.selectAll(".amount-div")
-                    .data([monthDay])
-                    .join("div")
-                    .attr("class", "amount-div")
-                    .attr("style", "text-align: center; font-weight: bold;")
-                    .text(amountText);
-                  return;
-                }
-                //const barHeight =
-                //  tableSquareSizePx -
-                //  select(this).select(".amount-div").node().offsetHeight;
-                const yRange = [0, q.maxAmount];
-                var y = null;
-                y = scaleLinear().domain(yRange).range([tableSquareSizePx, 0]);
-                td.selectAll("svg")
-                  .data([monthDay], (d) => {
-                    const key = `${month}-${d}-${year}`;
-                    return key;
-                  })
-                  .join(
-                    (enter) => {
-                      if (monthDay === earlierDay || monthDay === laterDay) {
-                        const svg = enter
-                          .append("svg")
-                          .attr("x", "0")
-                          .attr("y", "0")
-                          .attr("width", () => tableSquareSizePx)
-                          .attr("height", () => tableSquareSizePx)
-                          .attr("style", "text-align: center");
-                        svg
-                          .append("text")
-                          .attr("x", () => tableSquareSizePx / 2)
-                          .attr("y", (d) =>
-                            y(
-                              monthDay === earlierDay
-                                ? q.amountEarlier
-                                : q.amountLater
-                            )
-                          )
-                          .attr("style", "font-size:large;")
-                          .attr("text-anchor", "middle")
-                          .text(amountText);
-                        svg
-                          .append("rect")
-                          .attr("fill", "steelblue")
-                          .attr("x", "0")
-                          .attr("y", (d) =>
-                            y(
-                              monthDay === earlierDay
-                                ? q.amountEarlier
-                                : q.amountLater
-                            )
-                          )
-                          .attr("width", tableSquareSizePx)
-                          .attr("height", (d) => {
-                            const y0 = y(0);
-                            const yamt = y(
-                              d === earlierDay ? q.amountEarlier : q.amountLater
-                            );
-                            return y0 - yamt;
-                          });
-                      }
-                    },
-                    (update) => {
-                      update
-                        .selectAll("text")
-                        .attr("y", (d) =>
-                          y(
-                            monthDay === earlierDay
-                              ? q.amountEarlier
-                              : q.amountLater
-                          )
-                        )
-                        .text(amountText);
-                      update
-                        .selectAll("rect")
-                        .attr("y", (d) =>
-                          y(
-                            monthDay === earlierDay
-                              ? q.amountEarlier
-                              : q.amountLater
-                          )
-                        )
-                        .attr("height", (d) => {
-                          const y0 = y(0);
-                          const yamt = y(
-                            d === earlierDay ? q.amountEarlier : q.amountLater
-                          );
-                          return y0 - yamt;
-                        });
-                      return update;
-                    },
-                    function (exit) {
-                      const selection = d3.select(this).selectAll("svg");
-                      return selection.remove();
-                    }
-                  );
-                if (q.interaction === InteractionType.drag) {
-                  var dragHandler = drag().on("drag", function (d) {
-                    if (
-                      (d.subject === earlierDay &&
-                        q.variableAmount === VariableType.earlierAmount) ||
-                      (d.subject === laterDay &&
-                        q.variableAmount === VariableType.laterAmount)
-                    ) {
-                      select(this)
-                        .attr("y", d.y)
-                        .attr("height", y(0) - d.y);
-                    }
-                  });
-                  dragHandler(table.selectAll(".bar"));
-                }
               });
+
+            td.each(function (monthDay, i, nodes) {
+              if (monthDay < 0) return;
+              const td = d3.select(this);
+              td.selectAll(".day-div")
+                .data([monthDay], (d) => `div-${month}-${d}-${year}`)
+                .join("div")
+                .attr("style", "float: right")
+                .attr("class", "day-div")
+                .text((d) => {
+                  if (d <= 0) return "";
+                  if (
+                    d === 1 ||
+                    d === lastDayOfMonth ||
+                    firstDaysOfWeek.includes(d)
+                  )
+                    return d;
+                });
+            });
+
+            // works
+            // d3.select("#earlier-day")
+            //   .selectAll("svg")
+            //   .data([q.earlierAmount])
+            //   .enter()
+            //   .append("svg");
+
+            if (q.viewType === ViewType.calendarWord) {
+              d3.select("#earlier-day")
+                .selectAll("div")
+                .data(
+                  [q.earlierAmount],
+                  (d) => `div-${month}-${earlierDay}-${year}-${d}`
+                )
+                .join("div")
+                .attr("class", "amount-div")
+                .attr("style", "text-align: center; font-weight: bold;")
+                .text(format("$,.0f")((d) => d));
+
+              d3.select("#later-day")
+                .selectAll("div")
+                .data(
+                  [q.laterAmount],
+                  (d) => `div-${month}-${laterDay}-${year}-${d}`
+                )
+                .join("div")
+                .attr("class", "amount-div")
+                .attr("style", "text-align: center; font-weight: bold;")
+                .text(format("$,.0f")((d) => d));
+
+              // d3.select("#earlier-day")
+              //   .data([q.amountEarlier])
+              //   .join("div")
+              //   .attr("class", "amount-div")
+              //   .attr("style", "text-align: center; font-weight: bold;")
+              //   .text(format("$,.0f")(q.amountEarlier));
+            } else {
+              const yRange = [0, q.maxAmount];
+              const y = scaleLinear()
+                .domain(yRange)
+                .range([tableSquareSizePx, 0]);
+
+              d3.select("#earlier-day")
+                .selectAll("svg")
+                .data(
+                  [q.earlierAmount],
+                  (d) => `svg-${month}-${earlierDay}-${year}-${d}`
+                )
+                .join("svg")
+                .attr("id", "earlier-svg")
+                .attr("x", "0")
+                .attr("y", "0")
+                .attr("width", () => tableSquareSizePx)
+                .attr("height", () => tableSquareSizePx)
+                .attr("style", "text-align: center");
+
+              d3.select("#earlier-svg")
+                .selectAll("text")
+                .data(
+                  [q.earlierAmount],
+                  (d) => `text-${month}-${earlierDay}-${year}-${d}`
+                )
+                .join("text")
+                .attr("x", () => tableSquareSizePx / 2)
+                .attr("y", (d) => y(q.amountEarlier))
+                .attr("style", "font-size:large;")
+                .attr("text-anchor", "middle")
+                .text(format("$,.0f")(q.amountEarlier));
+
+              d3.select("#earlier-svg")
+                .selectAll("rect")
+                .data(
+                  [q.earlierAmount],
+                  (d) => `rect-${month}-${earlierDay}-${year}-${d}`
+                )
+                .join("rect")
+                .attr("fill", "steelblue")
+                .attr("x", "0")
+                .attr("y", (d) => y(q.amountEarlier))
+                .attr("width", tableSquareSizePx)
+                .attr("height", (d) => {
+                  const y0 = y(0);
+                  const yamt = y(q.amountEarlier);
+                  return y0 - yamt;
+                });
+
+              d3.select("#later-day")
+                .selectAll("svg")
+                .data(
+                  [q.laterAmount],
+                  (d) => `svg-${month}-${laterDay}-${year}-${d}`
+                )
+                .join("svg")
+                .attr("x", "0")
+                .attr("y", "0")
+                .attr("width", () => tableSquareSizePx)
+                .attr("height", () => tableSquareSizePx)
+                .attr("style", "text-align: center");
+
+              // (enter) => {
+              //   console.log("hello");
+              //   return enter
+              //     .append("svg")
+              //     .attr("x", "0")
+              //     .attr("y", "0")
+              //     .attr("width", () => tableSquareSizePx)
+              //     .attr("height", () => tableSquareSizePx)
+              //     .attr("style", "text-align: center");
+              // },
+              // (update) => update,
+              // (exit) => exit
+
+              // svg
+              //   .join("text")
+              //   .attr("x", () => tableSquareSizePx / 2)
+              //   .attr("y", (d) => y(q.amountEarlier))
+              //   .attr("style", "font-size:large;")
+              //   .attr("text-anchor", "middle")
+              //   .text(format("$,.0f")(q.amountEarlier));
+              // svg
+              //   .join("rect")
+              //   .attr("fill", "steelblue")
+              //   .attr("x", "0")
+              //   .attr("y", (d) => y(q.amountEarlier))
+              //   .attr("width", tableSquareSizePx)
+              //   .attr("height", (d) => {
+              //     const y0 = y(0);
+              //     const yamt = y(q.amountEarlier);
+              //     return y0 - yamt;
+              //   });
+            }
+
+            // .each(function (monthDay, i, nodes) {
+            //   if (monthDay < 0) return;
+            //   const td = d3.select(this);
+            //   td.selectAll(".day-div")
+            //     .data([monthDay], (d) => {
+            //       const key = `${month}-${d}-${year}`;
+            //       return key;
+            //     })
+            //     .join("div")
+            //     .attr("style", "float: right")
+            //     .attr("class", "day-div")
+            //     .text((d) => {
+            //       if (d <= 0) return "";
+            //       // if (
+            //       //   d === 1 ||
+            //       //   d === lastDayOfMonth ||
+            //       //   firstDaysOfWeek.includes(d)
+            //       // )
+            //       return d;
+            //     });
+            //   const amountText = format("$,.0f")(
+            //     monthDay === earlierDay ? q.amountEarlier : q.amountLater
+            //   );
+            //   if (q.viewType === ViewType.calendarWord) {
+            //     td.selectAll(".amount-div")
+            //       .data([monthDay])
+            //       .join("div")
+            //       .attr("class", "amount-div")
+            //       .attr("style", "text-align: center; font-weight: bold;")
+            //       .text(amountText);
+            //     return;
+            //   }
+            //   //const barHeight =
+            //   //  tableSquareSizePx -
+            //   //  select(this).select(".amount-div").node().offsetHeight;
+            //   const yRange = [0, q.maxAmount];
+            //   var y = null;
+            //   y = scaleLinear().domain(yRange).range([tableSquareSizePx, 0]);
+            //   td.selectAll("svg")
+            //     .data([monthDay], (d) => {
+            //       const key = `${month}-${d}-${year}`;
+            //       return key;
+            //     })
+            //     .join(
+            //       (enter) => {
+            //         if (monthDay === earlierDay || monthDay === laterDay) {
+            //           const svg = enter
+            //             .append("svg")
+            //             .attr("x", "0")
+            //             .attr("y", "0")
+            //             .attr("width", () => tableSquareSizePx)
+            //             .attr("height", () => tableSquareSizePx)
+            //             .attr("style", "text-align: center");
+            //           svg
+            //             .append("text")
+            //             .attr("x", () => tableSquareSizePx / 2)
+            //             .attr("y", (d) =>
+            //               y(
+            //                 monthDay === earlierDay
+            //                   ? q.amountEarlier
+            //                   : q.amountLater
+            //               )
+            //             )
+            //             .attr("style", "font-size:large;")
+            //             .attr("text-anchor", "middle")
+            //             .text(amountText);
+            //           svg
+            //             .append("rect")
+            //             .attr("fill", "steelblue")
+            //             .attr("x", "0")
+            //             .attr("y", (d) =>
+            //               y(
+            //                 monthDay === earlierDay
+            //                   ? q.amountEarlier
+            //                   : q.amountLater
+            //               )
+            //             )
+            //             .attr("width", tableSquareSizePx)
+            //             .attr("height", (d) => {
+            //               const y0 = y(0);
+            //               const yamt = y(
+            //                 d === earlierDay ? q.amountEarlier : q.amountLater
+            //               );
+            //               return y0 - yamt;
+            //             });
+            //         }
+            //       },
+            //       (update) => {
+            //         update
+            //           .selectAll("text")
+            //           .attr("y", (d) =>
+            //             y(
+            //               monthDay === earlierDay
+            //                 ? q.amountEarlier
+            //                 : q.amountLater
+            //             )
+            //           )
+            //           .text(amountText);
+            //         update
+            //           .selectAll("rect")
+            //           .attr("y", (d) =>
+            //             y(
+            //               monthDay === earlierDay
+            //                 ? q.amountEarlier
+            //                 : q.amountLater
+            //             )
+            //           )
+            //           .attr("height", (d) => {
+            //             const y0 = y(0);
+            //             const yamt = y(
+            //               d === earlierDay ? q.amountEarlier : q.amountLater
+            //             );
+            //             return y0 - yamt;
+            //           });
+            //         return update;
+            //       },
+            //       (exit) => {
+            //         return exit.remove();
+            //       }
+            //     );
+            //   if (q.interaction === InteractionType.drag) {
+            //     var dragHandler = drag().on("drag", function (d) {
+            //       if (
+            //         (d.subject === earlierDay &&
+            //           q.variableAmount === VariableType.earlierAmount) ||
+            //         (d.subject === laterDay &&
+            //           q.variableAmount === VariableType.laterAmount)
+            //       ) {
+            //         select(this)
+            //           .attr("y", d.y)
+            //           .attr("height", y(0) - d.y);
+            //       }
+            //     });
+            //     dragHandler(table.selectAll(".bar"));
+            //   }
+            // });
           },
           [q]
         )}
