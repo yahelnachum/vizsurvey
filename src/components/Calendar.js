@@ -1,9 +1,7 @@
-/* eslint-disable no-unused-vars */
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { select, format, scaleLinear, drag } from "d3";
-import * as d3 from "d3";
+import { select, format, scaleLinear } from "d3";
 import { Formik, Form } from "formik";
 import { Button } from "react-bootstrap";
 import { DateTime } from "luxon";
@@ -19,7 +17,6 @@ import { ChoiceType } from "../features/ChoiceType";
 import { StatusType } from "../features/StatusType";
 import { InteractionType } from "../features/InteractionType";
 import { ViewType } from "../features/ViewType";
-import { VariableType } from "../features/VariableType";
 
 var calendarMatrix = require("calendar-matrix");
 
@@ -46,8 +43,6 @@ function Calendar() {
     q.widthIn / 7
   );
 
-  //const barWidth = 0.15 * dpi; // bars are 0.1 inch wide
-
   const tableSquareSizePx = Math.round(tableSquareSizeIn * dpi);
 
   const result = (
@@ -57,12 +52,6 @@ function Calendar() {
         style={{ borderCollapse: "collapse", tableLayout: "fixed" }}
         ref={useD3(
           (table) => {
-            // const earlierLaterData = [
-            //   { day: earlierDay, amount: q.amountEarlier },
-            //   { day: laterDay, amount: q.amountLater },
-            // ];
-            const earlierLaterDays = [earlierDay, laterDay];
-
             const thead = table
               .selectAll("#month-head")
               .data([null])
@@ -100,316 +89,177 @@ function Calendar() {
               .join("tbody")
               .attr("id", "calendar-body");
 
-            var earlyDayTd = null;
-            var lateDayTd = null;
-            const td = tbody
+            const yRange = [0, q.maxAmount];
+            const y = scaleLinear()
+              .domain(yRange)
+              .range([tableSquareSizePx, 0]);
+
+            const drawBar = (parent, idPrefix, day, amount) => {
+              const svg = parent
+                .append("svg")
+                .data([day], (d) => d)
+                .attr("id", () => `${idPrefix}-svg`)
+                .attr("x", "0")
+                .attr("y", "0")
+                .attr("width", () => tableSquareSizePx)
+                .attr("height", () => tableSquareSizePx)
+                .attr("style", "text-align: center");
+              svg
+                .append("rect")
+                .data([day], (d) => d)
+                .attr("id", () => `${idPrefix}-rect`)
+                .attr("fill", "black")
+                .attr("x", "0")
+                .attr("y", () => y(amount))
+                .attr("width", tableSquareSizePx)
+                .attr("height", () => {
+                  const y0 = y(0);
+                  const yamt = y(amount);
+                  return y0 - yamt;
+                });
+              svg
+                .append("text")
+                .data([day], (d) => d)
+                .attr("id", () => `${idPrefix}-text`)
+                .attr("x", () => tableSquareSizePx / 2)
+                .attr("y", () => y(amount))
+                .attr("style", "font-size:large;")
+                .attr("fill", "white")
+                .attr("text-anchor", "middle")
+                .attr("dominant-baseline", "hanging")
+                .text(() => format("$,.0f")(amount));
+            };
+
+            const updateBar = (parent, idPrefix, amount) => {
+              parent
+                .select(`#${idPrefix}-text`)
+                .attr("y", () => y(amount))
+                .text(() => format("$,.0f")(amount));
+              parent
+                .select(`#${idPrefix}-rect`)
+                .attr("y", () => y(amount))
+                .attr("height", () => {
+                  const y0 = y(0);
+                  const yamt = y(amount);
+                  return y0 - yamt;
+                });
+            };
+
+            const drawWord = (parent, idPrefix, day, amount) => {
+              parent
+                .append("div")
+                .data([day], (d) => d)
+                .attr("id", `${idPrefix}-div`)
+                .attr("class", "amount-div")
+                .attr(
+                  "style",
+                  "text-align: center; font-weight: bold; font-size: large;"
+                )
+                .text(format("$,.0f")(amount));
+            };
+
+            const updateWord = (parent, idPrefix, amount) => {
+              parent.select(`${idPrefix}-div`).text(format("$,.0f")(amount));
+            };
+
+            tbody
               .selectAll(".day-rows")
-              .data(monthDays, (d) => `tr-${month}-${d[0]}-${year}`)
+              .data(monthDays, (d) => d)
               .join("tr")
               .attr("class", "day-rows")
               .selectAll(".day-cells")
               .data(
                 (d) => d,
-                (d) => `td-${month}-${d}-${year}`
+                (d) => d
               )
-              .join("td")
-              .attr("class", "day-cells")
-              .attr("id", (d) =>
-                d === earlierDay
-                  ? "earlier-day"
-                  : d === laterDay
-                  ? "later-day"
-                  : null
-              )
-              .attr("width", () => tableSquareSizePx)
-              .attr("height", () => tableSquareSizePx)
-              .attr("style", (d) =>
-                d > 0
-                  ? //? "border: 1px solid black; text-align: right; vertical-align: top; position: relative; overflow: hidden; white-space: nowrap;"
-                    "font-size:x-small; background-color: lightgrey; border: 2px solid white; border-radius: 5px; text-align: right; vertical-align: top; position: relative; overflow: hidden; white-space: nowrap;"
-                  : "border: none;"
-              )
-              .on("click", (d) => {
-                if (
-                  q.interaction === InteractionType.titration ||
-                  q.interaction === InteractionType.none
-                ) {
-                  if (d.target.__data__ === earlierDay) {
-                    dispatch(
-                      answer({
-                        choice: ChoiceType.earlier,
-                        choiceTimestamp: DateTime.now(),
-                      })
-                    );
-                  } else if (d.target.__data__ === laterDay) {
-                    dispatch(
-                      answer({
-                        choice: ChoiceType.later,
-                        choiceTimestamp: DateTime.now(),
-                      })
-                    );
+              .join(
+                (enter) => {
+                  enter
+                    .append("td")
+                    .attr("class", "day-cells")
+                    .attr("id", (d) =>
+                      d === earlierDay
+                        ? "earlier-day"
+                        : d === laterDay
+                        ? "later-day"
+                        : null
+                    )
+                    .attr("width", () => tableSquareSizePx)
+                    .attr("height", () => tableSquareSizePx)
+                    .attr("style", (d) =>
+                      d > 0
+                        ? //? "border: 1px solid black; text-align: right; vertical-align: top; position: relative; overflow: hidden; white-space: nowrap;"
+                          "font-size:x-small; background-color: lightgrey; border: 2px solid white; border-radius: 5px; text-align: right; vertical-align: top; position: relative; overflow: hidden; white-space: nowrap;"
+                        : "border: none;"
+                    )
+                    .on("click", (d) => {
+                      if (
+                        q.interaction === InteractionType.titration ||
+                        q.interaction === InteractionType.none
+                      ) {
+                        if (d.target.__data__ === earlierDay) {
+                          dispatch(
+                            answer({
+                              choice: ChoiceType.earlier,
+                              choiceTimestamp: DateTime.now(),
+                            })
+                          );
+                        } else if (d.target.__data__ === laterDay) {
+                          dispatch(
+                            answer({
+                              choice: ChoiceType.later,
+                              choiceTimestamp: DateTime.now(),
+                            })
+                          );
+                        }
+                      }
+                    })
+                    .each(function (d) {
+                      const td = select(this);
+                      if (d >= 0) {
+                        td.append("div")
+                          .attr("style", "float: right")
+                          .attr("class", "day-div")
+                          .text((d) => {
+                            if (d <= 0) return "";
+                            if (
+                              d === 1 ||
+                              d === lastDayOfMonth ||
+                              firstDaysOfWeek.includes(d)
+                            )
+                              return d;
+                          });
+                      }
+                      if (d === earlierDay || d === laterDay) {
+                        if (q.viewType === ViewType.calendarWord) {
+                          drawWord(
+                            td,
+                            d === earlierDay ? "earlier" : "later",
+                            d,
+                            d === earlierDay ? q.amountEarlier : q.amountLater
+                          );
+                        } else if (q.viewType === ViewType.calendarBar) {
+                          drawBar(
+                            td,
+                            d === earlierDay ? "earlier" : "later",
+                            d,
+                            d === earlierDay ? q.amountEarlier : q.amountLater
+                          );
+                        }
+                      }
+                    });
+                },
+                (update) => {
+                  if (q.viewType === ViewType.calendarBar) {
+                    updateBar(update, "earlier", q.amountEarlier);
+                    updateBar(update, "later", q.amountLater);
+                  } else if (q.viewType === ViewType.calendarWord) {
+                    updateWord(update, "earlier", q.amountEarlier);
+                    updateWord(update, "later", q.amountLater);
                   }
-                }
-              });
-
-            td.each(function (monthDay, i, nodes) {
-              if (monthDay < 0) return;
-              const td = d3.select(this);
-              td.selectAll(".day-div")
-                .data([monthDay], (d) => `div-${month}-${d}-${year}`)
-                .join("div")
-                .attr("style", "float: right")
-                .attr("class", "day-div")
-                .text((d) => {
-                  if (d <= 0) return "";
-                  if (
-                    d === 1 ||
-                    d === lastDayOfMonth ||
-                    firstDaysOfWeek.includes(d)
-                  )
-                    return d;
-                });
-            });
-
-            if (q.viewType === ViewType.calendarWord) {
-              d3.select("#earlier-day")
-                .selectAll("div")
-                .data(
-                  [q.earlierAmount],
-                  (d) => `div-${month}-${earlierDay}-${year}-${d}`
-                )
-                .join("div")
-                .attr("class", "amount-div")
-                .attr("style", "text-align: center; font-weight: bold;")
-                .text(format("$,.0f")((d) => d));
-
-              d3.select("#later-day")
-                .selectAll("div")
-                .data(
-                  [q.laterAmount],
-                  (d) => `div-${month}-${laterDay}-${year}-${d}`
-                )
-                .join("div")
-                .attr("class", "amount-div")
-                .attr("style", "text-align: center; font-weight: bold;")
-                .text(format("$,.0f")((d) => d));
-            } else {
-              const drawBar = (idPrefix, day, amount) => {
-                d3.select(`#${idPrefix}-day`)
-                  .selectAll("svg")
-                  .data([day], (d) => `svg-${month}-${year}`)
-                  .join(
-                    (enter) => {
-                      const svg = enter
-                        .append("svg")
-                        .attr("id", () => `${idPrefix}-svg`)
-                        .attr("x", "0")
-                        .attr("y", "0")
-                        .attr("width", () => tableSquareSizePx)
-                        .attr("height", () => tableSquareSizePx)
-                        .attr("style", "text-align: center");
-                      svg
-                        .append("text")
-                        .attr("x", () => tableSquareSizePx / 2)
-                        .attr("y", () => y(amount))
-                        .attr("style", "font-size:large;")
-                        .attr("text-anchor", "middle")
-                        .text(() => format("$,.0f")(amount));
-                      svg
-                        .append("rect")
-                        .attr("fill", "steelblue")
-                        .attr("x", "0")
-                        .attr("y", (d) => y(amount))
-                        .attr("width", tableSquareSizePx)
-                        .attr("height", () => {
-                          const y0 = y(0);
-                          const yamt = y(amount);
-                          return y0 - yamt;
-                        });
-                      return enter;
-                    },
-                    (update) => update,
-                    (exit) => exit.remove()
-                  );
-              };
-
-              const yRange = [0, q.maxAmount];
-              const y = scaleLinear()
-                .domain(yRange)
-                .range([tableSquareSizePx, 0]);
-
-              drawBar("earlier", earlierDay, q.amountEarlier);
-              drawBar("later", laterDay, q.amountLater);
-
-              // (enter) => {
-              //   console.log("hello");
-              //   return enter
-              //     .append("svg")
-              //     .attr("x", "0")
-              //     .attr("y", "0")
-              //     .attr("width", () => tableSquareSizePx)
-              //     .attr("height", () => tableSquareSizePx)
-              //     .attr("style", "text-align: center");
-              // },
-              // (update) => update,
-              // (exit) => exit
-
-              // svg
-              //   .join("text")
-              //   .attr("x", () => tableSquareSizePx / 2)
-              //   .attr("y", (d) => y(q.amountEarlier))
-              //   .attr("style", "font-size:large;")
-              //   .attr("text-anchor", "middle")
-              //   .text(format("$,.0f")(q.amountEarlier));
-              // svg
-              //   .join("rect")
-              //   .attr("fill", "steelblue")
-              //   .attr("x", "0")
-              //   .attr("y", (d) => y(q.amountEarlier))
-              //   .attr("width", tableSquareSizePx)
-              //   .attr("height", (d) => {
-              //     const y0 = y(0);
-              //     const yamt = y(q.amountEarlier);
-              //     return y0 - yamt;
-              //   });
-            }
-
-            // .each(function (monthDay, i, nodes) {
-            //   if (monthDay < 0) return;
-            //   const td = d3.select(this);
-            //   td.selectAll(".day-div")
-            //     .data([monthDay], (d) => {
-            //       const key = `${month}-${d}-${year}`;
-            //       return key;
-            //     })
-            //     .join("div")
-            //     .attr("style", "float: right")
-            //     .attr("class", "day-div")
-            //     .text((d) => {
-            //       if (d <= 0) return "";
-            //       // if (
-            //       //   d === 1 ||
-            //       //   d === lastDayOfMonth ||
-            //       //   firstDaysOfWeek.includes(d)
-            //       // )
-            //       return d;
-            //     });
-            //   const amountText = format("$,.0f")(
-            //     monthDay === earlierDay ? q.amountEarlier : q.amountLater
-            //   );
-            //   if (q.viewType === ViewType.calendarWord) {
-            //     td.selectAll(".amount-div")
-            //       .data([monthDay])
-            //       .join("div")
-            //       .attr("class", "amount-div")
-            //       .attr("style", "text-align: center; font-weight: bold;")
-            //       .text(amountText);
-            //     return;
-            //   }
-            //   //const barHeight =
-            //   //  tableSquareSizePx -
-            //   //  select(this).select(".amount-div").node().offsetHeight;
-            //   const yRange = [0, q.maxAmount];
-            //   var y = null;
-            //   y = scaleLinear().domain(yRange).range([tableSquareSizePx, 0]);
-            //   td.selectAll("svg")
-            //     .data([monthDay], (d) => {
-            //       const key = `${month}-${d}-${year}`;
-            //       return key;
-            //     })
-            //     .join(
-            //       (enter) => {
-            //         if (monthDay === earlierDay || monthDay === laterDay) {
-            //           const svg = enter
-            //             .append("svg")
-            //             .attr("x", "0")
-            //             .attr("y", "0")
-            //             .attr("width", () => tableSquareSizePx)
-            //             .attr("height", () => tableSquareSizePx)
-            //             .attr("style", "text-align: center");
-            //           svg
-            //             .append("text")
-            //             .attr("x", () => tableSquareSizePx / 2)
-            //             .attr("y", (d) =>
-            //               y(
-            //                 monthDay === earlierDay
-            //                   ? q.amountEarlier
-            //                   : q.amountLater
-            //               )
-            //             )
-            //             .attr("style", "font-size:large;")
-            //             .attr("text-anchor", "middle")
-            //             .text(amountText);
-            //           svg
-            //             .append("rect")
-            //             .attr("fill", "steelblue")
-            //             .attr("x", "0")
-            //             .attr("y", (d) =>
-            //               y(
-            //                 monthDay === earlierDay
-            //                   ? q.amountEarlier
-            //                   : q.amountLater
-            //               )
-            //             )
-            //             .attr("width", tableSquareSizePx)
-            //             .attr("height", (d) => {
-            //               const y0 = y(0);
-            //               const yamt = y(
-            //                 d === earlierDay ? q.amountEarlier : q.amountLater
-            //               );
-            //               return y0 - yamt;
-            //             });
-            //         }
-            //       },
-            //       (update) => {
-            //         update
-            //           .selectAll("text")
-            //           .attr("y", (d) =>
-            //             y(
-            //               monthDay === earlierDay
-            //                 ? q.amountEarlier
-            //                 : q.amountLater
-            //             )
-            //           )
-            //           .text(amountText);
-            //         update
-            //           .selectAll("rect")
-            //           .attr("y", (d) =>
-            //             y(
-            //               monthDay === earlierDay
-            //                 ? q.amountEarlier
-            //                 : q.amountLater
-            //             )
-            //           )
-            //           .attr("height", (d) => {
-            //             const y0 = y(0);
-            //             const yamt = y(
-            //               d === earlierDay ? q.amountEarlier : q.amountLater
-            //             );
-            //             return y0 - yamt;
-            //           });
-            //         return update;
-            //       },
-            //       (exit) => {
-            //         return exit.remove();
-            //       }
-            //     );
-            //   if (q.interaction === InteractionType.drag) {
-            //     var dragHandler = drag().on("drag", function (d) {
-            //       if (
-            //         (d.subject === earlierDay &&
-            //           q.variableAmount === VariableType.earlierAmount) ||
-            //         (d.subject === laterDay &&
-            //           q.variableAmount === VariableType.laterAmount)
-            //       ) {
-            //         select(this)
-            //           .attr("y", d.y)
-            //           .attr("height", y(0) - d.y);
-            //       }
-            //     });
-            //     dragHandler(table.selectAll(".bar"));
-            //   }
-            // });
+                },
+                (exit) => exit.remove()
+              );
           },
           [q]
         )}
