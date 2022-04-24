@@ -35,6 +35,7 @@ cypress/plugins
 cypress/screenshots
 cypress/support
 cypress/videos
+
 doc/~$MCL questions.xlsx
 
 #amplify-do-not-edit-begin
