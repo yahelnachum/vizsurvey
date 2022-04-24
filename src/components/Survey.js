@@ -20,8 +20,8 @@ export function Survey() {
   };
 
   const monthsApart = question.dateLater
-    .diff(question.dateEarlier, "months")
-    .toObject().months;
+    ? question.dateLater.diff(question.dateEarlier, "months").toObject().months
+    : null;
 
   return (
     <div style={divCenterContentStyle}>
