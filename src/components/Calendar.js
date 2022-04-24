@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { select, format, scaleLinear } from "d3";
+import { select, format, scaleLinear, drag } from "d3";
 import { Formik, Form } from "formik";
 import { Button } from "react-bootstrap";
 import { DateTime } from "luxon";
@@ -17,6 +17,7 @@ import { ChoiceType } from "../features/ChoiceType";
 import { StatusType } from "../features/StatusType";
 import { InteractionType } from "../features/InteractionType";
 import { ViewType } from "../features/ViewType";
+import { VariableType } from "../features/VariableType";
 
 var calendarMatrix = require("calendar-matrix");
 
@@ -108,6 +109,7 @@ function Calendar() {
                 .append("rect")
                 .data([day], (d) => d)
                 .attr("id", () => `${idPrefix}-rect`)
+                .attr("class", "bar")
                 .attr("fill", "black")
                 .attr("x", "0")
                 .attr("y", () => y(amount))
@@ -261,6 +263,21 @@ function Calendar() {
                 },
                 (exit) => exit.remove()
               );
+            if (q.interaction === InteractionType.drag) {
+              var dragHandler = drag().on("drag", function (d) {
+                if (
+                  (d.subject === earlierDay &&
+                    q.variableAmount === VariableType.earlierAmount) ||
+                  (d.subject === laterDay &&
+                    q.variableAmount === VariableType.laterAmount)
+                ) {
+                  select(this)
+                    .attr("y", d.y)
+                    .attr("height", y(0) - d.y);
+                }
+              });
+              dragHandler(table.selectAll(".bar"));
+            }
           },
           [q]
         )}
