@@ -22,6 +22,7 @@ export class Answer {
     widthIn: widthIn,
     heightIn: heightIn,
     choice: choice,
+    dragAmount: dragAmount,
     shownTimestamp: shownTimestamp,
     choiceTimestamp: choiceTimestamp,
     highup: highup,
@@ -50,6 +51,7 @@ export class Answer {
     this.widthIn = widthIn;
     this.heightIn = heightIn;
     this.choice = choice;
+    this.dragAmount = dragAmount;
     this.shownTimestamp = shownTimestamp;
     this.choiceTimestamp = choiceTimestamp;
     this.highup = highup;

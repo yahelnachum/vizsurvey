@@ -181,6 +181,7 @@ export class QuestionEngine {
     latestAnswer.choice = action.payload.choice;
     latestAnswer.choiceTimestamp =
       action.payload.choiceTimestamp.toFormat(TIMESTAMP_FORMAT);
+    latestAnswer.dragAmount = action.payload.dragAmount;
     if (
       treatment.interaction === InteractionType.none ||
       treatment.interaction === InteractionType.drag

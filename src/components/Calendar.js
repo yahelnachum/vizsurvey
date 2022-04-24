@@ -27,24 +27,45 @@ function Calendar() {
   const status = useSelector(fetchStatus);
 
   const monthDays = calendarMatrix(q.dateEarlier.toJSDate());
-  const month = q.dateEarlier.month;
-  const monthName = monthNames[month - 1];
+
   const earlierDay = q.dateEarlier.day;
   const laterDay = q.dateLater.day;
+  const monthDaysAmounts = monthDays.map((week) =>
+    week.map((day) => {
+      return {
+        day: day,
+        amount:
+          day === earlierDay
+            ? q.amountEarlier
+            : day === laterDay
+            ? q.amountLater
+            : null,
+        type:
+          day === earlierDay
+            ? VariableType.earlierAmount
+            : day === laterDay
+            ? VariableType.laterAmount
+            : VariableType.none,
+      };
+    })
+  );
+
   const year = q.dateLater.year;
   const lastDayOfMonth = Math.max(...[].concat(...monthDays));
-  const firstDaysOfWeek = monthDays.reduce((acc, cv) => {
-    return acc.concat(cv[0]);
+  const firstDaysOfWeek = monthDaysAmounts.reduce((acc, cv) => {
+    return acc.concat(cv[0].day);
   }, []);
 
   const dpi = window.devicePixelRatio >= 2 ? 132 : 96;
 
   const tableSquareSizeIn = Math.min(
-    q.heightIn / monthDays.length,
+    q.heightIn / monthDaysAmounts.length,
     q.widthIn / 7
   );
 
   const tableSquareSizePx = Math.round(tableSquareSizeIn * dpi);
+
+  var dragAmount = null;
 
   const result = (
     <div>
@@ -71,7 +92,7 @@ function Calendar() {
               .attr("id", "month-year-cell")
               .attr("style", "font-size: large")
               .attr("colspan", 7)
-              .text((d) => `${monthName} ${d}`);
+              .text((d) => `${monthNames[q.dateEarlier.month - 1]} ${d}`);
             thead
               .selectAll(".weekday-name-row")
               .data([null])
@@ -95,85 +116,87 @@ function Calendar() {
               .domain(yRange)
               .range([tableSquareSizePx, 0]);
 
-            const drawBar = (parent, idPrefix, day, amount) => {
+            const drawBar = (parent, idPrefix, dayAndAmount) => {
               const svg = parent
                 .append("svg")
-                .data([day], (d) => d)
-                .attr("id", () => `${idPrefix}-svg`)
+                .data([dayAndAmount], (d) => JSON.stringify(d))
+                .attr("id", `${idPrefix}-svg`)
                 .attr("x", "0")
                 .attr("y", "0")
-                .attr("width", () => tableSquareSizePx)
-                .attr("height", () => tableSquareSizePx)
+                .attr("width", tableSquareSizePx)
+                .attr("height", tableSquareSizePx)
                 .attr("style", "text-align: center");
               svg
                 .append("rect")
-                .data([day], (d) => d)
-                .attr("id", () => `${idPrefix}-rect`)
+                .data([dayAndAmount], (d) => JSON.stringify(d))
+                .attr("id", `${idPrefix}-rect`)
                 .attr("class", "bar")
                 .attr("fill", "black")
                 .attr("x", "0")
-                .attr("y", () => y(amount))
+                .attr("y", (d) => y(d.amount))
                 .attr("width", tableSquareSizePx)
-                .attr("height", () => {
+                .attr("height", (d) => {
                   const y0 = y(0);
-                  const yamt = y(amount);
+                  const yamt = y(d.amount);
                   return y0 - yamt;
                 });
               svg
                 .append("text")
-                .data([day], (d) => d)
-                .attr("id", () => `${idPrefix}-text`)
-                .attr("x", () => tableSquareSizePx / 2)
-                .attr("y", () => y(amount))
+                .data([dayAndAmount], (d) => JSON.stringify(d))
+                .attr("id", `${idPrefix}-text`)
+                .attr("x", tableSquareSizePx / 2)
+                .attr("y", (d) => y(d.amount))
                 .attr("style", "font-size:large;")
                 .attr("fill", "white")
                 .attr("text-anchor", "middle")
                 .attr("dominant-baseline", "hanging")
-                .text(() => format("$,.0f")(amount));
+                .text((d) => format("$,.0f")(d.amount));
             };
 
-            const updateBar = (parent, idPrefix, amount) => {
+            const updateBar = (parent, idPrefix) => {
+              console.log("in updateBar");
               parent
                 .select(`#${idPrefix}-text`)
-                .attr("y", () => y(amount))
-                .text(() => format("$,.0f")(amount));
+                .attr("y", (d) => y(d.amount))
+                .text((d) => format("$,.0f")(d.amount));
               parent
                 .select(`#${idPrefix}-rect`)
-                .attr("y", () => y(amount))
-                .attr("height", () => {
+                .attr("y", (d) => y(d.amount))
+                .attr("height", (d) => {
+                  console.log(`d.amount=${d.amount}`);
                   const y0 = y(0);
-                  const yamt = y(amount);
+                  const yamt = y(d.amount);
                   return y0 - yamt;
                 });
             };
 
-            const drawWord = (parent, idPrefix, day, amount) => {
+            const drawWord = (parent, idPrefix, dayAndAmount) => {
               parent
                 .append("div")
-                .data([day], (d) => d)
+                .data([dayAndAmount], (d) => JSON.stringify(d))
                 .attr("id", `${idPrefix}-div`)
                 .attr("class", "amount-div")
                 .attr(
                   "style",
                   "position: absolute; top: 50%; left: 50%; transform: translateX(-50%) translateY(-50%); font-weight: bold; font-size: large;"
                 )
-                .text(format("$,.0f")(amount));
+                .text(format("$,.0f")(dayAndAmount.amount));
             };
 
-            const updateWord = (parent, idPrefix, amount) => {
+            const updateWord = (parent, idPrefix, dayAndAmount) => {
               const selection = parent.select(`#${idPrefix}-div`);
-              selection.text(format("$,.0f")(amount));
+              selection.text(format("$,.0f")(dayAndAmount.amount));
             };
 
             tbody
               .selectAll(".day-rows")
-              .data(monthDays, (d) => d)
+              .data(monthDaysAmounts, (d) => JSON.stringify(d))
               .join("tr")
               .attr("class", "day-rows")
               .selectAll(".day-cells")
               .data(
                 (d) => d,
-                (d) => d
+                (d) => JSON.stringify(d)
               )
               .join(
                 (enter) => {
@@ -181,16 +204,16 @@ function Calendar() {
                     .append("td")
                     .attr("class", "day-cells")
                     .attr("id", (d) =>
-                      d === earlierDay
+                      d.day === earlierDay
                         ? "earlier-day"
-                        : d === laterDay
+                        : d.day === laterDay
                         ? "later-day"
                         : null
                     )
-                    .attr("width", () => tableSquareSizePx)
-                    .attr("height", () => tableSquareSizePx)
+                    .attr("width", tableSquareSizePx)
+                    .attr("height", tableSquareSizePx)
                     .attr("style", (d) =>
-                      d > 0
+                      d.day > 0
                         ? //? "border: 1px solid black; text-align: right; vertical-align: top; position: relative; overflow: hidden; white-space: nowrap;"
                           "font-size:x-small; background-color: lightgrey; border: 2px solid white; border-radius: 5px; text-align: right; vertical-align: top; position: relative; overflow: hidden; white-space: nowrap;"
                         : "border: none;"
@@ -200,14 +223,14 @@ function Calendar() {
                         q.interaction === InteractionType.titration ||
                         q.interaction === InteractionType.none
                       ) {
-                        if (d.target.__data__ === earlierDay) {
+                        if (d.target.__data__.day === earlierDay) {
                           dispatch(
                             answer({
                               choice: ChoiceType.earlier,
                               choiceTimestamp: DateTime.now(),
                             })
                           );
-                        } else if (d.target.__data__ === laterDay) {
+                        } else if (d.target.__data__.day === laterDay) {
                           dispatch(
                             answer({
                               choice: ChoiceType.later,
@@ -219,61 +242,58 @@ function Calendar() {
                     })
                     .each(function (d) {
                       const td = select(this);
-                      if (d >= 0) {
+                      if (d.day >= 0) {
                         td.append("div")
                           .attr("style", "float: right")
                           .attr("class", "day-div")
                           .text((d) => {
-                            if (d <= 0) return "";
+                            if (d.day <= 0) return "";
                             if (
-                              d === 1 ||
-                              d === lastDayOfMonth ||
-                              firstDaysOfWeek.includes(d)
+                              d.day === 1 ||
+                              d.day === lastDayOfMonth ||
+                              firstDaysOfWeek.includes(d.day)
                             )
-                              return d;
+                              return d.day;
                           });
                       }
-                      if (d === earlierDay || d === laterDay) {
+                      if (d.day === earlierDay || d.day === laterDay) {
                         if (q.viewType === ViewType.calendarWord) {
                           drawWord(
                             td,
-                            d === earlierDay ? "earlier" : "later",
-                            d,
-                            d === earlierDay ? q.amountEarlier : q.amountLater
+                            d.day === earlierDay ? "earlier" : "later",
+                            d
                           );
                         } else if (q.viewType === ViewType.calendarBar) {
                           drawBar(
                             td,
-                            d === earlierDay ? "earlier" : "later",
-                            d,
-                            d === earlierDay ? q.amountEarlier : q.amountLater
+                            d.day === earlierDay ? "earlier" : "later",
+                            d
                           );
                         }
                       }
                     });
                 },
                 (update) => {
+                  console.log("In update");
                   if (q.viewType === ViewType.calendarBar) {
-                    updateBar(update, "earlier", q.amountEarlier);
-                    updateBar(update, "later", q.amountLater);
+                    updateBar(update, "earlier");
+                    updateBar(update, "later");
                   } else if (q.viewType === ViewType.calendarWord) {
-                    updateWord(update, "earlier", q.amountEarlier);
-                    updateWord(update, "later", q.amountLater);
+                    updateWord(update, "earlier");
+                    updateWord(update, "later");
                   }
                 },
                 (exit) => exit.remove()
               );
             if (q.interaction === InteractionType.drag) {
               var dragHandler = drag().on("drag", function (d) {
-                if (
-                  (d.subject === earlierDay &&
-                    q.variableAmount === VariableType.earlierAmount) ||
-                  (d.subject === laterDay &&
-                    q.variableAmount === VariableType.laterAmount)
-                ) {
+                if (d.subject.type === q.variableAmount) {
                   select(this)
                     .attr("y", d.y)
                     .attr("height", y(0) - d.y);
+                  d.subject.amount = y.invert(d.y);
+                  console.log(d.subject.amount);
+                  dragAmount = d.subject;
                 }
               });
               dragHandler(table.selectAll(".bar"));
@@ -293,8 +313,9 @@ function Calendar() {
             setTimeout(() => {
               dispatch(
                 answer({
-                  choice: ChoiceType.earlier,
+                  choice: q.variableAmount,
                   choiceTimestamp: DateTime.now(),
+                  dragAmount: dragAmount.amount,
                 })
               );
               setSubmitting(false);
