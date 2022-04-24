@@ -153,13 +153,14 @@ function Calendar() {
                 .attr("class", "amount-div")
                 .attr(
                   "style",
-                  "text-align: center; font-weight: bold; font-size: large;"
+                  "position: absolute; top: 50%; left: 50%; transform: translateX(-50%) translateY(-50%); font-weight: bold; font-size: large;"
                 )
                 .text(format("$,.0f")(amount));
             };
 
             const updateWord = (parent, idPrefix, amount) => {
-              parent.select(`${idPrefix}-div`).text(format("$,.0f")(amount));
+              const selection = parent.select(`#${idPrefix}-div`);
+              selection.text(format("$,.0f")(amount));
             };
 
             tbody
