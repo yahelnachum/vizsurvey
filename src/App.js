@@ -180,6 +180,15 @@ const Home = () => {
                 }
               </Link>
             </p>
+            <p>
+              <Link id="12" to="/vizsurvey/instructions?treatment_id=12">
+                {
+                  allTreatments.filter(
+                    (d) => d.treatmentId === 12 && d.position === 1
+                  )[0].comment
+                }
+              </Link>
+            </p>
           </p>
         )}
       </div>
@@ -267,17 +276,15 @@ const Instructions = () => {
           }
         })()}
       </span>
-      <FullScreen handle={handle}>
-        <Link to="/vizsurvey/survey">
-          <Button
-            size="lg"
-            onClick={surveyButtonClicked}
-            style={buttonCenterContentStyle}
-          >
-            Start Survey
-          </Button>
-        </Link>
-      </FullScreen>
+      <Link to="/vizsurvey/survey">
+        <Button
+          size="lg"
+          onClick={surveyButtonClicked}
+          style={buttonCenterContentStyle}
+        >
+          Start Survey
+        </Button>
+      </Link>
     </div>
   );
 };

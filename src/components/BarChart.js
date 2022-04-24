@@ -50,7 +50,7 @@ function BarChart() {
   const barAreaWidthUC = totalWidthUC - leftOffSetUC;
   const barAreaHeightUC = totalHeightUC - bottomOffSetUC;
 
-  const barWidth = 0.1 * scaleHorizUCPerIn; // bars are 0.1 inch wide
+  const barWidth = 0.15 * scaleHorizUCPerIn; // bars are 0.1 inch wide
 
   // SVG thinks the resolution is 96 ppi when macbook is 132 ppi so we need to adjust by device pixel ratio
   const pixelRatioScale = window.devicePixelRatio >= 2 ? 132 / 96 : 1;

@@ -8,11 +8,14 @@
 3,1,calendarBar,none,none,300,,2/1/2022,700,,2/22/2022,1100,,100,100,,,,,8,8,Calendar MEL question with barchart and no interaction month view.
 3,2,calendarBar,none,none,500,,3/1/2022,800,,3/12/2022,1100,,100,100,,,,,8,8,Calendar MEL question with barchart and no interaction month view.
 3,3,calendarBar,none,none,300,,4/1/2022,1000,,4/15/2022,1100,,100,100,,,,,8,8,Calendar MEL question with barchart and no interaction month view.
-4,1,barchart,drag,laterAmount,500,2,,1000,10,,1500,10,100,100,0.5,0.5,8,8,8.5,8.5,Barchart MEL question with drag interaction.
-5,1,calendar,drag,laterAmount,500,,2/1/2022,1000,,2/22/2022,1100,,100,100,,,,,8,8,"Read 2001 example, absolute size"
-6,1,word,titration,laterAmount,500,2,,1000,3,,,10,,,,,,,8,8,Word MEL question with titration interaction.
-7,1,barchart,titration,laterAmount,500,2,,1000,10,,1500,10,100,100,0.5,0.5,8,8,8.5,8.5,Barchat MEL question with titration interaction.
-8,1,calendarBar,titration,laterAmount,500,,2/1/2022,1000,,2/22/2022,1100,,100,100,,,,,8,8,Calendar MEL question with barchart and titration interaction month view.
-9,1,calendarWord,titration,laterAmount,500,,2/1/2022,1000,,2/22/2022,1100,,100,100,,,,,8,8,Calendar MEL question with word and titration interaction month view.
-10,1,calendarBar,drag,laterAmount,500,,2/1/2022,1000,,2/22/2022,1100,,100,100,,,,,8,8,Calendar MEL question with barchart and drag interaction month view.
-11,1,calendarWord,titration,laterAmount,500,,2/1/2022,1000,,10/1/2022,1100,,100,100,,,,,10,8,Calendar MEL question with barchart and drag interaction year calendar view.
+4,1,calendarWord,none,none,300,,2/1/2022,700,,2/22/2022,1100,,100,100,,,,,8,8,Calendar MEL question with word and no interaction month view.
+4,2,calendarWord,none,none,500,,3/1/2022,800,,3/12/2022,1100,,100,100,,,,,8,8,Calendar MEL question with word and no interaction month view.
+4,3,calendarWord,none,none,300,,4/1/2022,1000,,4/15/2022,1100,,100,100,,,,,8,8,Calendar MEL question with word and no interaction month view.
+5,1,barchart,drag,laterAmount,500,2,,1000,10,,1500,10,100,100,0.5,0.5,8,8,8.5,8.5,Barchart MEL question with drag interaction.
+6,1,calendar,drag,laterAmount,500,,2/1/2022,1000,,2/22/2022,1100,,100,100,,,,,8,8,"Read 2001 example, absolute size"
+7,1,word,titration,laterAmount,500,2,,1000,3,,,10,,,,,,,8,8,Word MEL question with titration interaction.
+8,1,barchart,titration,laterAmount,500,2,,1000,10,,1500,10,100,100,0.5,0.5,8,8,8.5,8.5,Barchat MEL question with titration interaction.
+9,1,calendarBar,titration,laterAmount,500,,2/1/2022,1000,,2/22/2022,1100,,100,100,,,,,8,8,Calendar MEL question with barchart and titration interaction month view.
+10,1,calendarWord,titration,laterAmount,500,,2/1/2022,1000,,2/22/2022,1100,,100,100,,,,,8,8,Calendar MEL question with word and titration interaction month view.
+11,1,calendarBar,drag,laterAmount,500,,2/1/2022,1000,,2/22/2022,1100,,100,100,,,,,8,8,Calendar MEL question with barchart and drag interaction month view.
+12,1,calendarWord,titration,laterAmount,500,,2/1/2022,1000,,10/1/2022,1100,,100,100,,,,,10,8,Calendar MEL question with barchart and drag interaction year calendar view.
