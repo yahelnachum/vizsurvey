@@ -1,5 +1,5 @@
 import { StatusType } from "./StatusType";
-import { VariableType } from "./VariableType";
+import { AmountType } from "./AmountType";
 import { InteractionType } from "./InteractionType";
 import { ChoiceType } from "./ChoiceType";
 import { Answer } from "./Answer";
@@ -72,7 +72,7 @@ export class QuestionEngine {
     state.currentQuestionIdx = 0;
     const treatment = this.currentTreatment(state);
     state.highup =
-      treatment.variableAmount === VariableType.laterAmount
+      treatment.variableAmount === AmountType.laterAmount
         ? treatment.amountEarlier
         : treatment.amountLater;
     state.lowdown = undefined;
@@ -115,7 +115,7 @@ export class QuestionEngine {
     switch (latestAnswer.choice) {
       case ChoiceType.earlier:
         var possibleHighup =
-          treatment.variableAmount === VariableType.laterAmount
+          treatment.variableAmount === AmountType.laterAmount
             ? latestAnswer.amountLater
             : latestAnswer.amountEarlier;
         if (!state.highup || possibleHighup > state.highup)
@@ -123,7 +123,7 @@ export class QuestionEngine {
         break;
       case ChoiceType.later:
         var possibleLowdown =
-          treatment.variableAmount === VariableType.laterAmount
+          treatment.variableAmount === AmountType.laterAmount
             ? latestAnswer.amountLater
             : latestAnswer.amountEarlier;
         if (!state.lowdown || possibleLowdown < state.lowdown)
@@ -147,7 +147,7 @@ export class QuestionEngine {
       this.currentTreatmentAndLatestAnswer(state);
     var adjustmentAmount;
     switch (treatment.variableAmount) {
-      case VariableType.laterAmount:
+      case AmountType.laterAmount:
         console.assert(
           latestAnswer.choice && latestAnswer.choice !== ChoiceType.unitialized
         );
@@ -158,7 +158,7 @@ export class QuestionEngine {
         return (
           parseInt((latestAnswer.amountLater + adjustmentAmount) / 10) * 10
         );
-      case VariableType.earlierAmount:
+      case AmountType.earlierAmount:
         adjustmentAmount =
           latestAnswer.choice === ChoiceType.earlier
             ? -1 * titrationAmount
@@ -189,7 +189,7 @@ export class QuestionEngine {
       this.incNextQuestion(state);
     } else if (treatment.interaction === InteractionType.titration) {
       const titrationAmount = this.calcTitrationAmount(
-        treatment.variableAmount === VariableType.laterAmount
+        treatment.variableAmount === AmountType.laterAmount
           ? latestAnswer.amountLater
           : latestAnswer.amountEarlier,
         state.highup,
@@ -201,14 +201,14 @@ export class QuestionEngine {
         this.incNextQuestion(state);
       } else {
         const newAmount = this.calcNewAmount(state, titrationAmount);
-        if (treatment.variableAmount === VariableType.laterAmount) {
+        if (treatment.variableAmount === AmountType.laterAmount) {
           this.createNextAnswer(
             treatment,
             state.answers,
             treatment.amountEarlier,
             newAmount
           );
-        } else if (treatment.variableAmount === VariableType.earlierAmount) {
+        } else if (treatment.variableAmount === AmountType.earlierAmount) {
           this.createNextAnswer(
             treatment,
             state.answers,

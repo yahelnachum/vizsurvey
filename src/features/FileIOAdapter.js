@@ -5,7 +5,7 @@ import { TREATMENTS_CSV } from "./treatments";
 import { Question } from "./Question";
 import { ViewType } from "./ViewType";
 import { InteractionType } from "./InteractionType";
-import { VariableType } from "./VariableType";
+import { AmountType } from "./AmountType";
 
 export class FileIOAdapter {
   constructor() {}
@@ -40,7 +40,7 @@ export class FileIOAdapter {
         ? InteractionType.enumValueOf(row.interaction)
         : undefined,
       variableAmount: row.variable_amount
-        ? VariableType.enumValueOf(row.variable_amount)
+        ? AmountType.enumValueOf(row.variable_amount)
         : undefined,
       amountEarlier: row.amount_earlier ? +row.amount_earlier : undefined,
       timeEarlier: row.time_earlier ? +row.time_earlier : undefined,

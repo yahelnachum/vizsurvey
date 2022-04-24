@@ -1,6 +1,6 @@
 import { FileIOAdapter } from "./FileIOAdapter";
 import { InteractionType } from "./InteractionType";
-import { VariableType } from "./VariableType";
+import { AmountType } from "./AmountType";
 import { ViewType } from "./ViewType";
 import { ChoiceType } from "./ChoiceType";
 import { Answer } from "./Answer";
@@ -24,7 +24,7 @@ describe("FileIOAdapter tests", () => {
     expect(questions[0].position).toBe(1);
     expect(questions[0].viewType).toBe(ViewType.word);
     expect(questions[0].interaction).toBe(InteractionType.none);
-    expect(questions[0].variableAmount).toBe(VariableType.none);
+    expect(questions[0].variableAmount).toBe(AmountType.none);
     expect(questions[0].amountEarlier).toBe(500);
     expect(questions[0].timeEarlier).toBe(2);
     expect(questions[0].dateEarlier).toBeUndefined();
@@ -50,7 +50,7 @@ describe("FileIOAdapter tests", () => {
     expect(questions[0].position).toBe(1);
     expect(questions[0].viewType).toBe(ViewType.calendarBar);
     expect(questions[0].interaction).toBe(InteractionType.none);
-    expect(questions[0].variableAmount).toBe(VariableType.none);
+    expect(questions[0].variableAmount).toBe(AmountType.none);
     expect(questions[0].amountEarlier).toBe(300);
     expect(questions[0].timeEarlier).toBeUndefined();
     expect(questions[0].dateEarlier.toLocaleString()).toBe("2/1/2022");
@@ -78,7 +78,7 @@ describe("FileIOAdapter tests", () => {
       position: 2,
       viewType: ViewType.word,
       interaction: InteractionType.none,
-      variableAmount: VariableType.earlierAmount,
+      variableAmount: AmountType.earlierAmount,
       amountEarlier: 3,
       timeEarlier: 4,
       dateEarlier: DateTime.fromFormat("1/1/2001", "M/d/yyyy"),
@@ -107,7 +107,7 @@ describe("FileIOAdapter tests", () => {
       position: 14,
       viewType: ViewType.barchart,
       interaction: InteractionType.drag,
-      variableAmount: VariableType.earlierAmount,
+      variableAmount: AmountType.earlierAmount,
       amountEarlier: 15,
       timeEarlier: 16,
       dateEarlier: DateTime.utc(2001, 1, 2, 1, 1, 1, 1),
@@ -137,7 +137,7 @@ describe("FileIOAdapter tests", () => {
     const result = io.convertToCSV(answers);
     expect(result)
       .toBe(`treatment_id,position,view_type,interaction,variable_amount,amount_earlier,time_earlier,date_earlier,amount_later,time_later,date_later,max_amount,max_time,vertical_pixels,horizontal_pixels,left_margin_width_in,bottom_margin_height_in,graph_width_in,graph_height_in,width_in,height_in,choice,shown_timestamp,choice_timestamp,highup,lowdown,participant_code
-1,2,ViewType.word,InteractionType.none,VariableType.earlierAmount,3,4,2001-01-01T00:00:00.000-05:00,5,6,2001-01-02T00:00:00.000-05:00,7,8,9,10,11,12,13,14,15,16,earlier,2001-01-03T00:00:00.000-05:00,2001-01-04T00:00:00.000-05:00,17,18,participant code
-13,14,ViewType.barchart,InteractionType.drag,VariableType.earlierAmount,15,16,2001-01-02T01:01:01.001Z,17,18,2001-01-02T02:01:01.001Z,19,20,21,22,23,24,25,26,27,28,later,2001-01-02T03:01:01.001Z,2001-01-02T04:01:01.001Z,29,30,participant code 2`);
+1,2,ViewType.word,InteractionType.none,AmountType.earlierAmount,3,4,2001-01-01T00:00:00.000-05:00,5,6,2001-01-02T00:00:00.000-05:00,7,8,9,10,11,12,13,14,15,16,earlier,2001-01-03T00:00:00.000-05:00,2001-01-04T00:00:00.000-05:00,17,18,participant code
+13,14,ViewType.barchart,InteractionType.drag,AmountType.earlierAmount,15,16,2001-01-02T01:01:01.001Z,17,18,2001-01-02T02:01:01.001Z,19,20,21,22,23,24,25,26,27,28,later,2001-01-02T03:01:01.001Z,2001-01-02T04:01:01.001Z,29,30,participant code 2`);
   });
 });

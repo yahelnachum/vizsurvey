@@ -19,7 +19,7 @@ import { ChoiceType } from "../features/ChoiceType";
 import { StatusType } from "../features/StatusType";
 import { InteractionType } from "../features/InteractionType";
 import { ViewType } from "../features/ViewType";
-import { VariableType } from "../features/VariableType";
+import { AmountType } from "../features/AmountType";
 
 var calendarMatrix = require("calendar-matrix");
 

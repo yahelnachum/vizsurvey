@@ -17,7 +17,7 @@ import { useD3 } from "../hooks/useD3";
 import { ChoiceType } from "../features/ChoiceType";
 import { StatusType } from "../features/StatusType";
 import { InteractionType } from "../features/InteractionType";
-import { VariableType } from "../features/VariableType";
+import { AmountType } from "../features/AmountType";
 import {
   selectCurrentQuestion,
   fetchStatus,
@@ -67,16 +67,16 @@ function BarChart() {
       return {
         time: d,
         amount: q.amountEarlier,
-        barType: VariableType.earlierAmount,
+        barType: AmountType.earlierAmount,
       };
     } else if (d === q.timeLater) {
       return {
         time: d,
         amount: q.amountLater,
-        barType: VariableType.laterAmount,
+        barType: AmountType.laterAmount,
       };
     } else {
-      return { time: d, amount: 0, barType: VariableType.none };
+      return { time: d, amount: 0, barType: AmountType.none };
     }
   });
 

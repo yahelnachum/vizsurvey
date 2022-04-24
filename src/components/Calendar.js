@@ -18,7 +18,7 @@ import { ChoiceType } from "../features/ChoiceType";
 import { StatusType } from "../features/StatusType";
 import { InteractionType } from "../features/InteractionType";
 import { ViewType } from "../features/ViewType";
-import { VariableType } from "../features/VariableType";
+import { AmountType } from "../features/AmountType";
 
 var calendarMatrix = require("calendar-matrix");
 
@@ -43,10 +43,10 @@ function Calendar() {
             : null,
         type:
           day === earlierDay
-            ? VariableType.earlierAmount
+            ? AmountType.earlierAmount
             : day === laterDay
-            ? VariableType.laterAmount
-            : VariableType.none,
+            ? AmountType.laterAmount
+            : AmountType.none,
       };
     })
   );
@@ -298,9 +298,7 @@ function Calendar() {
                   dragAmount = d.subject;
                   d3.select(
                     `#${
-                      d.type === VariableType.earlierAmount
-                        ? "earlier"
-                        : "later"
+                      d.type === AmountType.earlierAmount ? "earlier" : "later"
                     }-text`
                   )
                     .attr("y", (d) => y(d.amount))

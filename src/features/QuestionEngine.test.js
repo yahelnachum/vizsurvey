@@ -5,7 +5,7 @@ import { ChoiceType } from "./ChoiceType";
 import { StatusType } from "./StatusType";
 import { Question } from "./Question";
 import { InteractionType } from "./InteractionType";
-import { VariableType } from "./VariableType";
+import { AmountType } from "./AmountType";
 import { Answer } from "./Answer";
 
 describe("QuestionEngine tests", () => {
@@ -224,7 +224,7 @@ export class TestDataFactory {
       position: 1,
       viewType: ViewType.barchart,
       interaction: InteractionType.titration,
-      variableAmount: VariableType.laterAmount,
+      variableAmount: AmountType.laterAmount,
       amountEarlier: 500,
       timeEarlier: 1,
       dateEarlier: undefined,
@@ -273,7 +273,7 @@ export class TestDataFactory {
       position: 1,
       viewType: ViewType.barchart,
       interaction: InteractionType.none,
-      variableAmount: VariableType.laterAmount,
+      variableAmount: AmountType.laterAmount,
       amountEarlier: 400,
       timeEarlier: 1,
       dateEarlier: undefined,
