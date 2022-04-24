@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from "react-router-dom";
+import * as d3 from "d3";
 import { select, format, scaleLinear, drag } from "d3";
 import { Formik, Form } from "formik";
 import { Button } from "react-bootstrap";
@@ -119,7 +120,7 @@ function Calendar() {
             const drawBar = (parent, idPrefix, dayAndAmount) => {
               const svg = parent
                 .append("svg")
-                .data([dayAndAmount], (d) => JSON.stringify(d))
+                .data([dayAndAmount], (d) => d.day)
                 .attr("id", `${idPrefix}-svg`)
                 .attr("x", "0")
                 .attr("y", "0")
@@ -128,7 +129,7 @@ function Calendar() {
                 .attr("style", "text-align: center");
               svg
                 .append("rect")
-                .data([dayAndAmount], (d) => JSON.stringify(d))
+                .data([dayAndAmount], (d) => d.day)
                 .attr("id", `${idPrefix}-rect`)
                 .attr("class", "bar")
                 .attr("fill", "black")
@@ -142,7 +143,7 @@ function Calendar() {
                 });
               svg
                 .append("text")
-                .data([dayAndAmount], (d) => JSON.stringify(d))
+                .data([dayAndAmount], (d) => d.day)
                 .attr("id", `${idPrefix}-text`)
                 .attr("x", tableSquareSizePx / 2)
                 .attr("y", (d) => y(d.amount))
@@ -173,7 +174,7 @@ function Calendar() {
             const drawWord = (parent, idPrefix, dayAndAmount) => {
               parent
                 .append("div")
-                .data([dayAndAmount], (d) => JSON.stringify(d))
+                .data([dayAndAmount], (d) => d.day)
                 .attr("id", `${idPrefix}-div`)
                 .attr("class", "amount-div")
                 .attr(
@@ -190,13 +191,13 @@ function Calendar() {
 
             tbody
               .selectAll(".day-rows")
-              .data(monthDaysAmounts, (d) => JSON.stringify(d))
+              .data(monthDaysAmounts, (d) => d.day)
               .join("tr")
               .attr("class", "day-rows")
               .selectAll(".day-cells")
               .data(
                 (d) => d,
-                (d) => JSON.stringify(d)
+                (d) => d.day
               )
               .join(
                 (enter) => {
@@ -288,12 +289,22 @@ function Calendar() {
             if (q.interaction === InteractionType.drag) {
               var dragHandler = drag().on("drag", function (d) {
                 if (d.subject.type === q.variableAmount) {
+                  const newAmount = y.invert(d.y);
+                  if (newAmount > q.maxAmount) return;
+                  d.subject.amount = newAmount;
                   select(this)
                     .attr("y", d.y)
                     .attr("height", y(0) - d.y);
-                  d.subject.amount = y.invert(d.y);
-                  console.log(d.subject.amount);
                   dragAmount = d.subject;
+                  d3.select(
+                    `#${
+                      d.type === VariableType.earlierAmount
+                        ? "earlier"
+                        : "later"
+                    }-text`
+                  )
+                    .attr("y", (d) => y(d.amount))
+                    .text(() => format("$,.0f")(dragAmount.amount));
                 }
               });
               dragHandler(table.selectAll(".bar"));
