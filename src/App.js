@@ -276,15 +276,17 @@ const Instructions = () => {
           }
         })()}
       </span>
-      <Link to="/vizsurvey/survey">
-        <Button
-          size="lg"
-          onClick={surveyButtonClicked}
-          style={buttonCenterContentStyle}
-        >
-          Start Survey
-        </Button>
-      </Link>
+      <FullScreen handle={handle}>
+        <Link to="/vizsurvey/survey">
+          <Button
+            size="lg"
+            onClick={surveyButtonClicked}
+            style={buttonCenterContentStyle}
+          >
+            Start Survey
+          </Button>
+        </Link>
+      </FullScreen>
     </div>
   );
 };
