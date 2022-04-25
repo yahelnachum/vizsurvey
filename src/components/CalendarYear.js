@@ -7,7 +7,7 @@ import * as d3 from "d3";
 import { Formik, Form } from "formik";
 import { Button } from "react-bootstrap";
 import { DateTime } from "luxon";
-import { monthNames, dayNames } from "./CalendarHelper";
+import { dayNames } from "./CalendarHelper";
 import {
   selectCurrentQuestion,
   fetchStatus,
@@ -20,6 +20,7 @@ import { StatusType } from "../features/StatusType";
 import { InteractionType } from "../features/InteractionType";
 import { ViewType } from "../features/ViewType";
 import { AmountType } from "../features/AmountType";
+import { local } from "d3";
 
 var calendarMatrix = require("calendar-matrix");
 
@@ -32,10 +33,26 @@ function Calendar() {
   const laterDay = q.dateLater.day;
 
   const monthsMatrix = [
-    [monthNames[0], monthNames[1], monthNames[2], monthNames[3]],
-    [monthNames[4], monthNames[5], monthNames[6], monthNames[7]],
-    [monthNames[8], monthNames[9], monthNames[10], monthNames[11]],
+    [
+      local(1, 1, q.dateEarlier.year),
+      local(2, 1, q.dateEarlier.year),
+      local(3, 1, q.dateEarlier.year),
+      local(4, 1, q.dateEarlier.year),
+    ],
+    [
+      local(5, 1, q.dateEarlier.year),
+      local(6, 1, q.dateEarlier.year),
+      local(7, 1, q.dateEarlier.year),
+      local(8, 1, q.dateEarlier.year),
+    ],
+    [
+      local(9, 1, q.dateEarlier.year),
+      local(10, 1, q.dateEarlier.year),
+      local(11, 1, q.dateEarlier.year),
+      local(12, 1, q.dateEarlier.year),
+    ],
   ];
+
   const dpi = window.devicePixelRatio >= 2 ? 132 : 96;
   const monthTdSquareSizeIn = Math.min(q.heightIn / 3, q.widthIn / 4);
   const monthTdSquareSizePx = Math.round(monthTdSquareSizeIn * dpi);
@@ -88,30 +105,10 @@ function Calendar() {
               .attr("class", "months-cells")
               .attr("width", () => monthTdSquareSizePx)
               .attr("height", () => monthTdSquareSizePx)
-              .each(function (monthName, i, nodes) {
+              .each(function (monthDate, i, nodes) {
                 const monthDays = calendarMatrix(
                   laterDate.year,
                   laterDate.month
-                );
-
-                const monthDaysAmounts = monthDays.map((week) =>
-                  week.map((day) => {
-                    return {
-                      day: day,
-                      amount:
-                        day === earlierDay
-                          ? q.amountEarlier
-                          : day === laterDay
-                          ? q.amountLater
-                          : null,
-                      type:
-                        day === earlierDay
-                          ? AmountType.earlierAmount
-                          : day === laterDay
-                          ? AmountType.laterAmount
-                          : AmountType.none,
-                    };
-                  })
                 );
 
                 const lastDayOfMonth = Math.max(...[].concat(...monthDays));
@@ -125,9 +122,9 @@ function Calendar() {
                 );
 
                 const createMonthTable = (parentTd) => {
-                  const monthTableId = `#month-calendar-table-${monthName}`;
-                  const monthHeadId = `#month-calendar-head-${monthName}`;
-                  const monthBodyId = `#month-calendar-body-${monthName}`;
+                  const monthTableId = `#month-calendar-table-${monthDate.monthLong}`;
+                  const monthHeadId = `#month-calendar-head-${monthDate.monthLong}`;
+                  const monthBodyId = `#month-calendar-body-${monthDate.monthLong}`;
 
                   const monthTable = parentTd
                     .selectAll(monthTableId)
@@ -145,7 +142,7 @@ function Calendar() {
                     .join("tr")
                     .attr("class", "month-name-row")
                     .selectAll(".month-name-cell")
-                    .data([monthName])
+                    .data([monthDate.monthLong])
                     .join("td")
                     .attr("class", "month-name-cell")
                     .attr("style", "bold; text-align: center;")
