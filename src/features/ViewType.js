@@ -1,10 +1,9 @@
-import { Enumify } from "enumify";
+export const ViewType = {
+  word: "word",
+  barchart: "barchart",
+  calendarBar: "calendarBar",
+  calendarWord: "calendarWord",
+  calendarIcon: "calendarIcon",
+};
 
-export class ViewType extends Enumify {
-  static word = new ViewType();
-  static barchart = new ViewType();
-  static calendarBar = new ViewType();
-  static calendarWord = new ViewType();
-  static calendarIcon = new ViewType();
-  static _ = this.closeEnum();
-}
+Object.freeze(ViewType);

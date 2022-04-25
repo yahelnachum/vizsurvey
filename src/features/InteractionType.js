@@ -1,8 +1,7 @@
-import { Enumify } from "enumify";
+export const InteractionType = {
+  none: "none",
+  drag: "drag",
+  titration: "titration",
+};
 
-export class InteractionType extends Enumify {
-  static none = new InteractionType();
-  static drag = new InteractionType();
-  static titration = new InteractionType();
-  static _ = this.closeEnum();
-}
+Object.freeze(InteractionType);

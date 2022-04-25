@@ -5,3 +5,5 @@ export const StatusType = {
   Complete: "Complete",
   Error: "Error",
 };
+
+Object.freeze(StatusType);

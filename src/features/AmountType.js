@@ -1,8 +1,7 @@
-import { Enumify } from "enumify";
+export const AmountType = {
+  none: "none",
+  earlierAmount: "earlierAmount",
+  laterAmount: "laterAmount",
+};
 
-export class AmountType extends Enumify {
-  static none = new AmountType();
-  static earlierAmount = new AmountType();
-  static laterAmount = new AmountType();
-  static _ = this.closeEnum();
-}
+Object.freeze(AmountType);

@@ -35,12 +35,12 @@ export class FileIOAdapter {
     return new Question({
       treatmentId: row.treatment_id ? +row.treatment_id : undefined,
       position: row.position ? +row.position : undefined,
-      viewType: row.view_type ? ViewType.enumValueOf(row.view_type) : undefined,
+      viewType: row.view_type ? ViewType[row.view_type] : undefined,
       interaction: row.interaction
-        ? InteractionType.enumValueOf(row.interaction)
+        ? InteractionType[row.interaction]
         : undefined,
       variableAmount: row.variable_amount
-        ? AmountType.enumValueOf(row.variable_amount)
+        ? AmountType[row.variable_amount]
         : undefined,
       amountEarlier: row.amount_earlier ? +row.amount_earlier : undefined,
       timeEarlier: row.time_earlier ? +row.time_earlier : undefined,

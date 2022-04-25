@@ -3,3 +3,5 @@ export const ChoiceType = {
   earlier: "earlier",
   later: "later",
 };
+
+Object.freeze(ChoiceType);
