@@ -186,7 +186,7 @@ function Calendar() {
 
             const updateWord = (parent, idPrefix, dayAndAmount) => {
               const selection = parent.select(`#${idPrefix}-div`);
-              selection.text(format("$,.0f")(dayAndAmount.amount));
+              selection.text(() => format("$,.0f")(dayAndAmount.amount));
             };
 
             tbody
