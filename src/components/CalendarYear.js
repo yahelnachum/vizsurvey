@@ -27,6 +27,10 @@ function Calendar() {
   const dispatch = useDispatch();
   const q = useSelector(selectCurrentQuestion);
   const status = useSelector(fetchStatus);
+
+  const earlierDay = q.dateEarlier.day;
+  const laterDay = q.dateLater.day;
+
   const monthsMatrix = [
     [monthNames[0], monthNames[1], monthNames[2], monthNames[3]],
     [monthNames[4], monthNames[5], monthNames[6], monthNames[7]],
@@ -89,6 +93,27 @@ function Calendar() {
                   laterDate.year,
                   laterDate.month
                 );
+
+                const monthDaysAmounts = monthDays.map((week) =>
+                  week.map((day) => {
+                    return {
+                      day: day,
+                      amount:
+                        day === earlierDay
+                          ? q.amountEarlier
+                          : day === laterDay
+                          ? q.amountLater
+                          : null,
+                      type:
+                        day === earlierDay
+                          ? AmountType.earlierAmount
+                          : day === laterDay
+                          ? AmountType.laterAmount
+                          : AmountType.none,
+                    };
+                  })
+                );
+
                 const lastDayOfMonth = Math.max(...[].concat(...monthDays));
                 const firstDaysOfWeek = monthDays.reduce((acc, cv) => {
                   return acc.concat(cv[0]);
@@ -153,6 +178,13 @@ function Calendar() {
                       (d) => d
                     )
                     .join("td")
+                    .attr("id", (d) =>
+                      d.day === earlierDay
+                        ? "earlier-day"
+                        : d.day === laterDay
+                        ? "later-day"
+                        : null
+                    )
                     .attr("class", "month-body-cells")
                     .attr("width", () => dayTdSquareSizePx)
                     .attr("height", () => dayTdSquareSizePx)
