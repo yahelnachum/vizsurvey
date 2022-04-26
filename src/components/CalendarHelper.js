@@ -128,7 +128,7 @@ export const drawCalendar = (
       .attr("id", `${idPrefix}-text`)
       .attr("x", tableSquareSizePx / 2)
       .attr("y", (d) => y(d.amount))
-      .attr("style", "font-size:large;")
+      .attr("style", "font-size:large; pointer-events: none;")
       .attr("fill", "white")
       .attr("text-anchor", "middle")
       .attr("dominant-baseline", "hanging")
