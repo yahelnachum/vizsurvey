@@ -95,7 +95,7 @@ export class FileIOAdapter {
     // // eslint-disable-next-line no-undef
     // const gistAnswerId = process.env.REACT_APP_GIST_ANSWER_ID;
     // const url = `PATCH /gists/${gistAnswerId}`;
-    // const now = DateTime.now().toFormat("yyyy-MM-dd-H-mm-ss-SSS-ZZZZ");
+    // const now = DateTime.local().toFormat("yyyy-MM-dd-H-mm-ss-SSS-ZZZZ");
     // const files = {};
     // answersCSV = `${answersCSV}`;
     // files[`answers-subject-${state.questions.participant_id}-${now}.csv`] = {

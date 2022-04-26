@@ -124,7 +124,7 @@ describe("QuestionEngine tests", () => {
     qe.answerCurrentQuestion(state, {
       payload: {
         choice: ChoiceType.earlier,
-        choiceTimestamp: DateTime.now(),
+        choiceTimestamp: DateTime.local(),
       },
     });
     expect(state.currentQuestionIdx).toBe(0);
@@ -139,7 +139,7 @@ describe("QuestionEngine tests", () => {
     qe.answerCurrentQuestion(state, {
       payload: {
         choice: ChoiceType.later,
-        choiceTimestamp: DateTime.now(),
+        choiceTimestamp: DateTime.local(),
       },
     });
     expect(state.currentQuestionIdx).toBe(0);
@@ -154,7 +154,7 @@ describe("QuestionEngine tests", () => {
     qe.answerCurrentQuestion(state, {
       payload: {
         choice: ChoiceType.later,
-        choiceTimestamp: DateTime.now(),
+        choiceTimestamp: DateTime.local(),
       },
     });
     expect(state.currentQuestionIdx).toBe(0);
@@ -169,7 +169,7 @@ describe("QuestionEngine tests", () => {
     qe.answerCurrentQuestion(state, {
       payload: {
         choice: ChoiceType.earlier,
-        choiceTimestamp: DateTime.now(),
+        choiceTimestamp: DateTime.local(),
       },
     });
     expect(state.currentQuestionIdx).toBe(0);
@@ -184,7 +184,7 @@ describe("QuestionEngine tests", () => {
     qe.answerCurrentQuestion(state, {
       payload: {
         choice: ChoiceType.later,
-        choiceTimestamp: DateTime.now(),
+        choiceTimestamp: DateTime.local(),
       },
     });
     expect(state.currentQuestionIdx).toBe(0);
@@ -202,7 +202,7 @@ describe("QuestionEngine tests", () => {
         // Choice of later seems to make the last value of lowdown work according to the algorithm
         // I derived from the earlier steps in the example.
         choice: ChoiceType.later,
-        choiceTimestamp: DateTime.now(),
+        choiceTimestamp: DateTime.local(),
       },
     });
     expect(state.currentQuestionIdx).toBe(0);

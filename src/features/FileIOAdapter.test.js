@@ -142,7 +142,7 @@ describe("FileIOAdapter tests", () => {
     const result = io.convertToCSV(answers);
     expect(result)
       .toBe(`treatment_id,position,view_type,interaction,variable_amount,amount_earlier,time_earlier,date_earlier,amount_later,time_later,date_later,max_amount,max_time,vertical_pixels,horizontal_pixels,left_margin_width_in,bottom_margin_height_in,graph_width_in,graph_height_in,width_in,height_in,choice,shown_timestamp,choice_timestamp,highup,lowdown,participant_code
-1,2,word,InteractionType.none,earlierAmount,3,4,2001-01-01T00:00:00.000-05:00,5,6,2001-01-02T00:00:00.000-05:00,7,8,9,10,11,12,13,14,15,16,earlier,2001-01-03T00:00:00.000-05:00,2001-01-04T00:00:00.000-05:00,17,18,participant code
-13,14,barchart,InteractionType.drag,earlierAmount,15,16,2001-01-02T01:01:01.001Z,17,18,2001-01-02T02:01:01.001Z,19,20,21,22,23,24,25,26,27,28,later,2001-01-02T03:01:01.001Z,2001-01-02T04:01:01.001Z,29,30,participant code 2`);
+1,2,word,none,earlierAmount,3,4,2001-01-01T00:00:00.000-05:00,5,6,2001-01-02T00:00:00.000-05:00,7,8,9,10,11,12,13,14,15,16,earlier,2001-01-03T00:00:00.000-05:00,2001-01-04T00:00:00.000-05:00,17,18,participant code
+13,14,barchart,drag,earlierAmount,15,16,2001-01-02T01:01:01.001Z,17,18,2001-01-02T02:01:01.001Z,19,20,21,22,23,24,25,26,27,28,later,2001-01-02T03:01:01.001Z,2001-01-02T04:01:01.001Z,29,30,participant code 2`);
   });
 });

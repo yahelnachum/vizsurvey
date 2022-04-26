@@ -64,7 +64,7 @@ function Calendar() {
               dispatch(
                 answer({
                   choice: q.variableAmount,
-                  choiceTimestamp: DateTime.now(),
+                  choiceTimestamp: DateTime.local(),
                   dragAmount: dragAmount.amount,
                 })
               );

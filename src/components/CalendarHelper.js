@@ -21,24 +21,29 @@ export const drawCalendar = (
 ) => {
   const monthDays = calendarMatrix(monthDate.toJSDate());
 
-  const earlierDay = q.dateEarlier.day;
-  const laterDay = q.dateLater.day;
   const monthDaysAmounts = monthDays.map((week) =>
     week.map((day) => {
+      const date =
+        day <= 0 ? null : DateTime.local(monthDate.year, monthDate.month, day);
       return {
         day: day,
         amount:
-          day === earlierDay
+          date === null
+            ? null
+            : date.equals(q.dateEarlier)
             ? q.amountEarlier
-            : day === laterDay
+            : date.equals(q.dateLater)
             ? q.amountLater
             : null,
         type:
-          day === earlierDay
+          date === null
+            ? AmountType.none
+            : date.equals(q.dateEarlier)
             ? AmountType.earlierAmount
-            : day === laterDay
+            : date.equals(q.dateLater)
             ? AmountType.laterAmount
-            : AmountType.none,
+            : null,
+        date: date,
       };
     })
   );
@@ -176,9 +181,9 @@ export const drawCalendar = (
           .append("td")
           .attr("class", "day-cells")
           .attr("id", (d) =>
-            d.day === earlierDay
+            d.type === AmountType.earlierAmount
               ? "earlier-day"
-              : d.day === laterDay
+              : d.type === AmountType.laterAmount
               ? "later-day"
               : null
           )
@@ -195,18 +200,18 @@ export const drawCalendar = (
               q.interaction === InteractionType.titration ||
               q.interaction === InteractionType.none
             ) {
-              if (d.target.__data__.day === earlierDay) {
+              if (d.target.__data__.type === AmountType.earlierAmount) {
                 dispatchCallback(
                   answer({
                     choice: ChoiceType.earlier,
-                    choiceTimestamp: DateTime.now(),
+                    choiceTimestamp: DateTime.local(),
                   })
                 );
-              } else if (d.target.__data__.day === laterDay) {
+              } else if (d.target.__data__.type === AmountType.laterAmount) {
                 dispatchCallback(
                   answer({
                     choice: ChoiceType.later,
-                    choiceTimestamp: DateTime.now(),
+                    choiceTimestamp: DateTime.local(),
                   })
                 );
               }
@@ -228,11 +233,22 @@ export const drawCalendar = (
                     return d.day;
                 });
             }
-            if (d.day === earlierDay || d.day === laterDay) {
+            if (
+              d.type === AmountType.earlierAmount ||
+              d.type === AmountType.laterAmount
+            ) {
               if (q.viewType === ViewType.calendarWord) {
-                drawWord(td, d.day === earlierDay ? "earlier" : "later", d);
+                drawWord(
+                  td,
+                  d.type === AmountType.earlierAmount ? "earlier" : "later",
+                  d
+                );
               } else if (q.viewType === ViewType.calendarBar) {
-                drawBar(td, d.day === earlierDay ? "earlier" : "later", d);
+                drawBar(
+                  td,
+                  d.type === AmountType.earlierAmount ? "earlier" : "later",
+                  d
+                );
               }
             }
           });

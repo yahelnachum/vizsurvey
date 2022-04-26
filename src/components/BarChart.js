@@ -165,14 +165,14 @@ function BarChart() {
                     dispatch(
                       answer({
                         choice: ChoiceType.earlier,
-                        choiceTimestamp: DateTime.now(),
+                        choiceTimestamp: DateTime.local(),
                       })
                     );
                   } else if (d.target.__data__.amount === q.amountLater) {
                     dispatch(
                       answer({
                         choice: ChoiceType.later,
-                        choiceTimestamp: DateTime.now(),
+                        choiceTimestamp: DateTime.local(),
                       })
                     );
                   }
@@ -205,7 +205,7 @@ function BarChart() {
               dispatch(
                 answer({
                   choice: ChoiceType.earlier,
-                  choiceTimestamp: DateTime.now(),
+                  choiceTimestamp: DateTime.local(),
                 })
               );
               setSubmitting(false);

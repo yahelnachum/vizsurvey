@@ -209,14 +209,14 @@ function Calendar() {
                   //       dispatch(
                   //         answer({
                   //           choice: ChoiceType.earlier,
-                  //           choiceTimestamp: DateTime.now(),
+                  //           choiceTimestamp: DateTime.local(),
                   //         })
                   //       );
                   //     } else if (d.target.__data__ === laterDate) {
                   //       dispatch(
                   //         answer({
                   //           choice: ChoiceType.later,
-                  //           choiceTimestamp: DateTime.now(),
+                  //           choiceTimestamp: DateTime.local(),
                   //         })
                   //       );
                   //     }
@@ -249,7 +249,7 @@ function Calendar() {
               dispatch(
                 answer({
                   choice: ChoiceType.earlier,
-                  choiceTimestamp: DateTime.now(),
+                  choiceTimestamp: DateTime.local(),
                 })
               );
               setSubmitting(false);
