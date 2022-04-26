@@ -155,7 +155,7 @@ export const drawCalendar = (
   const drawWord = (parent, idPrefix, dayAndAmount) => {
     parent
       .append("div")
-      .data([dayAndAmount], (d) => d.day)
+      .data([dayAndAmount], (d) => d)
       .attr("id", `${idPrefix}-div`)
       .attr("class", "amount-div")
       .attr(
@@ -167,7 +167,10 @@ export const drawCalendar = (
 
   const updateWord = (parent, idPrefix) => {
     const selection = parent.select(`#${idPrefix}-div`);
-    selection.text((d) => format("$,.0f")(d.amount));
+    selection.text((d) => {
+      console.log(d.amount);
+      return format("$,.0f")(d.amount);
+    });
   };
 
   tbody
@@ -178,7 +181,7 @@ export const drawCalendar = (
     .selectAll(".day-cells")
     .data(
       (d) => d,
-      (d) => d.day
+      (d) => JSON.stringify(d)
     )
     .join(
       (enter) => {
