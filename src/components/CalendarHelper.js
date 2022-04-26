@@ -15,10 +15,15 @@ export const drawCalendar = (
   table,
   q,
   monthDate,
-  tableSquareSizePx,
+  tableWidthIn,
+  showYear,
   dragCallback,
   dispatchCallback
 ) => {
+  const dpi = window.devicePixelRatio >= 2 ? 132 : 96;
+  const tableSquareSizeIn = tableWidthIn / 7;
+  const tableSquareSizePx = Math.round(tableSquareSizeIn * dpi);
+
   const monthDays = calendarMatrix(monthDate.toJSDate());
 
   const monthDaysAmounts = monthDays.map((week) =>
@@ -66,12 +71,12 @@ export const drawCalendar = (
     .attr("id", "month-head-year-row")
     .style("text-align", "center")
     .selectAll("#month-year-cell")
-    .data([monthDate.year])
+    .data([monthDate])
     .join("td")
     .attr("id", "month-year-cell")
     .attr("style", "font-size: large")
     .attr("colspan", 7)
-    .text((d) => `${monthDate.monthLong} ${d}`);
+    .text((d) => `${d.monthLong}${showYear ? " " + d.year : ""}`);
   thead
     .selectAll(".weekday-name-row")
     .data([null])
@@ -160,9 +165,9 @@ export const drawCalendar = (
       .text(format("$,.0f")(dayAndAmount.amount));
   };
 
-  const updateWord = (parent, idPrefix, dayAndAmount) => {
+  const updateWord = (parent, idPrefix) => {
     const selection = parent.select(`#${idPrefix}-div`);
-    selection.text(() => format("$,.0f")(dayAndAmount.amount));
+    selection.text((d) => format("$,.0f")(d.amount));
   };
 
   tbody

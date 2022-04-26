@@ -21,12 +21,6 @@ function Calendar() {
   const q = useSelector(selectCurrentQuestion);
   const status = useSelector(fetchStatus);
 
-  const dpi = window.devicePixelRatio >= 2 ? 132 : 96;
-
-  const tableSquareSizeIn = q.widthIn / 7;
-
-  const tableSquareSizePx = Math.round(tableSquareSizeIn * dpi);
-
   var dragAmount = null;
 
   const result = (
@@ -40,7 +34,8 @@ function Calendar() {
               table,
               q,
               q.dateEarlier,
-              tableSquareSizePx,
+              q.widthIn,
+              true,
               (amount) => {
                 dragAmount = amount;
               },

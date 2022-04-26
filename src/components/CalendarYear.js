@@ -1,13 +1,11 @@
-/* eslint-disable no-unused-vars */
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { groups, select, format, scaleLinear, drag } from "d3";
+import { select } from "d3";
 import * as d3 from "d3";
 import { Formik, Form } from "formik";
 import { Button } from "react-bootstrap";
 import { DateTime } from "luxon";
-import { dayNames } from "./CalendarHelper";
 import {
   selectCurrentQuestion,
   fetchStatus,
@@ -18,38 +16,31 @@ import { useD3 } from "../hooks/useD3";
 import { ChoiceType } from "../features/ChoiceType";
 import { StatusType } from "../features/StatusType";
 import { InteractionType } from "../features/InteractionType";
-import { ViewType } from "../features/ViewType";
-import { AmountType } from "../features/AmountType";
-import { local } from "d3";
-
-var calendarMatrix = require("calendar-matrix");
+import { drawCalendar } from "./CalendarHelper";
 
 function Calendar() {
   const dispatch = useDispatch();
   const q = useSelector(selectCurrentQuestion);
   const status = useSelector(fetchStatus);
 
-  const earlierDay = q.dateEarlier.day;
-  const laterDay = q.dateLater.day;
-
   const monthsMatrix = [
     [
-      local(1, 1, q.dateEarlier.year),
-      local(2, 1, q.dateEarlier.year),
-      local(3, 1, q.dateEarlier.year),
-      local(4, 1, q.dateEarlier.year),
+      DateTime.local(1, 1, q.dateEarlier.year),
+      DateTime.local(2, 1, q.dateEarlier.year),
+      DateTime.local(3, 1, q.dateEarlier.year),
+      DateTime.local(4, 1, q.dateEarlier.year),
     ],
     [
-      local(5, 1, q.dateEarlier.year),
-      local(6, 1, q.dateEarlier.year),
-      local(7, 1, q.dateEarlier.year),
-      local(8, 1, q.dateEarlier.year),
+      DateTime.local(5, 1, q.dateEarlier.year),
+      DateTime.local(6, 1, q.dateEarlier.year),
+      DateTime.local(7, 1, q.dateEarlier.year),
+      DateTime.local(8, 1, q.dateEarlier.year),
     ],
     [
-      local(9, 1, q.dateEarlier.year),
-      local(10, 1, q.dateEarlier.year),
-      local(11, 1, q.dateEarlier.year),
-      local(12, 1, q.dateEarlier.year),
+      DateTime.local(9, 1, q.dateEarlier.year),
+      DateTime.local(10, 1, q.dateEarlier.year),
+      DateTime.local(11, 1, q.dateEarlier.year),
+      DateTime.local(12, 1, q.dateEarlier.year),
     ],
   ];
 
@@ -57,8 +48,8 @@ function Calendar() {
   const monthTdSquareSizeIn = Math.min(q.heightIn / 3, q.widthIn / 4);
   const monthTdSquareSizePx = Math.round(monthTdSquareSizeIn * dpi);
 
-  const earlierDate = q.dateEarlier;
-  const laterDate = q.dateLater;
+  // eslint-disable-next-line no-unused-vars
+  var dragAmount = null;
 
   const result = (
     <div>
@@ -66,6 +57,7 @@ function Calendar() {
         id="year-calendar"
         style={{ borderCollapse: "collapse", tableLayout: "fixed" }}
         ref={useD3(
+          // eslint-disable-next-line no-unused-vars
           (table) => {
             const yearTable = d3
               .select("#year-calendar")
@@ -83,12 +75,12 @@ function Calendar() {
               .attr("id", "year-head-row")
               .style("text-align", "center")
               .selectAll("#year-cell")
-              .data([laterDate.year])
+              .data([q.dateEarlier])
               .join("td")
               .attr("id", "year-cell")
               .attr("style", "font-size: large")
               .attr("colspan", 7)
-              .text((d) => d);
+              .text((d) => d.year);
             const yearBody = yearTable
               .selectAll("#year-calendar-body")
               .data([null])
@@ -100,139 +92,30 @@ function Calendar() {
               .join("tr")
               .attr("class", "months-rows")
               .selectAll(".months-cells")
-              .data((d) => d)
+              .data(
+                (d) => d,
+                (d) => d
+              )
               .join("td")
               .attr("class", "months-cells")
               .attr("width", () => monthTdSquareSizePx)
               .attr("height", () => monthTdSquareSizePx)
-              .each(function (monthDate, i, nodes) {
-                const monthDays = calendarMatrix(
-                  laterDate.year,
-                  laterDate.month
-                );
-
-                const lastDayOfMonth = Math.max(...[].concat(...monthDays));
-                const firstDaysOfWeek = monthDays.reduce((acc, cv) => {
-                  return acc.concat(cv[0]);
-                }, []);
-
-                const dayTdSquareSizePx = Math.min(
-                  monthTdSquareSizePx / monthDays.length,
-                  monthTdSquareSizePx / 7
-                );
-
-                const createMonthTable = (parentTd) => {
-                  const monthTableId = `#month-calendar-table-${monthDate.monthLong}`;
-                  const monthHeadId = `#month-calendar-head-${monthDate.monthLong}`;
-                  const monthBodyId = `#month-calendar-body-${monthDate.monthLong}`;
-
-                  const monthTable = parentTd
-                    .selectAll(monthTableId)
-                    .data([null])
-                    .join("table")
-                    .attr("id", monthTableId);
-                  const monthHead = monthTable
-                    .selectAll(monthHeadId)
-                    .data([null])
-                    .join("thead")
-                    .attr("id", monthHeadId);
-                  monthHead
-                    .selectAll(".month-name-row")
-                    .data([null])
-                    .join("tr")
-                    .attr("class", "month-name-row")
-                    .selectAll(".month-name-cell")
-                    .data([monthDate.monthLong])
-                    .join("td")
-                    .attr("class", "month-name-cell")
-                    .attr("style", "bold; text-align: center;")
-                    .attr("colspan", 7)
-                    .text((d) => d);
-                  monthHead
-                    .selectAll(".weekday-name-row")
-                    .data([null])
-                    .join("tr")
-                    .attr("class", "weekday-name-row")
-                    .selectAll(".weekday-name-cell")
-                    .data(dayNames)
-                    .join("td")
-                    .attr("class", "weekday-name-cell")
-                    .attr("style", "text-align: center;")
-                    .text((d) => d);
-
-                  monthTable
-                    .selectAll(monthBodyId)
-                    .data([null])
-                    .join("tbody")
-                    .attr("id", monthBodyId)
-                    .selectAll(".month-body-rows")
-                    .data(monthDays)
-                    .join("tr")
-                    .attr("class", "month-body-rows")
-                    .selectAll(".month-body-cells")
-                    .data(
-                      (d) => d,
-                      (d) => d
-                    )
-                    .join("td")
-                    .attr("id", (d) =>
-                      d.day === earlierDay
-                        ? "earlier-day"
-                        : d.day === laterDay
-                        ? "later-day"
-                        : null
-                    )
-                    .attr("class", "month-body-cells")
-                    .attr("width", () => dayTdSquareSizePx)
-                    .attr("height", () => dayTdSquareSizePx)
-                    .attr("style", (d) =>
-                      d > 0
-                        ? "font-size:x-small; background-color: lightgrey; border: 2px solid white; border-radius: 5px; text-align: right; vertical-align: top; position: relative; overflow: hidden; white-space: nowrap;"
-                        : "border: none;"
-                    )
-                    .text((d) => {
-                      if (d <= 0) return "";
-                      if (
-                        d === 1 ||
-                        d === lastDayOfMonth ||
-                        firstDaysOfWeek.includes(d)
-                      )
-                        return d;
-                    });
-                  //
-                  // .on("click", (d) => {
-                  //   if (
-                  //     q.interaction === InteractionType.titration ||
-                  //     q.interaction === InteractionType.none
-                  //   ) {
-                  //     if (d.target.__data__ === earlierDate) {
-                  //       dispatch(
-                  //         answer({
-                  //           choice: ChoiceType.earlier,
-                  //           choiceTimestamp: DateTime.local(),
-                  //         })
-                  //       );
-                  //     } else if (d.target.__data__ === laterDate) {
-                  //       dispatch(
-                  //         answer({
-                  //           choice: ChoiceType.later,
-                  //           choiceTimestamp: DateTime.local(),
-                  //         })
-                  //       );
-                  //     }
-                  //   }
-                  // });
-                };
-
+              .each(function (monthDate) {
                 const yearTd = select(this);
-                createMonthTable(yearTd);
+                drawCalendar(
+                  yearTd,
+                  q,
+                  monthDate,
+                  monthTdSquareSizePx,
+                  false,
+                  (amount) => {
+                    dragAmount = amount;
+                  },
+                  (answer) => {
+                    dispatch(answer);
+                  }
+                );
               });
-
-            // const earlierDay = q.dateEarlier.getDate();
-            // const laterDay = q.dateLater.getDate();
-
-            // const yRange = [0, q.maxAmount];
-            // var y = null;
           },
           [q]
         )}
