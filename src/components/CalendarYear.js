@@ -25,22 +25,22 @@ function Calendar() {
 
   const monthsMatrix = [
     [
-      DateTime.local(1, 1, q.dateEarlier.year),
-      DateTime.local(2, 1, q.dateEarlier.year),
-      DateTime.local(3, 1, q.dateEarlier.year),
-      DateTime.local(4, 1, q.dateEarlier.year),
+      DateTime.local(q.dateEarlier.year, 1, 1),
+      DateTime.local(q.dateEarlier.year, 2, 1),
+      DateTime.local(q.dateEarlier.year, 3, 1),
+      DateTime.local(q.dateEarlier.year, 4, 1),
     ],
     [
-      DateTime.local(5, 1, q.dateEarlier.year),
-      DateTime.local(6, 1, q.dateEarlier.year),
-      DateTime.local(7, 1, q.dateEarlier.year),
-      DateTime.local(8, 1, q.dateEarlier.year),
+      DateTime.local(q.dateEarlier.yearp, 5, 1),
+      DateTime.local(q.dateEarlier.year, 6, 1),
+      DateTime.local(q.dateEarlier.year, 7, 1),
+      DateTime.local(q.dateEarlier.year, 8, 1),
     ],
     [
-      DateTime.local(9, 1, q.dateEarlier.year),
-      DateTime.local(10, 1, q.dateEarlier.year),
-      DateTime.local(11, 1, q.dateEarlier.year),
-      DateTime.local(12, 1, q.dateEarlier.year),
+      DateTime.local(q.dateEarlier.year, 9, 1),
+      DateTime.local(q.dateEarlier.year, 10, 1),
+      DateTime.local(q.dateEarlier.year, 11, 1),
+      DateTime.local(q.dateEarlier.year, 12, 1),
     ],
   ];
 
@@ -106,7 +106,7 @@ function Calendar() {
                   yearTd,
                   q,
                   monthDate,
-                  monthTdSquareSizePx,
+                  monthTdSquareSizeIn,
                   false,
                   (amount) => {
                     dragAmount = amount;
