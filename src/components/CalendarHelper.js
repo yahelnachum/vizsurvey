@@ -160,7 +160,7 @@ export const drawCalendar = (
       .attr("class", "amount-div")
       .attr(
         "style",
-        "position: absolute; top: 50%; left: 50%; transform: translateX(-50%) translateY(-50%); font-weight: bold; font-size: large;"
+        "font-size:1vw; position: absolute; top: 50%; left: 50%; transform: translateX(-50%) translateY(-50%); font-weight: bold;"
       )
       .text(format("$,.0f")(dayAndAmount.amount));
   };
@@ -197,8 +197,8 @@ export const drawCalendar = (
           .attr("style", (d) =>
             d.day > 0
               ? //? "border: 1px solid black; text-align: right; vertical-align: top; position: relative; overflow: hidden; white-space: nowrap;"
-                "font-size:x-small; background-color: lightgrey; border: 2px solid white; border-radius: 5px; text-align: right; vertical-align: top; position: relative; overflow: hidden; white-space: nowrap;"
-              : "border: none;"
+                `font-size: 1vw; background-color: lightgrey; border: 2px solid white; border-radius: 5px; text-align: right; vertical-align: top; position: relative; overflow: hidden; white-space: nowrap;`
+              : `border: none;`
           )
           .on("click", (d) => {
             if (

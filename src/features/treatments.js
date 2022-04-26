@@ -19,4 +19,5 @@ export const TREATMENTS_CSV = `treatment_id,position,view_type,interaction,varia
 10,1,calendarWord,titration,laterAmount,500,,2/1/2022,1000,,2/22/2022,1100,,100,100,,,,,8,8,Calendar month view with word and titration interaction.
 11,1,calendarBar,drag,laterAmount,500,,2/1/2022,1000,,2/22/2022,1100,,100,100,,,,,8,8,Calendar month view with barchart and drag interaction.
 12,1,calendarWord,titration,laterAmount,500,,2/1/2022,1000,,10/1/2022,1100,,100,100,,,,,10,8,Calendar year view with word and titration interaction.
+13,1,calendarBar,drag,laterAmount,500,,2/1/2022,1000,,10/1/2022,1100,,100,100,,,,,10,8,Calendar year view with barchart and drag interaction.
 `;
