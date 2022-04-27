@@ -75,7 +75,7 @@ export const drawCalendar = ({
     .data([monthDate])
     .join("td")
     .attr("id", "month-year-cell")
-    .attr("style", "font-size: large")
+    .attr("style", "font-size: 14px; box-sizing: border-box;")
     .attr("colspan", 7)
     .text((d) => `${d.monthLong}${showYear ? " " + d.year : ""}`);
   thead
@@ -87,7 +87,7 @@ export const drawCalendar = ({
     .data(dayNames)
     .join("td")
     .attr("class", "weekday-name-cell")
-    .attr("style", "text-align: center;")
+    .attr("style", "text-align: center; box-sizing: border-box;")
     .text((d) => d);
 
   const tbody = table
