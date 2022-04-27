@@ -98,8 +98,9 @@ function Calendar() {
   // TODO this will always be constrained by q.heightIn since the monitor aspect ration is shorter in height.  Unessarily complex to consider q.widthIn in calculation
   const monthTdSquareSizeIn = Math.min(q.heightIn / 3, q.widthIn / 4);
   const monthTdSquareSizePx = Math.round(monthTdSquareSizeIn * dpi);
-  const monthTdSquareSizePxNoAmount = monthTdSquareSizePx / 3;
-  //const monthTdSquareSizePxAmount =
+  // I gave up on trying to shrink the months that don't have amounts for now.  Left the code in place to try to fix later.
+  //const monthTdSquareSizePxNoAmount = monthTdSquareSizePx;
+  //const monthTdSquareSizePxAmount = monthTdSquareSizePx;
 
   var dragAmount = null;
 
@@ -129,7 +130,7 @@ function Calendar() {
               .data([q.dateEarlier])
               .join("td")
               .attr("id", "year-cell")
-              .attr("style", "font-size: 24px;")
+              .attr("style", "font-size: 14px;")
               .attr("colspan", 7)
               .text((d) => d.year);
             const yearBody = yearTable
@@ -149,8 +150,20 @@ function Calendar() {
               )
               .join("td")
               .attr("class", "months-cells")
-              .attr("width", () => monthTdSquareSizePx)
-              .attr("height", () => monthTdSquareSizePx)
+              .attr(
+                "width",
+                (d) => monthTdSquareSizePx
+                // d.hasEarlierDate || d.hasLaterDate
+                //</div>   ? monthTdSquareSizePxAmount
+                //   : monthTdSquareSizePxNoAmount
+              )
+              .attr(
+                "height",
+                (d) => monthTdSquareSizePx
+                //d.hasEarlierDate || d.hasLaterDate
+                //</div>  ? monthTdSquareSizePxAmount
+                //  : monthTdSquareSizePxNoAmount
+              )
               .attr("style", "vertical-align: top;")
               .each(function (monthDate) {
                 const yearTd = select(this);

@@ -87,7 +87,10 @@ export const drawCalendar = ({
     .data(dayNames)
     .join("td")
     .attr("class", "weekday-name-cell")
-    .attr("style", "text-align: center; box-sizing: border-box;")
+    .attr(
+      "style",
+      "font-size: 10px; text-align: center; box-sizing: border-box;"
+    )
     .text((d) => d);
 
   const tbody = table
@@ -97,7 +100,7 @@ export const drawCalendar = ({
     .attr("id", "calendar-body");
 
   const yRange = [0, q.maxAmount];
-  const y = scaleLinear().domain(yRange).range([tableSquareSizePx, 0]);
+  var y;
 
   const drawBar = (parent, idPrefix, dayAndAmount) => {
     const svg = parent
@@ -106,8 +109,8 @@ export const drawCalendar = ({
       .attr("id", `${idPrefix}-svg`)
       .attr("x", "0")
       .attr("y", "0")
-      .attr("width", tableSquareSizePx)
-      .attr("height", tableSquareSizePx)
+      .attr("width", `${tableSquareSizePx - 4}`) // TODO how do I get out of doing this math?  Without it, the year view jumps when the svg shifts cells.  I assume the math is incorporating the boarder, passing, etc.
+      .attr("height", `${tableSquareSizePx - 4}`)
       .attr("style", "text-align: center");
     svg
       .append("rect")
@@ -117,7 +120,7 @@ export const drawCalendar = ({
       .attr("fill", "black")
       .attr("x", "0")
       .attr("y", (d) => y(d.amount))
-      .attr("width", tableSquareSizePx)
+      .attr("width", tableSquareSizePx - 4)
       .attr("height", (d) => {
         const y0 = y(0);
         const yamt = y(d.amount);
@@ -128,9 +131,9 @@ export const drawCalendar = ({
         .append("text")
         .data([dayAndAmount], (d) => d.day)
         .attr("id", `${idPrefix}-text`)
-        .attr("x", tableSquareSizePx / 2)
+        .attr("x", (tableSquareSizePx - 4) / 2)
         .attr("y", (d) => y(d.amount))
-        .attr("style", "font-size:large; pointer-events: none;")
+        .attr("style", "font-size: large; pointer-events: none;")
         .attr("fill", "white")
         .attr("text-anchor", "middle")
         .attr("dominant-baseline", "hanging")
@@ -166,7 +169,7 @@ export const drawCalendar = ({
       .attr("class", "amount-div")
       .attr(
         "style",
-        "font-size:1vw; position: absolute; top: 50%; left: 50%; transform: translateX(-50%) translateY(-50%); font-weight: bold;"
+        "font-size:12px; position: absolute; top: 50%; left: 50%; transform: translateX(-50%) translateY(-50%); font-weight: bold;"
       )
       .text(format("$,.0f")(dayAndAmount.amount));
   };
@@ -268,7 +271,7 @@ export const drawCalendar = ({
             const td = select(this);
             if (d.day >= 0) {
               td.append("div")
-                .attr("style", "float: right")
+                .attr("style", "font-size: 10px; float: right")
                 .attr("class", "day-div")
                 .text((d) => {
                   if (d.day <= 0) return "";
@@ -285,6 +288,10 @@ export const drawCalendar = ({
               d.type === AmountType.earlierAmount ||
               d.type === AmountType.laterAmount
             ) {
+              // TODO this is a hack.  Must be a better way.
+              y = scaleLinear()
+                .domain(yRange)
+                .range([td.node().clientHeight, 0]);
               if (q.viewType === ViewType.calendarWord) {
                 drawWord(
                   td,
