@@ -11,15 +11,16 @@ var calendarMatrix = require("calendar-matrix");
 
 export const dayNames = ["S", "M", "T", "W", "T", "F", "S"];
 
-export const drawCalendar = (
-  table,
-  q,
-  monthDate,
-  tableWidthIn,
-  showYear,
-  dragCallback,
-  dispatchCallback
-) => {
+export const drawCalendar = ({
+  table: table,
+  question: q,
+  monthDate: monthDate,
+  tableWidthIn: tableWidthIn,
+  showYear: showYear,
+  showAmountOnBar: showAmountOnBar,
+  dragCallback: dragCallback,
+  dispatchCallback: dispatchCallback,
+}) => {
   const dpi = window.devicePixelRatio >= 2 ? 132 : 96;
   const tableSquareSizeIn = tableWidthIn / 7;
   const tableSquareSizePx = Math.round(tableSquareSizeIn * dpi);
@@ -47,7 +48,7 @@ export const drawCalendar = (
             ? AmountType.earlierAmount
             : date.equals(q.dateLater)
             ? AmountType.laterAmount
-            : null,
+            : AmountType.none,
         date: date,
       };
     })
@@ -122,21 +123,27 @@ export const drawCalendar = (
         const yamt = y(d.amount);
         return y0 - yamt;
       });
-    svg
-      .append("text")
-      .data([dayAndAmount], (d) => d.day)
-      .attr("id", `${idPrefix}-text`)
-      .attr("x", tableSquareSizePx / 2)
-      .attr("y", (d) => y(d.amount))
-      .attr("style", "font-size:large; pointer-events: none;")
-      .attr("fill", "white")
-      .attr("text-anchor", "middle")
-      .attr("dominant-baseline", "hanging")
-      .text((d) => format("$,.0f")(d.amount));
+    if (showAmountOnBar) {
+      svg
+        .append("text")
+        .data([dayAndAmount], (d) => d.day)
+        .attr("id", `${idPrefix}-text`)
+        .attr("x", tableSquareSizePx / 2)
+        .attr("y", (d) => y(d.amount))
+        .attr("style", "font-size:large; pointer-events: none;")
+        .attr("fill", "white")
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "hanging")
+        .text((d) => format("$,.0f")(d.amount));
+    }
+    // svg
+    //   .append("text")
+    //   .data([dayAndAmount], (d) => d.day)
+    //   .attr("classname", "tooltip-area__text")
+    //   .text((d) => format("$,.0f")(d.amount));
   };
 
   const updateBar = (parent, idPrefix) => {
-    console.log("in updateBar");
     parent
       .select(`#${idPrefix}-text`)
       .attr("y", (d) => y(d.amount))
@@ -145,7 +152,6 @@ export const drawCalendar = (
       .select(`#${idPrefix}-rect`)
       .attr("y", (d) => y(d.amount))
       .attr("height", (d) => {
-        console.log(`d.amount=${d.amount}`);
         const y0 = y(0);
         const yamt = y(d.amount);
         return y0 - yamt;
@@ -167,11 +173,22 @@ export const drawCalendar = (
 
   const updateWord = (parent, idPrefix) => {
     const selection = parent.select(`#${idPrefix}-div`);
-    selection.text((d) => {
-      console.log(d.amount);
-      return format("$,.0f")(d.amount);
-    });
+    selection.text((d) => format("$,.0f")(d.amount));
   };
+
+  // const drawHoverText = (parent, idPrefix, dayAndAmount) => {
+  //   parent
+  //     .append("span")
+  //     .data([dayAndAmount], (d) => d.day)
+  //     .attr("id", `${idPrefix}-span`)
+  //     .attr("class", "details-hover")
+  //     .text(format("$,.0f")(dayAndAmount.amount));
+  // };
+
+  // const updateHoverText = (parent, idPrefix) => {
+  //   const selection = parent.select(`#${idPrefix}-span`);
+  //   selection.text((d) => format("$,.0f")(d.amount));
+  // };
 
   tbody
     .selectAll(".day-rows")
@@ -185,6 +202,7 @@ export const drawCalendar = (
     )
     .join(
       (enter) => {
+        //const tooltip = d3.select(".tooltip-area").style("opacity", 0);
         enter
           .append("td")
           .attr("class", "day-cells")
@@ -200,8 +218,17 @@ export const drawCalendar = (
           .attr("style", (d) =>
             d.day > 0
               ? //? "border: 1px solid black; text-align: right; vertical-align: top; position: relative; overflow: hidden; white-space: nowrap;"
-                `font-size: 1vw; background-color: lightgrey; border: 2px solid white; border-radius: 5px; text-align: right; vertical-align: top; position: relative; overflow: hidden; white-space: nowrap;`
+                `font-size: 1vw; background-color: ${
+                  d.type === AmountType.none ? "lightgrey" : "lightgrey"
+                }; border: ${
+                  d.type === AmountType.none
+                    ? "2px solid white; "
+                    : "2px solid white; "
+                } border-radius: 5px; text-align: right; vertical-align: top; position: relative; overflow: hidden; white-space: nowrap;`
               : `border: none;`
+          )
+          .attr("title", (d) =>
+            d.type === AmountType.none ? null : format("$,.0f")(d.amount)
           )
           .on("click", (d) => {
             if (
@@ -225,6 +252,18 @@ export const drawCalendar = (
               }
             }
           })
+          // .on("mousemove", () => {
+          //   tooltip.style("opacity", 1);
+          // })
+          // .on("mouseleave", () => {
+          //   tooltip.style("opacity", 0);
+          // })
+          // .on("mouseover", (event, d) => {
+          //   const text = d3.select(".tooltip-area__text");
+          //   text.text(format("$,.0f")(d.amount));
+          //   const [x, y] = d3.pointer(event);
+          //   tooltip.attr("transform", `translate(${x}, ${y - 20})`);
+          // })
           .each(function (d) {
             const td = select(this);
             if (d.day >= 0) {
@@ -234,9 +273,10 @@ export const drawCalendar = (
                 .text((d) => {
                   if (d.day <= 0) return "";
                   if (
-                    d.day === 1 ||
-                    d.day === lastDayOfMonth ||
-                    firstDaysOfWeek.includes(d.day)
+                    (d.day === 1 ||
+                      d.day === lastDayOfMonth ||
+                      firstDaysOfWeek.includes(d.day)) &&
+                    d.type === AmountType.none
                   )
                     return d.day;
                 });
@@ -258,17 +298,25 @@ export const drawCalendar = (
                   d
                 );
               }
+              // drawHoverText(
+              //   td,
+              //   d.type === AmountType.earlierAmount ? "earlier" : "later",
+              //   d
+              // );
             }
           });
       },
       (update) => {
-        console.log("In update");
         if (q.viewType === ViewType.calendarBar) {
           updateBar(update, "earlier");
           updateBar(update, "later");
+          // updateHoverText(update, "earlier");
+          // updateHoverText(update, "later");
         } else if (q.viewType === ViewType.calendarWord) {
           updateWord(update, "earlier");
           updateWord(update, "later");
+          // updateHoverText(update, "earlier");
+          // updateHoverText(update, "later");
         }
       },
       (exit) => exit.remove()

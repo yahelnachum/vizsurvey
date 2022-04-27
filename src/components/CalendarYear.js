@@ -102,19 +102,20 @@ function Calendar() {
               .attr("height", () => monthTdSquareSizePx)
               .each(function (monthDate) {
                 const yearTd = select(this);
-                drawCalendar(
-                  yearTd,
-                  q,
-                  monthDate,
-                  monthTdSquareSizeIn,
-                  false,
-                  (amount) => {
+                drawCalendar({
+                  table: yearTd,
+                  question: q,
+                  monthDate: monthDate,
+                  tableWidthIn: monthTdSquareSizeIn,
+                  showYear: false,
+                  showAmountOnBar: false,
+                  dragCallback: (amount) => {
                     dragAmount = amount;
                   },
-                  (answer) => {
+                  dispatchCallback: (answer) => {
                     dispatch(answer);
-                  }
-                );
+                  },
+                });
               });
           },
           [q]

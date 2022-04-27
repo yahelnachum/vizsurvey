@@ -30,19 +30,20 @@ function Calendar() {
         style={{ borderCollapse: "collapse", tableLayout: "fixed" }}
         ref={useD3(
           (table) => {
-            drawCalendar(
-              table,
-              q,
-              q.dateEarlier,
-              q.widthIn,
-              true,
-              (amount) => {
+            drawCalendar({
+              table: table,
+              question: q,
+              monthDate: q.dateEarlier,
+              tableWidthIn: q.widthIn,
+              showYear: true,
+              showAmountOnBar: true,
+              dragCallback: (amount) => {
                 dragAmount = amount;
               },
-              (answer) => {
+              dispatchCallback: (answer) => {
                 dispatch(answer);
-              }
-            );
+              },
+            });
           },
           [q]
         )}
