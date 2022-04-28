@@ -27,15 +27,10 @@ import {
 } from "./features/questionSlice";
 import { StatusType } from "./features/StatusType";
 
-import Amplify, { Storage } from "aws-amplify";
-import awsconfig from "./aws-exports";
-Amplify.configure(awsconfig);
-
 import { withAuthenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 
 const App = ({ signOut, user }) => {
-  Storage.put("test.txt", "Hello");
   return (
     <div>
       <BrowserRouter>
