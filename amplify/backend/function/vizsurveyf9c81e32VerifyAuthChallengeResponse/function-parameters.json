@@ -3,15 +3,15 @@
   "modules": [
     "captcha-verify"
   ],
-  "parentResource": "vizsurvey781b9360",
-  "functionName": "vizsurvey781b9360VerifyAuthChallengeResponse",
-  "resourceName": "vizsurvey781b9360VerifyAuthChallengeResponse",
+  "parentResource": "vizsurveyf9c81e32",
+  "functionName": "vizsurveyf9c81e32VerifyAuthChallengeResponse",
+  "resourceName": "vizsurveyf9c81e32VerifyAuthChallengeResponse",
   "parentStack": "auth",
   "triggerEnvs": [],
   "triggerDir": "/snapshot/node_modules/@aws-amplify/amplify-category-auth/provider-utils/awscloudformation/triggers/VerifyAuthChallengeResponse",
   "triggerTemplate": "VerifyAuthChallengeResponse.json.ejs",
   "triggerEventPath": "VerifyAuthChallengeResponse.event.json",
-  "roleName": "vizsurvey781b9360VerifyAuthChallengeResponse",
+  "roleName": "vizsurveyf9c81e32VerifyAuthChallengeResponse",
   "skipEdit": true,
   "RECAPTCHASECRET": "6LdyPJ0fAAAAADgXJMC0gh05NXx7Vbbm-WvJH0b3",
   "enableCors": false

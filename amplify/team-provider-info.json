@@ -1,34 +1,35 @@
 {
   "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-vizsurvey-dev-145435-authRole",
-      "UnauthRoleArn": "arn:aws:iam::315967937353:role/amplify-vizsurvey-dev-145435-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::315967937353:role/amplify-vizsurvey-dev-145435-authRole",
+      "AuthRoleName": "amplify-vizsurvey-dev-172759-authRole",
+      "UnauthRoleArn": "arn:aws:iam::315967937353:role/amplify-vizsurvey-dev-172759-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::315967937353:role/amplify-vizsurvey-dev-172759-authRole",
       "Region": "us-east-2",
-      "DeploymentBucketName": "amplify-vizsurvey-dev-145435-deployment",
-      "UnauthRoleName": "amplify-vizsurvey-dev-145435-unauthRole",
-      "StackName": "amplify-vizsurvey-dev-145435",
-      "StackId": "arn:aws:cloudformation:us-east-2:315967937353:stack/amplify-vizsurvey-dev-145435/fcb4d8f0-c3ff-11ec-bd78-0aac344ad306",
-      "AmplifyAppId": "d8q9jzifdyfq7",
-      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-vizsurvey-dev-145435-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+      "DeploymentBucketName": "amplify-vizsurvey-dev-172759-deployment",
+      "UnauthRoleName": "amplify-vizsurvey-dev-172759-unauthRole",
+      "StackName": "amplify-vizsurvey-dev-172759",
+      "StackId": "arn:aws:cloudformation:us-east-2:315967937353:stack/amplify-vizsurvey-dev-172759/1466e140-c73a-11ec-a1f4-0a925bd27dd0",
+      "AmplifyAppId": "d149obtpc67ns7",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-vizsurvey-dev-172759-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
       "auth": {
-        "vizsurvey781b9360": {}
+        "vizsurveyf9c81e32": {},
+        "true": {}
       },
       "function": {
-        "vizsurvey781b9360DefineAuthChallenge": {
-          "deploymentBucketName": "amplify-vizsurvey-dev-145435-deployment",
-          "s3Key": "amplify-builds/vizsurvey781b9360DefineAuthChallenge-673262677254664e766a-build.zip"
+        "vizsurveyf9c81e32DefineAuthChallenge": {
+          "deploymentBucketName": "amplify-vizsurvey-dev-172759-deployment",
+          "s3Key": "amplify-builds/vizsurveyf9c81e32DefineAuthChallenge-505872412b6759356a4e-build.zip"
         },
-        "vizsurvey781b9360CreateAuthChallenge": {
-          "deploymentBucketName": "amplify-vizsurvey-dev-145435-deployment",
-          "s3Key": "amplify-builds/vizsurvey781b9360CreateAuthChallenge-7a654556596130733554-build.zip"
+        "vizsurveyf9c81e32CreateAuthChallenge": {
+          "deploymentBucketName": "amplify-vizsurvey-dev-172759-deployment",
+          "s3Key": "amplify-builds/vizsurveyf9c81e32CreateAuthChallenge-4372475241596b353657-build.zip"
         },
-        "vizsurvey781b9360VerifyAuthChallengeResponse": {
+        "vizsurveyf9c81e32VerifyAuthChallengeResponse": {
           "RECAPTCHASECRET": "6LdyPJ0fAAAAADgXJMC0gh05NXx7Vbbm-WvJH0b3",
-          "deploymentBucketName": "amplify-vizsurvey-dev-145435-deployment",
-          "s3Key": "amplify-builds/vizsurvey781b9360VerifyAuthChallengeResponse-52704253586244666658-build.zip"
+          "deploymentBucketName": "amplify-vizsurvey-dev-172759-deployment",
+          "s3Key": "amplify-builds/vizsurveyf9c81e32VerifyAuthChallengeResponse-42555362596d336c624a-build.zip"
         }
       }
     }

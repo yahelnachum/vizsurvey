@@ -1,0 +1,18 @@
+{
+  "resourceName": "s3vizsurveydata",
+  "policyUUID": "cee67cbc",
+  "bucketName": "s3vizsurveydatabucket",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}

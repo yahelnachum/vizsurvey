@@ -67,12 +67,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "vizsurvey781b9360CreateAuthChallenge",
+            "vizsurveyf9c81e32CreateAuthChallenge",
             {
               "Fn::Join": [
                 "",
                 [
-                  "vizsurvey781b9360CreateAuthChallenge",
+                  "vizsurveyf9c81e32CreateAuthChallenge",
                   "-",
                   {
                     "Ref": "env"
@@ -122,12 +122,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "vizsurvey781b9360CreateAuthChallenge",
+            "vizsurveyf9c81e32CreateAuthChallenge",
             {
               "Fn::Join": [
                 "",
                 [
-                  "vizsurvey781b9360CreateAuthChallenge",
+                  "vizsurveyf9c81e32CreateAuthChallenge",
                   "-",
                   {
                     "Ref": "env"

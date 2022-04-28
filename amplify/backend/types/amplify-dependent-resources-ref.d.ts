@@ -1,24 +1,18 @@
 export type AmplifyDependentResourcesAttributes = {
-    "storage": {
-        "s3af1b3927": {
-            "BucketName": "string",
-            "Region": "string"
-        }
-    },
     "function": {
-        "vizsurvey781b9360DefineAuthChallenge": {
+        "vizsurveyf9c81e32DefineAuthChallenge": {
             "Name": "string",
             "Arn": "string",
             "LambdaExecutionRole": "string",
             "Region": "string"
         },
-        "vizsurvey781b9360CreateAuthChallenge": {
+        "vizsurveyf9c81e32CreateAuthChallenge": {
             "Name": "string",
             "Arn": "string",
             "LambdaExecutionRole": "string",
             "Region": "string"
         },
-        "vizsurvey781b9360VerifyAuthChallengeResponse": {
+        "vizsurveyf9c81e32VerifyAuthChallengeResponse": {
             "Name": "string",
             "Arn": "string",
             "LambdaExecutionRole": "string",
@@ -26,7 +20,7 @@ export type AmplifyDependentResourcesAttributes = {
         }
     },
     "auth": {
-        "vizsurvey781b9360": {
+        "vizsurveyf9c81e32": {
             "IdentityPoolId": "string",
             "IdentityPoolName": "string",
             "UserPoolId": "string",
@@ -34,6 +28,12 @@ export type AmplifyDependentResourcesAttributes = {
             "UserPoolName": "string",
             "AppClientIDWeb": "string",
             "AppClientID": "string"
+        }
+    },
+    "storage": {
+        "s3vizsurveydata": {
+            "BucketName": "string",
+            "Region": "string"
         }
     }
 }

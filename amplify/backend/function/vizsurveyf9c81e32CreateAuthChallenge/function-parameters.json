@@ -3,15 +3,15 @@
   "modules": [
     "captcha-create-challenge"
   ],
-  "parentResource": "vizsurvey781b9360",
-  "functionName": "vizsurvey781b9360CreateAuthChallenge",
-  "resourceName": "vizsurvey781b9360CreateAuthChallenge",
+  "parentResource": "vizsurveyf9c81e32",
+  "functionName": "vizsurveyf9c81e32CreateAuthChallenge",
+  "resourceName": "vizsurveyf9c81e32CreateAuthChallenge",
   "parentStack": "auth",
   "triggerEnvs": [],
   "triggerDir": "/snapshot/node_modules/@aws-amplify/amplify-category-auth/provider-utils/awscloudformation/triggers/CreateAuthChallenge",
   "triggerTemplate": "CreateAuthChallenge.json.ejs",
   "triggerEventPath": "CreateAuthChallenge.event.json",
-  "roleName": "vizsurvey781b9360CreateAuthChallenge",
+  "roleName": "vizsurveyf9c81e32CreateAuthChallenge",
   "skipEdit": true,
   "enableCors": false
 }
