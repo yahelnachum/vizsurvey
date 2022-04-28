@@ -27,7 +27,15 @@ import {
 } from "./features/questionSlice";
 import { StatusType } from "./features/StatusType";
 
-const App = () => {
+import Amplify, { Storage } from "aws-amplify";
+import awsconfig from "./aws-exports";
+Amplify.configure(awsconfig);
+
+import { withAuthenticator } from "@aws-amplify/ui-react";
+import "@aws-amplify/ui-react/styles.css";
+
+const App = ({ signOut, user }) => {
+  Storage.put("test.txt", "Hello");
   return (
     <div>
       <BrowserRouter>
@@ -35,23 +43,21 @@ const App = () => {
           <QueryParam />
           <Switch>
             <Route exact path="/vizsurvey" component={Home} />
-            <Route
-              exact
-              path={"/vizsurvey/instructions"}
-              component={Instructions}
-            />
-            <Route path="/vizsurvey/survey" component={Survey} />
-            <Route path="/vizsurvey/post-survey" component={PostSurvey} />
-            <Route path="/vizsurvey/thankyou" component={ThankYou} />
-            <Route path="/vizsurvey/*" component={Home} />
+            <Route exact path={"/instructions"} component={Instructions} />
+            <Route path="/survey" component={Survey} />
+            <Route path="/post-survey" component={PostSurvey} />
+            <Route path="/thankyou" component={ThankYou} />
+            <Route path="/*" component={Home} />
           </Switch>
         </div>
       </BrowserRouter>
+      <h1>Hello {user.username}</h1>
+      <button onClick={signOut}>Sign out</button>
     </div>
   );
 };
 
-export default App;
+export default withAuthenticator(App);
 
 const Home = () => {
   const treatmentId = useSelector(fetchTreatmentId);
