@@ -1,0 +1,18 @@
+{
+  "trigger": true,
+  "modules": [
+    "captcha-verify"
+  ],
+  "parentResource": "vizsurvey781b9360",
+  "functionName": "vizsurvey781b9360VerifyAuthChallengeResponse",
+  "resourceName": "vizsurvey781b9360VerifyAuthChallengeResponse",
+  "parentStack": "auth",
+  "triggerEnvs": [],
+  "triggerDir": "/snapshot/node_modules/@aws-amplify/amplify-category-auth/provider-utils/awscloudformation/triggers/VerifyAuthChallengeResponse",
+  "triggerTemplate": "VerifyAuthChallengeResponse.json.ejs",
+  "triggerEventPath": "VerifyAuthChallengeResponse.event.json",
+  "roleName": "vizsurvey781b9360VerifyAuthChallengeResponse",
+  "skipEdit": true,
+  "RECAPTCHASECRET": "6LdyPJ0fAAAAADgXJMC0gh05NXx7Vbbm-WvJH0b3",
+  "enableCors": false
+}

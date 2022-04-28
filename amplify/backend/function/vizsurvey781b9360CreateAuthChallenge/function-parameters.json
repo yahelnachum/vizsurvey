@@ -1,0 +1,17 @@
+{
+  "trigger": true,
+  "modules": [
+    "captcha-create-challenge"
+  ],
+  "parentResource": "vizsurvey781b9360",
+  "functionName": "vizsurvey781b9360CreateAuthChallenge",
+  "resourceName": "vizsurvey781b9360CreateAuthChallenge",
+  "parentStack": "auth",
+  "triggerEnvs": [],
+  "triggerDir": "/snapshot/node_modules/@aws-amplify/amplify-category-auth/provider-utils/awscloudformation/triggers/CreateAuthChallenge",
+  "triggerTemplate": "CreateAuthChallenge.json.ejs",
+  "triggerEventPath": "CreateAuthChallenge.event.json",
+  "roleName": "vizsurvey781b9360CreateAuthChallenge",
+  "skipEdit": true,
+  "enableCors": false
+}
