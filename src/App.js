@@ -43,10 +43,14 @@ const App = ({ signOut, user }) => {
           <QueryParam />
           <Switch>
             <Route exact path="/vizsurvey" component={Home} />
-            <Route exact path={"/instructions"} component={Instructions} />
-            <Route path="/survey" component={Survey} />
-            <Route path="/post-survey" component={PostSurvey} />
-            <Route path="/thankyou" component={ThankYou} />
+            <Route
+              exact
+              path={"/vizsurvey/instructions"}
+              component={Instructions}
+            />
+            <Route path="/vizsurvey/survey" component={Survey} />
+            <Route path="/vizsurvey/post-survey" component={PostSurvey} />
+            <Route path="/vizsurvey/thankyou" component={ThankYou} />
             <Route path="/*" component={Home} />
           </Switch>
         </div>

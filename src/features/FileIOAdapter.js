@@ -7,6 +7,10 @@ import { ViewType } from "./ViewType";
 import { InteractionType } from "./InteractionType";
 import { AmountType } from "./AmountType";
 
+import Amplify, { Storage } from "aws-amplify";
+import awsconfig from "../aws-exports";
+Amplify.configure(awsconfig);
+
 export class FileIOAdapter {
   constructor() {}
 
@@ -85,6 +89,7 @@ export class FileIOAdapter {
 
   writeAnswers = async (answersCSV, { getState }) => {
     const state = getState();
+    Storage.put("answers.csv", answersCSV);
     console.log(answersCSV);
     console.log(JSON.stringify(state));
     // const octokit = new Octokit({
