@@ -27,7 +27,10 @@ import {
 } from "./features/questionSlice";
 import { StatusType } from "./features/StatusType";
 
-const App = () => {
+import { withAuthenticator } from "@aws-amplify/ui-react";
+import "@aws-amplify/ui-react/styles.css";
+
+const App = ({ signOut, user }) => {
   return (
     <div>
       <BrowserRouter>
@@ -43,15 +46,17 @@ const App = () => {
             <Route path="/vizsurvey/survey" component={Survey} />
             <Route path="/vizsurvey/post-survey" component={PostSurvey} />
             <Route path="/vizsurvey/thankyou" component={ThankYou} />
-            <Route path="/vizsurvey/*" component={Home} />
+            <Route path="/*" component={Home} />
           </Switch>
         </div>
       </BrowserRouter>
+      <h1>Hello {user.username}</h1>
+      <button onClick={signOut}>Sign out</button>
     </div>
   );
 };
 
-export default App;
+export default withAuthenticator(App);
 
 const Home = () => {
   const treatmentId = useSelector(fetchTreatmentId);
